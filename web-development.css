@@ -151,21 +151,22 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   flex-shrink: 0;
 }
 
-/* ── Shared SVG wordmark ──────────────────────────────── */
+/* ── Shared PNG wordmark ──────────────────────────────── */
 .xilo-logo {
   display: block;
-  color: #fff;
-  overflow: visible;
   flex-shrink: 0;
+  /* If the PNG has a transparent bg and white/light letters it renders natively.
+     If the letters appear too dark or invisible on the dark bg, uncomment:
+     filter: brightness(0) invert(1); */
 }
 
-/* Nav: small */
+/* Nav: compact */
 .xilo-logo--nav {
-  height: 30px;
+  height: 28px;
   width: auto;
 }
 
-/* Footer: large */
+/* Footer: display size */
 .xilo-logo--footer {
   height: clamp(70px, 10vw, 115px);
   width: auto;
