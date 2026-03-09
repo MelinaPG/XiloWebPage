@@ -150,7 +150,7 @@
 
       /* hero */
       'hero.tag': 'Desarrollo Web',
-      'hero.headline': 'TEN TU SITIO WEB<br>EN LÍNEA EN <em>DÍAS,</em><br>NO EN MESES.',
+      'hero.headline': 'TU SITIO <br>WEB EN <em>DÍAS,</em><br>NO EN MESES.',
       'hero.sub': 'Aceleramos tu inicio digital y elevamos tu presencia en línea con herramientas de Ai Diana — sitios web hechos para crecer con tu negocio.',
       'hero.cta': 'Empieza Aquí',
       'hero.badgeLabel': 'EN LÍNEA EN',
