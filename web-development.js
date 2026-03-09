@@ -17,8 +17,7 @@
       'page.title': 'Web Development — XIPE',
 
       /* nav */
-      'nav.home': 'Home',
-      'nav.services': 'Services',
+      'nav.webdev': 'Web Development',
       'nav.portfolio': 'Portfolio',
       'nav.menuAriaOpen': 'Open menu',
       'nav.menuAriaClose': 'Close menu',
@@ -134,13 +133,9 @@
       'card3.desc': 'A creative and technology-driven project that helps companies elevate their presence through digital displays, interactive solutions, and impactful visual communication.',
 
       /* footer */
-      'footer.cta': 'Schedule a Call',
-      'footer.nav1': 'PRODUCT DEVELOPMENT',
-      'footer.nav2': 'WEBSITES OFFERING',
-      'footer.nav3': 'EXTENDED TEAMS',
-      'footer.copy': '© 2024 XIPE. All rights reserved.',
-      'footer.privacy': 'Privacy Policy',
-      'footer.terms': 'Terms of Service',
+      'footer.tagline': 'VENTURE STUDIO',
+      'footer.contactLabel': 'Contact:',
+      'footer.followLabel': 'Follow us at',
     },
 
     es: {
@@ -148,8 +143,7 @@
       'page.title': 'Desarrollo Web — XIPE',
 
       /* nav */
-      'nav.home': 'Inicio',
-      'nav.services': 'Servicios',
+      'nav.webdev': 'Desarrollo Web',
       'nav.portfolio': 'Portafolio',
       'nav.menuAriaOpen': 'Abrir menú',
       'nav.menuAriaClose': 'Cerrar menú',
@@ -265,13 +259,9 @@
       'card3.desc': 'Un proyecto creativo y tecnológico que ayuda a empresas a elevar su presencia a través de pantallas digitales, soluciones interactivas y comunicación visual de impacto.',
 
       /* footer */
-      'footer.cta': 'Agendar una Llamada',
-      'footer.nav1': 'DESARROLLO DE PRODUCTO',
-      'footer.nav2': 'OFERTA DE SITIOS WEB',
-      'footer.nav3': 'EQUIPOS EXTENDIDOS',
-      'footer.copy': '© 2024 XIPE. Todos los derechos reservados.',
-      'footer.privacy': 'Política de Privacidad',
-      'footer.terms': 'Términos de Servicio',
+      'footer.tagline': 'VENTURE STUDIO',
+      'footer.contactLabel': 'Contacto:',
+      'footer.followLabel': 'Síguenos en',
     },
   };
 
@@ -311,7 +301,7 @@
       if (dict[key] !== undefined) el.innerHTML = dict[key];
     });
 
-    /* toggle button visual state */
+    /* toggle button visual state — sync all instances (nav + footer) */
     document.querySelectorAll('.lang-toggle__btn').forEach((btn) => {
       const isActive = btn.dataset.lang === lang;
       btn.classList.toggle('active', isActive);
@@ -428,6 +418,16 @@
       }
     });
   });
+
+  /* ════════════════════════════════════════════════════════
+     BACK TO TOP
+  ════════════════════════════════════════════════════════ */
+  const backToTop = document.getElementById('backToTop');
+  if (backToTop) {
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
 
   /* ════════════════════════════════════════════════════════
      INIT — apply persisted / default language on load
