@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XILO — Intelligent Technology</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Korolev closest available: Barlow Condensed (bold/uppercase feel) as web-safe substitute -->
+  <!-- Using Google Fonts: Barlow Condensed for headlines, Inter for body (Helvetica-style) -->
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ─── NAV ─────────────────────────────────────────────────────── -->
+  <header class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="/" class="nav__logo">XILO</a>
+
+      <nav class="nav__links" id="navLinks">
+        <a href="#services">Services</a>
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a href="#insights">Insights</a>
+        <a href="#contact" class="btn btn--outline btn--sm">Contact Us</a>
+      </nav>
+
+      <button class="nav__hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ─── HERO ──────────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="container hero__inner">
+      <div class="hero__tag label">INTELLIGENT TECHNOLOGY</div>
+      <h1 class="hero__headline display">
+        WE BUILD<br />
+        <em>SYSTEMS</em><br />
+        THAT THINK
+      </h1>
+      <div class="hero__meta">
+        <p class="hero__sub body-lg">
+          End-to-end digital infrastructure for companies<br />
+          that refuse to stand still.
+        </p>
+        <div class="hero__actions">
+          <a href="#work" class="btn btn--primary">See Our Work</a>
+          <a href="#contact" class="btn btn--outline">Start a Project</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__scroll-hint">
+      <span class="label">SCROLL</span>
+      <div class="hero__scroll-line"></div>
+    </div>
+
+    <div class="hero__bg-accent"></div>
+  </section>
+
+  <!-- ─── MARQUEE STRIP ────────────────────────────────────────────── -->
+  <div class="marquee-strip" aria-hidden="true">
+    <div class="marquee-track">
+      <span>STRATEGY</span><span class="dot">·</span>
+      <span>TECHNOLOGY</span><span class="dot">·</span>
+      <span>DESIGN</span><span class="dot">·</span>
+      <span>ENGINEERING</span><span class="dot">·</span>
+      <span>DATA</span><span class="dot">·</span>
+      <span>AUTOMATION</span><span class="dot">·</span>
+      <span>STRATEGY</span><span class="dot">·</span>
+      <span>TECHNOLOGY</span><span class="dot">·</span>
+      <span>DESIGN</span><span class="dot">·</span>
+      <span>ENGINEERING</span><span class="dot">·</span>
+      <span>DATA</span><span class="dot">·</span>
+      <span>AUTOMATION</span><span class="dot">·</span>
+    </div>
+  </div>
+
+  <!-- ─── ABOUT / INTRO ────────────────────────────────────────────── -->
+  <section class="intro" id="about">
+    <div class="container intro__inner">
+      <div class="intro__left">
+        <span class="label section-label">ABOUT XILO</span>
+        <h2 class="heading-xl">WE ARE<br />YOUR TECH<br />PARTNER</h2>
+      </div>
+      <div class="intro__right">
+        <p class="body-lg intro__lead">
+          Xilo is a full-service technology studio. We design, build and scale
+          digital products for ambitious companies — from early-stage startups
+          to Fortune 500 enterprises.
+        </p>
+        <p class="body intro__body">
+          Our multidisciplinary team combines product strategy, UX design,
+          software engineering and data science to deliver systems that create
+          real business value. We don't just deliver code — we deliver outcomes.
+        </p>
+        <div class="intro__stats">
+          <div class="stat">
+            <span class="stat__number">120<sup>+</sup></span>
+            <span class="stat__label label">PROJECTS SHIPPED</span>
+          </div>
+          <div class="stat">
+            <span class="stat__number">8</span>
+            <span class="stat__label label">YEARS IN MARKET</span>
+          </div>
+          <div class="stat">
+            <span class="stat__number">94<sup>%</sup></span>
+            <span class="stat__label label">CLIENT RETENTION</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SERVICES ─────────────────────────────────────────────────── -->
+  <section class="services" id="services">
+    <div class="container">
+      <div class="section-header">
+        <span class="label section-label">WHAT WE DO</span>
+        <h2 class="heading-xl">CORE<br />SERVICES</h2>
+      </div>
+
+      <div class="services__grid">
+
+        <article class="service-card service-card--dark">
+          <div class="service-card__number label">01</div>
+          <h3 class="service-card__title heading-md">PRODUCT<br />STRATEGY</h3>
+          <p class="service-card__desc body">
+            We map user needs to business goals, defining the roadmap that
+            gets you from idea to market as efficiently as possible.
+          </p>
+          <a href="#contact" class="btn btn--outline btn--sm service-card__cta">Learn More</a>
+          <div class="service-card__icon">◈</div>
+        </article>
+
+        <article class="service-card service-card--light">
+          <div class="service-card__number label">02</div>
+          <h3 class="service-card__title heading-md">UX / UI<br />DESIGN</h3>
+          <p class="service-card__desc body">
+            Interfaces that feel as good as they look — designed with empathy,
+            validated with data, delivered with precision.
+          </p>
+          <a href="#contact" class="btn btn--dark btn--sm service-card__cta">Learn More</a>
+          <div class="service-card__icon">◇</div>
+        </article>
+
+        <article class="service-card service-card--accent">
+          <div class="service-card__number label">03</div>
+          <h3 class="service-card__title heading-md">SOFTWARE<br />ENGINEERING</h3>
+          <p class="service-card__desc body">
+            Scalable, maintainable systems built with modern stacks. Web apps,
+            APIs, microservices and everything in between.
+          </p>
+          <a href="#contact" class="btn btn--outline btn--sm service-card__cta">Learn More</a>
+          <div class="service-card__icon">◉</div>
+        </article>
+
+        <article class="service-card service-card--neutral">
+          <div class="service-card__number label">04</div>
+          <h3 class="service-card__title heading-md">DATA &amp;<br />AUTOMATION</h3>
+          <p class="service-card__desc body">
+            Pipelines, dashboards and AI-powered workflows that turn raw
+            information into competitive advantage.
+          </p>
+          <a href="#contact" class="btn btn--dark btn--sm service-card__cta">Learn More</a>
+          <div class="service-card__icon">◎</div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FEATURE SPLIT: WHY XILO ──────────────────────────────────── -->
+  <section class="feature-split">
+    <div class="container feature-split__inner">
+      <div class="feature-split__visual">
+        <div class="feature-split__image-block">
+          <div class="feature-split__img-main"></div>
+          <div class="feature-split__img-badge">
+            <span class="heading-md">8</span>
+            <span class="label">YEARS</span>
+          </div>
+        </div>
+      </div>
+      <div class="feature-split__content">
+        <span class="label section-label">WHY XILO</span>
+        <h2 class="heading-xl">QUALITY<br />WITHOUT<br />COMPROMISE</h2>
+        <p class="body feature-split__lead">
+          We believe great technology is invisible. The best systems work so
+          well that users never notice them — they just get things done.
+        </p>
+        <ul class="feature-list">
+          <li class="feature-list__item">
+            <div class="feature-list__dot"></div>
+            <div>
+              <strong class="label">SENIOR-ONLY TEAM</strong>
+              <p class="body">Every project is led and delivered by senior engineers and designers with 5+ years of experience.</p>
+            </div>
+          </li>
+          <li class="feature-list__item">
+            <div class="feature-list__dot"></div>
+            <div>
+              <strong class="label">OUTCOME-DRIVEN</strong>
+              <p class="body">We measure success by your KPIs, not our deliverables. Aligned incentives from day one.</p>
+            </div>
+          </li>
+          <li class="feature-list__item">
+            <div class="feature-list__dot"></div>
+            <div>
+              <strong class="label">FULL TRANSPARENCY</strong>
+              <p class="body">Weekly syncs, shared roadmaps, and real-time dashboards. No black boxes, ever.</p>
+            </div>
+          </li>
+        </ul>
+        <a href="#contact" class="btn btn--primary">Work With Us</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SELECTED WORK ─────────────────────────────────────────────── -->
+  <section class="work" id="work">
+    <div class="container">
+      <div class="section-header section-header--split">
+        <div>
+          <span class="label section-label">SELECTED WORK</span>
+          <h2 class="heading-xl">RECENT<br />PROJECTS</h2>
+        </div>
+        <a href="#" class="btn btn--outline">View All Work</a>
+      </div>
+
+      <div class="work__grid">
+
+        <article class="work-card work-card--large">
+          <div class="work-card__image work-card__image--01"></div>
+          <div class="work-card__content">
+            <div class="work-card__meta">
+              <span class="label work-card__cat">SAAS / PLATFORM</span>
+              <span class="label work-card__year">2024</span>
+            </div>
+            <h3 class="work-card__title heading-md">Nexus Analytics<br />Dashboard</h3>
+            <p class="body work-card__desc">Real-time business intelligence platform for a Series B fintech company — 40% faster decision cycles.</p>
+            <a href="#" class="work-card__link label">VIEW PROJECT →</a>
+          </div>
+        </article>
+
+        <article class="work-card">
+          <div class="work-card__image work-card__image--02"></div>
+          <div class="work-card__content">
+            <div class="work-card__meta">
+              <span class="label work-card__cat">MOBILE / iOS</span>
+              <span class="label work-card__year">2024</span>
+            </div>
+            <h3 class="work-card__title heading-md">Orion Health<br />App</h3>
+            <p class="body work-card__desc">End-to-end patient-facing app handling 50k+ daily active users with HIPAA compliance.</p>
+            <a href="#" class="work-card__link label">VIEW PROJECT →</a>
+          </div>
+        </article>
+
+        <article class="work-card">
+          <div class="work-card__image work-card__image--03"></div>
+          <div class="work-card__content">
+            <div class="work-card__meta">
+              <span class="label work-card__cat">E-COMMERCE</span>
+              <span class="label work-card__year">2023</span>
+            </div>
+            <h3 class="work-card__title heading-md">Meridian Retail<br />Platform</h3>
+            <p class="body work-card__desc">Headless commerce architecture driving a 3× conversion uplift for a global lifestyle brand.</p>
+            <a href="#" class="work-card__link label">VIEW PROJECT →</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PROCESS ───────────────────────────────────────────────────── -->
+  <section class="process">
+    <div class="container">
+      <div class="section-header">
+        <span class="label section-label">HOW WE WORK</span>
+        <h2 class="heading-xl">OUR<br />PROCESS</h2>
+      </div>
+
+      <div class="process__steps">
+        <div class="process__step">
+          <div class="process__step-num label">01</div>
+          <div class="process__step-connector"></div>
+          <h4 class="process__step-title label">DISCOVER</h4>
+          <p class="body">Deep-dive workshops to understand your business, users and technical landscape.</p>
+        </div>
+        <div class="process__step">
+          <div class="process__step-num label">02</div>
+          <div class="process__step-connector"></div>
+          <h4 class="process__step-title label">DEFINE</h4>
+          <p class="body">Clear scope, roadmap, and success metrics agreed before a single line of code is written.</p>
+        </div>
+        <div class="process__step">
+          <div class="process__step-num label">03</div>
+          <div class="process__step-connector"></div>
+          <h4 class="process__step-title label">DESIGN</h4>
+          <p class="body">Iterative prototyping from wireframes to high-fidelity designs validated with real users.</p>
+        </div>
+        <div class="process__step">
+          <div class="process__step-num label">04</div>
+          <div class="process__step-connector"></div>
+          <h4 class="process__step-title label">DELIVER</h4>
+          <p class="body">Agile sprints, continuous deployment, and transparent progress updates every step.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── INSIGHTS ──────────────────────────────────────────────────── -->
+  <section class="insights" id="insights">
+    <div class="container">
+      <div class="section-header section-header--split">
+        <div>
+          <span class="label section-label">INSIGHTS</span>
+          <h2 class="heading-xl">FROM THE<br />STUDIO</h2>
+        </div>
+        <a href="#" class="btn btn--outline">All Articles</a>
+      </div>
+
+      <div class="insights__grid">
+
+        <article class="insight-card insight-card--featured">
+          <div class="insight-card__image insight-card__image--01"></div>
+          <div class="insight-card__content">
+            <span class="label insight-card__cat">ENGINEERING</span>
+            <h3 class="insight-card__title heading-sm">Why Most SaaS Architecture<br />Fails at Scale</h3>
+            <p class="body insight-card__excerpt">The hidden bottlenecks that slow your system down at exactly the wrong moment — and how to engineer around them.</p>
+            <a href="#" class="label insight-card__link">READ ARTICLE →</a>
+          </div>
+        </article>
+
+        <article class="insight-card">
+          <div class="insight-card__image insight-card__image--02"></div>
+          <div class="insight-card__content">
+            <span class="label insight-card__cat">DESIGN</span>
+            <h3 class="insight-card__title heading-sm">The UX of Invisible Design</h3>
+            <p class="body insight-card__excerpt">How the best interfaces disappear — and what that means for your product team.</p>
+            <a href="#" class="label insight-card__link">READ ARTICLE →</a>
+          </div>
+        </article>
+
+        <article class="insight-card">
+          <div class="insight-card__image insight-card__image--03"></div>
+          <div class="insight-card__content">
+            <span class="label insight-card__cat">STRATEGY</span>
+            <h3 class="insight-card__title heading-sm">Data Maturity: Where Is<br />Your Company?</h3>
+            <p class="body insight-card__excerpt">A practical framework for assessing and advancing your organization's data capabilities.</p>
+            <a href="#" class="label insight-card__link">READ ARTICLE →</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TESTIMONIALS ──────────────────────────────────────────────── -->
+  <section class="testimonials">
+    <div class="container">
+      <span class="label section-label">CLIENT VOICES</span>
+
+      <div class="testimonials__grid">
+
+        <blockquote class="testimonial">
+          <p class="testimonial__text body-lg">
+            "Xilo didn't just build our platform — they helped us rethink
+            our entire product strategy. The results speak for themselves:
+            2× ARR in eight months."
+          </p>
+          <footer class="testimonial__footer">
+            <div class="testimonial__avatar"></div>
+            <div>
+              <strong class="label">SARAH CHEN</strong>
+              <span class="body testimonial__role">CPO, Nexus Analytics</span>
+            </div>
+          </footer>
+        </blockquote>
+
+        <blockquote class="testimonial testimonial--accent">
+          <p class="testimonial__text body-lg">
+            "The team's ability to translate complex requirements into
+            elegant, performant code is unmatched. They feel like an
+            extension of our own team."
+          </p>
+          <footer class="testimonial__footer">
+            <div class="testimonial__avatar"></div>
+            <div>
+              <strong class="label">MARCUS WEBB</strong>
+              <span class="body testimonial__role">CTO, Orion Health</span>
+            </div>
+          </footer>
+        </blockquote>
+
+        <blockquote class="testimonial">
+          <p class="testimonial__text body-lg">
+            "Delivery on time, on budget, and above expectations — every
+            single time. I've worked with many agencies; Xilo is in a
+            different league."
+          </p>
+          <footer class="testimonial__footer">
+            <div class="testimonial__avatar"></div>
+            <div>
+              <strong class="label">DIANA PARK</strong>
+              <span class="body testimonial__role">CEO, Meridian Retail</span>
+            </div>
+          </footer>
+        </blockquote>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CTA BAND ──────────────────────────────────────────────────── -->
+  <section class="cta-band" id="contact">
+    <div class="container cta-band__inner">
+      <div class="cta-band__content">
+        <span class="label section-label">READY TO START?</span>
+        <h2 class="heading-xl cta-band__headline">LET'S BUILD<br />SOMETHING<br />REMARKABLE</h2>
+      </div>
+      <div class="cta-band__action">
+        <p class="body cta-band__sub">
+          Tell us about your project and we'll get back to you within 24 hours
+          with a tailored proposal.
+        </p>
+        <a href="mailto:hello@xilo.io" class="btn btn--cta">START A CONVERSATION</a>
+        <span class="label cta-band__email">hello@xilo.io</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ────────────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a href="/" class="footer__logo">XILO</a>
+          <p class="body footer__tagline">Intelligent technology<br />for ambitious companies.</p>
+        </div>
+
+        <nav class="footer__nav">
+          <div class="footer__col">
+            <span class="label footer__col-title">COMPANY</span>
+            <a href="#about" class="body">About</a>
+            <a href="#" class="body">Careers</a>
+            <a href="#" class="body">Press</a>
+          </div>
+          <div class="footer__col">
+            <span class="label footer__col-title">SERVICES</span>
+            <a href="#services" class="body">Strategy</a>
+            <a href="#services" class="body">Design</a>
+            <a href="#services" class="body">Engineering</a>
+            <a href="#services" class="body">Data</a>
+          </div>
+          <div class="footer__col">
+            <span class="label footer__col-title">CONNECT</span>
+            <a href="#" class="body">LinkedIn</a>
+            <a href="#" class="body">Twitter / X</a>
+            <a href="#" class="body">Dribbble</a>
+            <a href="#" class="body">GitHub</a>
+          </div>
+        </nav>
+      </div>
+
+      <div class="footer__bottom">
+        <span class="body footer__copy">© 2024 Xilo. All rights reserved.</span>
+        <div class="footer__legal">
+          <a href="#" class="body">Privacy Policy</a>
+          <a href="#" class="body">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
