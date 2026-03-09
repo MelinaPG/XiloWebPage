@@ -150,14 +150,25 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   text-decoration: none;
   flex-shrink: 0;
 }
-.xnav__logo-svg { display: none; } /* fallback hidden — text version shown */
-.xnav__logo-text {
-  font-family: 'Fredoka', 'Barlow Condensed', sans-serif;
-  font-size: 2rem;
-  font-weight: 700;
+
+/* ── Shared SVG wordmark ──────────────────────────────── */
+.xilo-logo {
+  display: block;
   color: #fff;
-  letter-spacing: -0.01em;
-  line-height: 1;
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+/* Nav: small */
+.xilo-logo--nav {
+  height: 30px;
+  width: auto;
+}
+
+/* Footer: large */
+.xilo-logo--footer {
+  height: clamp(70px, 10vw, 115px);
+  width: auto;
 }
 
 /* Nav links */
@@ -1034,16 +1045,6 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   line-height: 1;
 }
 
-.wd-footer__logo-word {
-  font-family: 'Fredoka', 'Barlow Condensed', sans-serif;
-  font-size: clamp(5rem, 10vw, 8.5rem);
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: -0.02em;
-  line-height: 0.9;
-  display: block;
-}
-
 .wd-footer__logo-tagline {
   font-family: var(--x-font-body);
   font-size: 0.75rem;
@@ -1240,7 +1241,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
   /* Footer */
   .wd-footer__inner { flex-direction: column; align-items: flex-start; gap: 2.5rem; }
-  .wd-footer__logo-word { font-size: 5rem; }
+  .xilo-logo--footer { height: 64px; }
   .wd-footer__social-row { flex-wrap: wrap; gap: 1rem; }
 }
 
