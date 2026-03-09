@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="page.title">Web Development — XIPE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800&family=Barlow:wght@300;400;500;600&family=Fredoka:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="web-development.css" />
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════════════════════
+       NAV
+  ═════════════════════════════════════════════════════════ -->
+  <header class="xnav" id="xnav">
+    <div class="xnav__inner xcontainer">
+
+      <a href="/" class="xnav__logo" aria-label="XILO — Home">
+        <img src="assets/xilo-logo.png" alt="XILO" class="xilo-logo xilo-logo--nav" />
+      </a>
+
+      <nav class="xnav__links" id="xnavLinks" aria-label="Main navigation">
+        <a href="#features" data-i18n="nav.webdev">Web Development</a>
+        <a href="#portfolio" data-i18n="nav.portfolio">Portfolio</a>
+      </nav>
+
+      <div class="xnav__right">
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button class="lang-toggle__btn active" data-lang="en" aria-pressed="true">EN</button>
+          <span class="lang-toggle__sep" aria-hidden="true">/</span>
+          <button class="lang-toggle__btn" data-lang="es" aria-pressed="false">SP</button>
+        </div>
+        <button class="xnav__hamburger" id="xHamburger" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+
+  <!-- ════════════════════════════════════════════════════════
+       SECTION 1 — HERO
+  ═════════════════════════════════════════════════════════ -->
+  <section class="wd-hero">
+    <div class="xcontainer wd-hero__inner">
+      <div class="wd-hero__content">
+        <div class="wd-hero__tag xlabel" data-i18n="hero.tag">Web Development</div>
+        <h1 class="wd-hero__headline" data-i18n-html="hero.headline">
+          GET YOUR WEBSITE<br />
+          LIVE IN <em>DAYS,</em><br />
+          NOT MONTHS.
+        </h1>
+        <p class="wd-hero__sub xbody-lg" data-i18n="hero.sub">
+          We accelerate your digital start and elevate your online presence
+          with Ai Diana tools — websites built to grow with your business.
+        </p>
+        <a href="#pricing" class="xbtn xbtn--primary" data-i18n="hero.cta">Start Here</a>
+      </div>
+
+      <div class="wd-hero__visual" aria-hidden="true">
+        <div class="wd-hero__browser">
+          <div class="wd-hero__browser-bar">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="wd-hero__browser-body">
+            <div class="wd-hero__browser-line wd-hero__browser-line--h"></div>
+            <div class="wd-hero__browser-line wd-hero__browser-line--h wd-hero__browser-line--short"></div>
+            <div class="wd-hero__browser-line wd-hero__browser-line--h wd-hero__browser-line--shorter"></div>
+            <div class="wd-hero__browser-grid">
+              <div></div><div></div><div></div>
+              <div></div><div></div><div></div>
+            </div>
+            <div class="wd-hero__browser-badge">
+              <span class="xlabel" data-i18n="hero.badgeLabel">LIVE IN</span>
+              <strong data-i18n="hero.badgeValue">7 DAYS</strong>
+            </div>
+          </div>
+        </div>
+        <div class="wd-chip wd-chip--1 xlabel" data-i18n="hero.chip1">Mobile-First</div>
+        <div class="wd-chip wd-chip--2 xlabel" data-i18n="hero.chip2">AI-Powered</div>
+        <div class="wd-chip wd-chip--3 xlabel" data-i18n="hero.chip3">SEO Ready</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════════
+       SECTION 2 — HOW DO WE MAKE IT POSSIBLE
+  ═════════════════════════════════════════════════════════ -->
+  <section class="wd-possible">
+    <div class="xcontainer wd-possible__inner">
+      <span class="xlabel xsection-label" data-i18n="method.label">THE METHOD</span>
+      <h2 class="wd-possible__headline" data-i18n-html="method.headline">
+        HOW DO WE<br />MAKE IT POSSIBLE?
+      </h2>
+      <p class="xbody-lg wd-possible__body" data-i18n="method.body">
+        With over 20 years of experience building digital products, we combine
+        proven strategy, thoughtful design, and Ai Diana tools to deliver
+        high-performing websites — faster, simpler, and ready to evolve.
+      </p>
+      <a href="#portfolio" class="wd-possible__link xlabel">
+        <span data-i18n="method.link">Explore Our Work</span>
+        <span class="wd-possible__link-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════════
+       SECTION 3 — WHAT DO YOU GET
+  ═════════════════════════════════════════════════════════ -->
+  <section class="wd-features" id="features">
+    <div class="xcontainer">
+      <div class="wd-features__header">
+        <span class="xlabel xsection-label" data-i18n="package.label">THE PACKAGE</span>
+        <h2 class="wd-features__headline" data-i18n-html="package.headline">
+          WHAT DO<br />YOU GET?
+        </h2>
+        <p class="xbody wd-features__sub" data-i18n="package.sub">More than a landing page. A complete website 5 à 6.</p>
+      </div>
+
+      <div class="wd-features__grid">
+
+        <div class="wd-feature-card">
+          <div class="wd-feature-card__icon" aria-hidden="true">⬡</div>
+          <h4 class="wd-feature-card__title xlabel" data-i18n="f1.title">BUILT-IN CMS</h4>
+          <p class="xbody wd-feature-card__desc" data-i18n="f1.desc">
+            A simple, built-in CMS so you can manage your content
+            without technical complexity.
+          </p>
+        </div>
+
+        <div class="wd-feature-card">
+          <div class="wd-feature-card__icon" aria-hidden="true">◈</div>
+          <h4 class="wd-feature-card__title xlabel" data-i18n="f2.title">DESIGNED TO EVOLVE</h4>
+          <p class="xbody wd-feature-card__desc" data-i18n="f2.desc">
+            Design and structure prepared for seasonal updates
+            and ongoing growth.
+          </p>
+        </div>
+
+        <div class="wd-feature-card wd-feature-card--accent">
+          <div class="wd-feature-card__icon" aria-hidden="true">◎</div>
+          <h4 class="wd-feature-card__title xlabel" data-i18n="f3.title">MOBILE-FIRST DESIGN</h4>
+          <p class="xbody wd-feature-card__desc" data-i18n="f3.desc">
+            Mobile-first design, optimized for all devices.
+          </p>
+        </div>
+
+        <div class="wd-feature-card">
+          <div class="wd-feature-card__icon" aria-hidden="true">⬡</div>
+          <h4 class="wd-feature-card__title xlabel" data-i18n="f4.title">TOOL INTEGRATIONS</h4>
+          <p class="xbody wd-feature-card__desc" data-i18n="f4.desc">
+            Integration with the tools you already use to stay connected —
+            social media, WhatsApp, and calendars.
+          </p>
+        </div>
+
+        <div class="wd-feature-card wd-feature-card--dark">
+          <div class="wd-feature-card__icon" aria-hidden="true">◇</div>
+          <h4 class="wd-feature-card__title xlabel" data-i18n="f5.title">EMAIL NOTIFICATIONS</h4>
+          <p class="xbody wd-feature-card__desc" data-i18n="f5.desc">
+            Customizable email notifications to stay connected
+            with your audience.
+          </p>
+        </div>
+
+        <div class="wd-feature-card">
+          <div class="wd-feature-card__icon" aria-hidden="true">◉</div>
+          <h4 class="wd-feature-card__title xlabel" data-i18n="f6.title">TRAFFIC ANALYTICS</h4>
+          <p class="xbody wd-feature-card__desc" data-i18n="f6.desc">
+            Traffic analytics using Simple Analytics or
+            Google Analytics.
+          </p>
+        </div>
+
+        <div class="wd-feature-card">
+          <div class="wd-feature-card__icon" aria-hidden="true">⬡</div>
+          <h4 class="wd-feature-card__title xlabel" data-i18n="f7.title">BILINGUAL READY</h4>
+          <p class="xbody wd-feature-card__desc" data-i18n="f7.desc">
+            Bilingual ready — communicate seamlessly
+            in Spanish and English.
+          </p>
+        </div>
+
+        <div class="wd-feature-card">
+          <div class="wd-feature-card__icon" aria-hidden="true">◈</div>
+          <h4 class="wd-feature-card__title xlabel" data-i18n="f8.title">DOMAIN SETUP</h4>
+          <p class="xbody wd-feature-card__desc" data-i18n="f8.desc">
+            Domain setup included. We handle the technical
+            side so you don't have to.
+          </p>
+        </div>
+
+        <div class="wd-feature-card wd-feature-card--teal">
+          <div class="wd-feature-card__icon" aria-hidden="true">◎</div>
+          <h4 class="wd-feature-card__title xlabel" data-i18n="f9.title">DESIGN PROPOSALS</h4>
+          <p class="xbody wd-feature-card__desc" data-i18n-html="f9.desc">
+            Get up to 3 custom design proposals. Not satisfied?
+            You'll receive a <strong>50% refund.</strong>
+          </p>
+        </div>
+
+      </div>
+
+      <!-- ── PRICING BLOCK ─────────────────────────────── -->
+      <div class="wd-pricing" id="pricing">
+        <div class="wd-pricing__before xlabel">
+          <s>$1,200 USD</s>
+        </div>
+        <div class="wd-pricing__amount">
+          <span class="wd-pricing__price">$950</span>
+          <span class="wd-pricing__currency xlabel">USD</span>
+        </div>
+        <p class="wd-pricing__note xbody" data-i18n="pricing.note">One-time payment to start.</p>
+        <a href="#" class="xbtn xbtn--primary wd-pricing__cta" data-i18n="pricing.cta">Start Here</a>
+        <p class="wd-pricing__discount xbody" data-i18n="pricing.discount">
+          If you have a discount code enter it at checkout ↗
+        </p>
+        <div class="wd-pricing__divider"></div>
+        <p class="wd-pricing__custom xbody" data-i18n-html="pricing.custom">
+          Looking for a more customized website?
+          <a href="#contact" class="wd-pricing__custom-link">Get in touch with us.</a>
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════════
+       SECTION 4 — OUR APPROACH
+  ═════════════════════════════════════════════════════════ -->
+  <section class="wd-approach">
+    <div class="xcontainer">
+      <div class="wd-approach__header">
+        <div class="wd-approach__header-left">
+          <span class="xlabel xsection-label" data-i18n="approach.label">OUR PHILOSOPHY</span>
+          <h2 class="wd-approach__headline" data-i18n-html="approach.headline">
+            OUR APPROACH<br />TO BUILDING<br />WEBSITES
+          </h2>
+        </div>
+        <a href="#pricing" class="xbtn xbtn--outline wd-approach__cta" data-i18n="approach.cta">Build your website with Xipe</a>
+      </div>
+
+      <div class="wd-approach__pillars">
+
+        <div class="wd-approach__pillar">
+          <div class="wd-approach__pillar-num xlabel">01</div>
+          <div class="wd-approach__pillar-content">
+            <h3 class="wd-approach__pillar-title" data-i18n="pillar1.title">YOUR WEBSITE SHOULD ALWAYS EVOLVE</h3>
+            <p class="xbody" data-i18n="pillar1.desc">
+              Being online is not enough. Your website needs to stay updated
+              and clearly communicate what you do, what's new, and why
+              it matters to your customers.
+            </p>
+          </div>
+        </div>
+
+        <div class="wd-approach__pillar">
+          <div class="wd-approach__pillar-num xlabel">02</div>
+          <div class="wd-approach__pillar-content">
+            <h3 class="wd-approach__pillar-title" data-i18n="pillar2.title">YOUR WEBSITE IS YOUR DIGITAL HOME</h3>
+            <p class="xbody" data-i18n="pillar2.desc">
+              It reflects who you are and brings everything together —
+              products, services, content, and value so people can take action
+              at the right moment.
+            </p>
+          </div>
+        </div>
+
+        <div class="wd-approach__pillar">
+          <div class="wd-approach__pillar-num xlabel">03</div>
+          <div class="wd-approach__pillar-content">
+            <h3 class="wd-approach__pillar-title" data-i18n="pillar3.title">YOU SHOULD ALWAYS STAY IN CONTROL</h3>
+            <p class="xbody" data-i18n="pillar3.desc">
+              You deserve the freedom to update, adjust, and improve your
+              website anytime — without relying on third parties or facing
+              technical barriers. That's why we give you an admin panel that
+              lets you manage your site's structure whenever you need.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════════
+       SECTION 5 — PROCESS
+  ═════════════════════════════════════════════════════════ -->
+  <section class="wd-process">
+    <div class="xcontainer">
+      <div class="wd-process__header">
+        <h2 class="wd-process__headline" data-i18n-html="process.headline">
+          A GUIDED &amp; SECURE<br />PROCESS FOR YOU
+        </h2>
+        <p class="xbody-lg wd-process__sub" data-i18n-html="process.sub">
+          Get your website live in just <em>7 days</em>
+        </p>
+      </div>
+
+      <div class="wd-process__track">
+
+        <div class="wd-process__step">
+          <div class="wd-process__step-circle">
+            <span class="xlabel">01</span>
+          </div>
+          <div class="wd-process__step-connector"></div>
+          <div class="wd-process__step-content">
+            <h4 class="wd-process__step-title xlabel" data-i18n="step1.title">CREATE YOUR ACCOUNT</h4>
+            <p class="xbody" data-i18n="step1.desc">Sign up on our platform to start the process.</p>
+          </div>
+        </div>
+
+        <div class="wd-process__step">
+          <div class="wd-process__step-circle">
+            <span class="xlabel">02</span>
+          </div>
+          <div class="wd-process__step-connector"></div>
+          <div class="wd-process__step-content">
+            <h4 class="wd-process__step-title xlabel" data-i18n="step2.title">MAKE YOUR PAYMENT</h4>
+            <p class="xbody" data-i18n="step2.desc">A secure one-time payment to kick off your project.</p>
+          </div>
+        </div>
+
+        <div class="wd-process__step">
+          <div class="wd-process__step-circle">
+            <span class="xlabel">03</span>
+          </div>
+          <div class="wd-process__step-connector"></div>
+          <div class="wd-process__step-content">
+            <h4 class="wd-process__step-title xlabel" data-i18n="step3.title">SCHEDULE YOUR CALL</h4>
+            <p class="xbody" data-i18n="step3.desc">A discovery call to understand your vision and goals.</p>
+          </div>
+        </div>
+
+        <div class="wd-process__step">
+          <div class="wd-process__step-circle">
+            <span class="xlabel">04</span>
+          </div>
+          <div class="wd-process__step-connector"></div>
+          <div class="wd-process__step-content">
+            <h4 class="wd-process__step-title xlabel" data-i18n="step4.title">DESIGN &amp; CONTENT</h4>
+            <p class="xbody" data-i18n="step4.desc">We present up to 3 design proposals for your approval.</p>
+          </div>
+        </div>
+
+        <div class="wd-process__step">
+          <div class="wd-process__step-circle">
+            <span class="xlabel">05</span>
+          </div>
+          <div class="wd-process__step-connector"></div>
+          <div class="wd-process__step-content">
+            <h4 class="wd-process__step-title xlabel" data-i18n="step5.title">REVISIONS</h4>
+            <p class="xbody" data-i18n="step5.desc">We refine every detail until your site is exactly what you need.</p>
+          </div>
+        </div>
+
+        <div class="wd-process__step wd-process__step--last">
+          <div class="wd-process__step-circle wd-process__step-circle--final">
+            <span class="xlabel">06</span>
+          </div>
+          <div class="wd-process__step-content">
+            <h4 class="wd-process__step-title xlabel" data-i18n="step6.title">LAUNCH</h4>
+            <p class="xbody" data-i18n="step6.desc">Your site goes live. Ready, published, and online.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════════
+       SECTION 6 — SUPPORT PLANS
+  ═════════════════════════════════════════════════════════ -->
+  <section class="wd-support" id="support">
+    <div class="xcontainer">
+      <div class="wd-support__header">
+        <span class="xlabel xsection-label" data-i18n="support.label">AFTER LAUNCH</span>
+        <h2 class="wd-support__headline" data-i18n-html="support.headline">
+          YOUR WEBSITE DOESN'T<br />STOP AT LAUNCH
+        </h2>
+        <p class="xbody-lg wd-support__sub" data-i18n="support.sub">
+          Continue improving your website with all the power of Ai Diana
+        </p>
+      </div>
+
+      <div class="wd-support__grid">
+
+        <!-- Essential -->
+        <div class="wd-plan">
+          <div class="wd-plan__header">
+            <h3 class="wd-plan__name" data-i18n="plan1.name">Essential Support</h3>
+            <div class="wd-plan__price">
+              <span class="wd-plan__amount">$25</span>
+              <span class="xlabel wd-plan__period" data-i18n="plan.period">USD / monthly</span>
+            </div>
+          </div>
+          <ul class="wd-plan__features">
+            <li class="xbody"><span class="wd-plan__check">✓</span><span data-i18n="plan1.f1">100 monthly credits with Ai Diana</span></li>
+            <li class="xbody"><span class="wd-plan__check">✓</span><span data-i18n="plan.hosting">Cloud Hosting</span></li>
+            <li class="xbody"><span class="wd-plan__check">✓</span><span data-i18n="plan.secBasic">Basic Hosting Security Level</span></li>
+          </ul>
+          <a href="#" class="xbtn xbtn--outline wd-plan__cta" data-i18n="plan.select">Select</a>
+        </div>
+
+        <!-- Optimization (highlighted) -->
+        <div class="wd-plan wd-plan--featured">
+          <div class="wd-plan__badge xlabel" data-i18n="plan.badge">MOST POPULAR</div>
+          <div class="wd-plan__header">
+            <h3 class="wd-plan__name" data-i18n="plan2.name">Optimization Support</h3>
+            <div class="wd-plan__price">
+              <span class="wd-plan__amount">$50</span>
+              <span class="xlabel wd-plan__period" data-i18n="plan.period">USD / monthly</span>
+            </div>
+          </div>
+          <ul class="wd-plan__features">
+            <li class="xbody"><span class="wd-plan__check">✓</span><span data-i18n="plan2.f1">300 monthly credits with Ai Diana</span></li>
+            <li class="xbody"><span class="wd-plan__check">✓</span><span data-i18n="plan.hosting">Cloud Hosting</span></li>
+            <li class="xbody"><span class="wd-plan__check">✓</span><span data-i18n="plan.secBasic">Basic Hosting Security Level</span></li>
+          </ul>
+          <a href="#" class="xbtn xbtn--primary wd-plan__cta" data-i18n="plan.select">Select</a>
+        </div>
+
+        <!-- Strategic -->
+        <div class="wd-plan">
+          <div class="wd-plan__header">
+            <h3 class="wd-plan__name" data-i18n="plan3.name">Strategic Support</h3>
+            <div class="wd-plan__price">
+              <span class="wd-plan__amount">$199</span>
+              <span class="xlabel wd-plan__period" data-i18n="plan.period">USD / monthly</span>
+            </div>
+          </div>
+          <ul class="wd-plan__features">
+            <li class="xbody"><span class="wd-plan__check">✓</span><span data-i18n="plan3.f1">100 monthly change credits</span></li>
+            <li class="xbody"><span class="wd-plan__check">✓</span><span data-i18n="plan.hosting">Cloud Hosting</span></li>
+            <li class="xbody"><span class="wd-plan__check">✓</span><span data-i18n="plan.secAdv">Advanced Hosting Security Level</span></li>
+            <li class="xbody"><span class="wd-plan__check">✓</span><span data-i18n="plan3.f4">1:1 strategy — 5 hours/month</span></li>
+          </ul>
+          <a href="#" class="xbtn xbtn--outline wd-plan__cta" data-i18n="plan.select">Select</a>
+        </div>
+
+      </div>
+
+      <p class="wd-support__footnote xbody" data-i18n="support.footnote">
+        Designed for businesses that want a website they can continuously
+        improve, not rebuild.
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════════
+       SECTION 7 — PORTFOLIO
+  ═════════════════════════════════════════════════════════ -->
+  <section class="wd-portfolio" id="portfolio">
+    <div class="xcontainer">
+      <div class="wd-portfolio__header">
+        <div class="wd-portfolio__dot" aria-hidden="true"></div>
+        <h2 class="wd-portfolio__headline" data-i18n="portfolio.headline">WHAT WE'VE BUILT</h2>
+      </div>
+
+      <div class="wd-portfolio__grid">
+
+        <article class="wd-portfolio-card">
+          <div class="wd-portfolio-card__image wd-portfolio-card__image--01"></div>
+          <div class="wd-portfolio-card__body">
+            <div class="wd-portfolio-card__meta">
+              <h3 class="wd-portfolio-card__name">AMSAC</h3>
+              <span class="xlabel wd-portfolio-card__industry" data-i18n="portfolio.industry">Industry</span>
+            </div>
+            <p class="xbody wd-portfolio-card__desc" data-i18n="card1.desc">
+              An organization that supports and strengthens the mining industry by promoting
+              collaborative, responsible production and sustainable development across the sector.
+            </p>
+            <a href="#" class="wd-portfolio-card__link xlabel" data-i18n="portfolio.visit">VISIT WEBSITE →</a>
+          </div>
+        </article>
+
+        <article class="wd-portfolio-card">
+          <div class="wd-portfolio-card__image wd-portfolio-card__image--02"></div>
+          <div class="wd-portfolio-card__body">
+            <div class="wd-portfolio-card__meta">
+              <h3 class="wd-portfolio-card__name">SIMATSON</h3>
+              <span class="xlabel wd-portfolio-card__industry" data-i18n="portfolio.industry">Industry</span>
+            </div>
+            <p class="xbody wd-portfolio-card__desc" data-i18n="card2.desc">
+              A construction and industrial project company focused on delivering reliable
+              engineering solutions through modern methods, efficiency, and technical expertise.
+            </p>
+            <a href="#" class="wd-portfolio-card__link xlabel" data-i18n="portfolio.visit">VISIT WEBSITE →</a>
+          </div>
+        </article>
+
+        <article class="wd-portfolio-card">
+          <div class="wd-portfolio-card__image wd-portfolio-card__image--03"></div>
+          <div class="wd-portfolio-card__body">
+            <div class="wd-portfolio-card__meta">
+              <h3 class="wd-portfolio-card__name">PURE VISUAL</h3>
+              <span class="xlabel wd-portfolio-card__industry" data-i18n="portfolio.industry">Industry</span>
+            </div>
+            <p class="xbody wd-portfolio-card__desc" data-i18n="card3.desc">
+              A creative and technology-driven project that helps companies elevate their
+              presence through digital displays, interactive solutions, and impactful visual
+              communication.
+            </p>
+            <a href="#" class="wd-portfolio-card__link xlabel" data-i18n="portfolio.visit">VISIT WEBSITE →</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════════
+       FOOTER
+  ═════════════════════════════════════════════════════════ -->
+  <footer class="wd-footer" id="contact">
+    <div class="xcontainer wd-footer__inner">
+
+      <!-- ── Brand block (left) ──────────────────────── -->
+      <div class="wd-footer__brand">
+        <a href="/" class="wd-footer__logo-link" aria-label="XILO — Home">
+          <img src="assets/xilo-logo.png" alt="XILO" class="xilo-logo xilo-logo--footer" />
+          <span class="wd-footer__logo-tagline" data-i18n="footer.tagline">VENTURE STUDIO</span>
+        </a>
+      </div>
+
+      <!-- ── Info block (right) ─────────────────────── -->
+      <div class="wd-footer__info">
+
+        <div class="wd-footer__contact">
+          <p class="wd-footer__contact-label" data-i18n="footer.contactLabel">Contact:</p>
+          <a href="mailto:Contac@xipetechnology.com" class="wd-footer__email">
+            Contac@xipetechnology.com
+          </a>
+        </div>
+
+        <div class="wd-footer__social-block">
+          <p class="wd-footer__social-label" data-i18n="footer.followLabel">Follow us at</p>
+
+          <div class="wd-footer__social-row">
+
+            <div class="wd-footer__social-icons">
+
+              <!-- Instagram -->
+              <a href="https://www.instagram.com/xilostudio/"
+                 target="_blank" rel="noopener noreferrer"
+                 class="wd-footer__social-icon" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                  <circle cx="12" cy="12" r="4"/>
+                  <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+                </svg>
+              </a>
+
+              <!-- LinkedIn -->
+              <a href="https://www.linkedin.com/company/xilo-studio/"
+                 target="_blank" rel="noopener noreferrer"
+                 class="wd-footer__social-icon" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
+                  <rect x="2" y="9" width="4" height="12"/>
+                  <circle cx="4" cy="4" r="2"/>
+                </svg>
+              </a>
+
+              <!-- Facebook -->
+              <a href="https://www.facebook.com/xilostudio/"
+                 target="_blank" rel="noopener noreferrer"
+                 class="wd-footer__social-icon" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                </svg>
+              </a>
+
+            </div><!-- /.wd-footer__social-icons -->
+
+            <div class="wd-footer__controls">
+              <div class="lang-toggle lang-toggle--footer" role="group" aria-label="Language">
+                <button class="lang-toggle__btn active" data-lang="en" aria-pressed="true">EN</button>
+                <span class="lang-toggle__sep" aria-hidden="true">/</span>
+                <button class="lang-toggle__btn" data-lang="es" aria-pressed="false">SP</button>
+              </div>
+              <button class="wd-footer__totop" id="backToTop" aria-label="Back to top">↑</button>
+            </div>
+
+          </div><!-- /.wd-footer__social-row -->
+        </div><!-- /.wd-footer__social-block -->
+
+      </div><!-- /.wd-footer__info -->
+
+    </div><!-- /.wd-footer__inner -->
+  </footer>
+
+  <script src="web-development.js"></script>
+</body>
+</html>
