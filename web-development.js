@@ -42,7 +42,8 @@
       /* package */
       'package.label': 'THE PACKAGE',
       'package.headline': 'WHAT DO<br>YOU GET?',
-      'package.sub': 'More than a landing page. A complete website 5 à 6.',
+      'package.sub': 'More than a landing page. A complete website in a week.',
+      'package.cta': 'Start Here',
 
       /* features */
       'f1.title': 'BUILT-IN CMS',
@@ -169,7 +170,8 @@
       /* package */
       'package.label': 'EL PAQUETE',
       'package.headline': '¿QUÉ<br>OBTIENES?',
-      'package.sub': 'Más que una landing page. Un sitio web completo 5 à 6.',
+      'package.sub': 'Más que una landing page. Un sitio web completo en una semana.',
+      'package.cta': 'Empezar',
 
       /* features */
       'f1.title': 'CMS INTEGRADO',
