@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment — XIPE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       DESIGN SYSTEM TOKENS
+    ============================================================ */
+    :root {
+      --x-neutral:   #707070;
+      --x-teal:      #E2FFFD;
+      --x-green:     #88D98D;
+      --x-bg:        #FDFCF8;
+      --x-dark:      #2E2E2E;
+      --x-mid:       #E3E4E8;
+      --x-blue:      #88AEF5;
+      --x-red:       #FD3F28;
+
+      --x-font-head: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+      --x-font-body: 'Barlow', Helvetica, Arial, sans-serif;
+
+      --x-ease:      cubic-bezier(0.4, 0, 0.2, 1);
+      --x-dur:       0.2s;
+      --x-radius:    8px;
+      --x-pill:      999px;
+      --x-gutter:    2rem;
+      --x-max:       1200px;
+    }
+
+    /* ── RESET ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: var(--x-font-body);
+      color: var(--x-dark);
+      background: var(--x-bg);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    button { cursor: pointer; border: none; background: none; font: inherit; }
+
+    /* ── TYPE TOKENS ─────────────────────────────────────── */
+    .xlabel {
+      font-family: var(--x-font-body);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--x-neutral);
+    }
+    .xsection-label { display: block; margin-bottom: 1rem; }
+
+    /* ── LAYOUT ──────────────────────────────────────────── */
+    .xcontainer {
+      max-width: var(--x-max);
+      margin: 0 auto;
+      padding: 0 var(--x-gutter);
+    }
+
+    /* ============================================================
+       NAV — identical to Step 1
+    ============================================================ */
+    .xnav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: #2C2C2C;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: box-shadow var(--x-dur) var(--x-ease);
+    }
+    .xnav.scrolled { box-shadow: 0 2px 24px rgba(0,0,0,0.35); }
+
+    .xnav__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .xnav__logo { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+    .xilo-logo  { display: block; flex-shrink: 0; }
+    .xilo-logo--nav    { height: 28px; width: auto; }
+    .xilo-logo--footer { height: clamp(70px, 10vw, 115px); width: auto; }
+
+    .xnav__links {
+      display: flex;
+      align-items: center;
+      gap: 2.75rem;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .xnav__links a {
+      font-family: var(--x-font-body);
+      font-size: 0.82rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      color: rgba(255,255,255,0.7);
+      transition: color var(--x-dur) var(--x-ease);
+      position: relative;
+      white-space: nowrap;
+    }
+    .xnav__links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 1.5px;
+      background: #fff;
+      transform: scaleX(0);
+      transition: transform var(--x-dur) var(--x-ease);
+      transform-origin: left;
+    }
+    .xnav__links a:hover,
+    .xnav__links a.active { color: #fff; }
+    .xnav__links a.active::after,
+    .xnav__links a:hover::after { transform: scaleX(1); }
+
+    .xnav__right { display: flex; align-items: center; gap: 1.25rem; }
+
+    .lang-toggle { display: flex; align-items: center; gap: 0.25rem; }
+    .lang-toggle__sep {
+      font-family: var(--x-font-body);
+      font-size: 0.72rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.35);
+    }
+    .lang-toggle__btn {
+      font-family: var(--x-font-body);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.35);
+      padding: 0.15rem 0;
+      transition: color var(--x-dur) var(--x-ease);
+    }
+    .lang-toggle__btn.active { color: #fff; font-weight: 600; }
+    .lang-toggle__btn:hover  { color: rgba(255,255,255,0.8); }
+
+    .xnav__hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 4px;
+    }
+    .xnav__hamburger span {
+      display: block; width: 20px; height: 1.5px;
+      background: rgba(255,255,255,0.8); border-radius: 2px;
+      transition: all var(--x-dur) var(--x-ease);
+    }
+
+    /* ============================================================
+       PAGE WRAPPER
+    ============================================================ */
+    .ob-page {
+      padding-top: 64px;
+      min-height: 100vh;
+      background: var(--x-bg);
+    }
+
+    /* ============================================================
+       STEPPER — same component, Step 2 active, Step 1 done
+    ============================================================ */
+    .ob-stepper {
+      background: var(--x-bg);
+      border-bottom: 1px solid var(--x-mid);
+      padding: 3rem 0 2.5rem;
+    }
+    .ob-stepper__inner {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0;
+      position: relative;
+    }
+    .ob-stepper__inner::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: calc(100% / 12);
+      right: calc(100% / 12);
+      height: 1px;
+      background: var(--x-mid);
+      z-index: 0;
+    }
+
+    .ob-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+    .ob-step__circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: var(--x-font-body);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      transition: background var(--x-dur) var(--x-ease),
+                  border-color var(--x-dur) var(--x-ease),
+                  color var(--x-dur) var(--x-ease);
+      border: 1.5px solid var(--x-mid);
+      background: var(--x-bg);
+      color: #b0b0b0;
+    }
+
+    /* Step 2 — active */
+    .ob-step--active .ob-step__circle {
+      background: var(--x-dark);
+      border-color: var(--x-dark);
+      color: #fff;
+    }
+    /* Step 1 — done */
+    .ob-step--done .ob-step__circle {
+      background: var(--x-dark);
+      border-color: var(--x-dark);
+      color: #fff;
+      font-size: 0.75rem;
+    }
+
+    .ob-step__label {
+      font-family: var(--x-font-body);
+      font-size: 0.62rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #b0b0b0;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .ob-step--active .ob-step__label {
+      color: var(--x-dark);
+      font-weight: 700;
+    }
+    .ob-step--done .ob-step__label {
+      color: var(--x-neutral);
+    }
+
+    /* ============================================================
+       STEP CONTENT AREA
+    ============================================================ */
+    .ob-content {
+      padding: 5rem 0 7rem;
+    }
+    .ob-content__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    /* ── LEFT COLUMN — price info ────────────────────────── */
+    .ob-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      padding-top: 1rem;
+    }
+
+    .ob-step-badge {
+      display: inline-flex;
+      align-items: center;
+      border: 1.5px solid var(--x-mid);
+      border-radius: var(--x-pill);
+      padding: 0.35rem 0.9rem;
+      font-family: var(--x-font-body);
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--x-neutral);
+      width: fit-content;
+    }
+
+    .ob-headline {
+      font-family: var(--x-font-head);
+      font-size: clamp(2.5rem, 4.5vw, 4rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      color: var(--x-dark);
+    }
+
+    .ob-sub {
+      font-family: var(--x-font-body);
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--x-neutral);
+      max-width: 400px;
+    }
+
+    /* Price display */
+    .ob-price-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--x-mid);
+    }
+    .ob-price {
+      font-family: var(--x-font-head);
+      font-size: clamp(4rem, 7vw, 6rem);
+      font-weight: 800;
+      color: var(--x-dark);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .ob-price__period {
+      font-family: var(--x-font-body);
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: var(--x-neutral);
+      letter-spacing: 0.04em;
+    }
+    .ob-price__secure {
+      font-family: var(--x-font-body);
+      font-size: 0.65rem;
+      font-weight: 400;
+      color: #b0b0b0;
+      letter-spacing: 0.06em;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 0.5rem;
+    }
+    .ob-price__secure::before {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 12px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b0b0b0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2' ry='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E") center/contain no-repeat;
+      flex-shrink: 0;
+    }
+
+    /* ── RIGHT COLUMN — payment card ─────────────────────── */
+    .ob-card {
+      background: #fff;
+      border: 1px solid var(--x-mid);
+      border-radius: 12px;
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+    }
+    .ob-card__title {
+      font-family: var(--x-font-head);
+      font-size: 1.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: var(--x-dark);
+      line-height: 1.1;
+    }
+
+    /* ── FORM GRID ───────────────────────────────────────── */
+    .ob-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+    .ob-form__row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .ob-form__row--full  { grid-template-columns: 1fr; }
+    .ob-form__row--three { grid-template-columns: 1fr 1fr 1fr; }
+
+    /* ── FIELD ───────────────────────────────────────────── */
+    .ob-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .ob-field__label {
+      font-family: var(--x-font-body);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--x-neutral);
+    }
+    .ob-field__wrap {
+      position: relative;
+    }
+    .ob-field__input {
+      font-family: var(--x-font-body);
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--x-dark);
+      background: var(--x-bg);
+      border: 1px solid var(--x-mid);
+      border-radius: 4px;
+      padding: 0.65rem 0.85rem;
+      outline: none;
+      transition: border-color var(--x-dur) var(--x-ease),
+                  background var(--x-dur) var(--x-ease);
+      width: 100%;
+    }
+    .ob-field__input::placeholder { color: #c0c0c0; }
+    .ob-field__input:focus {
+      border-color: #9a9a9a;
+      background: #fff;
+    }
+    /* Card number has icon on the right */
+    .ob-field__input--icon { padding-right: 2.5rem; }
+    .ob-field__icon {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #c0c0c0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+    }
+    .ob-field__icon svg { width: 18px; height: 18px; }
+
+    /* ── ERROR STATE ─────────────────────────────────────── */
+    .ob-field__input.ob-error {
+      border-color: var(--x-red);
+      background: #fff8f7;
+    }
+    .ob-field__input.ob-error:focus {
+      border-color: var(--x-red);
+      background: #fff8f7;
+    }
+    .ob-field__error {
+      font-family: var(--x-font-body);
+      font-size: 0.62rem;
+      font-weight: 500;
+      color: var(--x-red);
+      letter-spacing: 0.04em;
+      margin-top: 0.1rem;
+      display: none;
+    }
+    .ob-field__error.visible { display: block; }
+
+    /* ── PROMO CODE ACCORDION ────────────────────────────── */
+    .ob-promo {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .ob-promo__toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--x-font-body);
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--x-neutral);
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      width: fit-content;
+      transition: color var(--x-dur) var(--x-ease);
+      user-select: none;
+    }
+    .ob-promo__toggle:hover { color: var(--x-dark); }
+    .ob-promo__arrow {
+      font-size: 0.6rem;
+      transition: transform var(--x-dur) var(--x-ease);
+      display: inline-block;
+    }
+    .ob-promo__toggle.open .ob-promo__arrow { transform: rotate(90deg); }
+
+    .ob-promo__field {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.25s var(--x-ease),
+                  opacity 0.2s var(--x-ease),
+                  margin-top 0.2s var(--x-ease);
+      margin-top: 0;
+    }
+    .ob-promo__field.visible {
+      max-height: 80px;
+      opacity: 1;
+      margin-top: 0.75rem;
+    }
+    .ob-promo__input {
+      font-family: var(--x-font-body);
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--x-dark);
+      background: #f5f4f0;
+      border: 1px solid var(--x-mid);
+      border-radius: 4px;
+      padding: 0.65rem 0.85rem;
+      outline: none;
+      width: 100%;
+      letter-spacing: 0.06em;
+      transition: border-color var(--x-dur) var(--x-ease),
+                  background var(--x-dur) var(--x-ease);
+    }
+    .ob-promo__input::placeholder { color: #c0c0c0; letter-spacing: 0.06em; }
+    .ob-promo__input:focus { border-color: #9a9a9a; background: #fff; }
+
+    /* ── CTA BUTTON ──────────────────────────────────────── */
+    .ob-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 0.9rem 1.75rem;
+      background: var(--x-dark);
+      color: #fff;
+      border: 1.5px solid var(--x-dark);
+      border-radius: 6px;
+      font-family: var(--x-font-body);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background var(--x-dur) var(--x-ease),
+                  border-color var(--x-dur) var(--x-ease),
+                  transform var(--x-dur) var(--x-ease);
+      margin-top: 0.5rem;
+    }
+    .ob-cta:hover {
+      background: var(--x-red);
+      border-color: var(--x-red);
+      transform: translateY(-1px);
+    }
+
+    /* ── SHAKE ANIMATION ─────────────────────────────────── */
+    @keyframes ob-shake {
+      0%, 100% { transform: translateX(0); }
+      20%       { transform: translateX(-6px); }
+      40%       { transform: translateX(6px); }
+      60%       { transform: translateX(-4px); }
+      80%       { transform: translateX(4px); }
+    }
+    .ob-card.ob-shake { animation: ob-shake 0.35s var(--x-ease); }
+
+    /* ============================================================
+       FOOTER — identical to Step 1
+    ============================================================ */
+    .wd-footer {
+      background: #2C2C2C;
+      padding: 3.5rem 0;
+    }
+    .wd-footer__inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 3rem;
+    }
+    .wd-footer__brand { flex-shrink: 0; }
+    .wd-footer__logo-link {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      text-decoration: none;
+      line-height: 1;
+    }
+    .wd-footer__logo-tagline {
+      font-family: var(--x-font-body);
+      font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+      font-weight: 600;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #fff;
+      display: block;
+      margin-top: 0.5rem;
+    }
+    .wd-footer__info {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: flex-start;
+      padding-bottom: 0.25rem;
+    }
+    .wd-footer__contact { display: flex; flex-direction: column; gap: 0.25rem; }
+    .wd-footer__contact-label {
+      font-family: var(--x-font-body);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.9);
+    }
+    .wd-footer__email {
+      font-family: var(--x-font-body);
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.55);
+      transition: color var(--x-dur) var(--x-ease);
+      text-decoration: none;
+    }
+    .wd-footer__email:hover { color: #fff; }
+    .wd-footer__social-block { display: flex; flex-direction: column; gap: 0.5rem; }
+    .wd-footer__social-label {
+      font-family: var(--x-font-body);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.9);
+    }
+    .wd-footer__social-row { display: flex; align-items: center; gap: 2rem; }
+    .wd-footer__social-icons { display: flex; align-items: center; gap: 0.6rem; }
+    .wd-footer__social-icon {
+      display: flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.7);
+      transition: border-color var(--x-dur) var(--x-ease),
+                  color var(--x-dur) var(--x-ease),
+                  background var(--x-dur) var(--x-ease);
+      flex-shrink: 0;
+    }
+    .wd-footer__social-icon svg { width: 16px; height: 16px; }
+    .wd-footer__social-icon:hover { border-color: #fff; color: #fff; background: rgba(255,255,255,0.08); }
+    .wd-footer__controls { display: flex; align-items: center; gap: 0.9rem; }
+    .lang-toggle--footer .lang-toggle__btn { font-size: 0.72rem; }
+    .wd-footer__totop {
+      display: flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.6);
+      font-size: 0.85rem;
+      font-family: var(--x-font-body);
+      cursor: pointer;
+      transition: border-color var(--x-dur) var(--x-ease),
+                  color var(--x-dur) var(--x-ease),
+                  transform var(--x-dur) var(--x-ease);
+      background: none;
+      line-height: 1;
+    }
+    .wd-footer__totop:hover { border-color: #fff; color: #fff; transform: translateY(-2px); }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 900px) {
+      .ob-content__inner { grid-template-columns: 1fr; gap: 3rem; }
+      .ob-left { padding-top: 0; }
+      .ob-headline { font-size: clamp(2rem, 6vw, 3rem); }
+      .ob-price { font-size: clamp(3.5rem, 10vw, 5rem); }
+    }
+
+    @media (max-width: 768px) {
+      .xnav__links {
+        position: fixed;
+        top: 64px; left: 0; right: 0;
+        background: #2C2C2C;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        flex-direction: column;
+        padding: 1.75rem var(--x-gutter);
+        gap: 1.5rem;
+        z-index: 99;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+        display: none;
+        transform: none;
+      }
+      .xnav__links.open { display: flex; }
+      .xnav__links a { font-size: 1rem; color: rgba(255,255,255,0.8); }
+      .xnav__hamburger { display: flex; }
+
+      .ob-step__label { display: none; }
+      .ob-stepper { padding: 2rem 0 1.75rem; }
+
+      .ob-form__row { grid-template-columns: 1fr; }
+      .ob-form__row--three { grid-template-columns: 1fr 1fr; }
+
+      .ob-card { padding: 1.75rem; }
+      .wd-footer__inner { flex-direction: column; align-items: flex-start; gap: 2.5rem; }
+      .xilo-logo--footer { height: 64px; }
+      .wd-footer__social-row { flex-wrap: wrap; gap: 1rem; }
+    }
+
+    @media (max-width: 480px) {
+      .ob-step__circle { width: 30px; height: 30px; font-size: 0.62rem; }
+      .ob-content { padding: 3rem 0 5rem; }
+      .ob-form__row--three { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════════════════════
+       NAV — identical to Step 1
+  ═════════════════════════════════════════════════════════ -->
+  <header class="xnav" id="xnav">
+    <div class="xnav__inner xcontainer">
+
+      <a href="/" class="xnav__logo" aria-label="XILO — Home">
+        <img src="assets/xilo-logo.png" alt="XILO" class="xilo-logo xilo-logo--nav" />
+      </a>
+
+      <nav class="xnav__links" id="xnavLinks" aria-label="Main navigation">
+        <a href="web-development.html">Web Development</a>
+        <a href="web-development.html#portfolio">Portfolio</a>
+      </nav>
+
+      <div class="xnav__right">
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button class="lang-toggle__btn active" data-lang="en" aria-pressed="true">EN</button>
+          <span class="lang-toggle__sep" aria-hidden="true">/</span>
+          <button class="lang-toggle__btn" data-lang="es" aria-pressed="false">SP</button>
+        </div>
+        <button class="xnav__hamburger" id="xHamburger" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+
+  <!-- ════════════════════════════════════════════════════════
+       ONBOARDING PAGE — STEP 2
+  ═════════════════════════════════════════════════════════ -->
+  <div class="ob-page">
+
+    <!-- ── STEPPER ─────────────────────────────────────────── -->
+    <div class="ob-stepper">
+      <div class="ob-stepper__inner xcontainer">
+
+        <!-- Step 1: done ✓ -->
+        <div class="ob-step ob-step--done">
+          <div class="ob-step__circle" aria-label="Step 1 completed">✓</div>
+          <span class="ob-step__label" id="s-label-1">About You</span>
+        </div>
+
+        <!-- Step 2: active -->
+        <div class="ob-step ob-step--active" aria-current="step">
+          <div class="ob-step__circle">2</div>
+          <span class="ob-step__label" id="s-label-2">Payment</span>
+        </div>
+
+        <div class="ob-step">
+          <div class="ob-step__circle">3</div>
+          <span class="ob-step__label" id="s-label-3">You're In!</span>
+        </div>
+
+        <div class="ob-step">
+          <div class="ob-step__circle">4</div>
+          <span class="ob-step__label" id="s-label-4">Book a Call</span>
+        </div>
+
+        <div class="ob-step">
+          <div class="ob-step__circle">5</div>
+          <span class="ob-step__label" id="s-label-5">Your Assets</span>
+        </div>
+
+        <div class="ob-step">
+          <div class="ob-step__circle">6</div>
+          <span class="ob-step__label" id="s-label-6">Your URL</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── STEP 2 CONTENT ──────────────────────────────────── -->
+    <section class="ob-content">
+      <div class="ob-content__inner xcontainer">
+
+        <!-- LEFT: price info -->
+        <div class="ob-left">
+          <span class="ob-step-badge" id="ob-step-badge">Step 2 of 6</span>
+
+          <h1 class="ob-headline" id="ob-headline">SECURE<br />YOUR<br />SPOT.</h1>
+
+          <p class="ob-sub" id="ob-sub">
+            One-time investment of $950 USD. Covers your full website build,
+            kickoff session, and dedicated support.
+          </p>
+
+          <div class="ob-price-block">
+            <div class="ob-price" id="ob-price">$950</div>
+            <p class="ob-price__period" id="ob-price-period">USD · One-time payment</p>
+            <p class="ob-price__secure" id="ob-price-secure">Secured payment.</p>
+          </div>
+        </div>
+
+        <!-- RIGHT: payment form card -->
+        <div class="ob-card" id="ob-card">
+          <h2 class="ob-card__title" id="ob-card-title">Payment Details</h2>
+
+          <form class="ob-form" id="ob-form" novalidate autocomplete="off">
+
+            <!-- Cardholder Name — full width -->
+            <div class="ob-form__row ob-form__row--full">
+              <div class="ob-field">
+                <label class="ob-field__label" for="cardName" id="lbl-cardName">Cardholder Name</label>
+                <input class="ob-field__input" type="text" id="cardName" name="cardName"
+                       placeholder="Maria Garcia" autocomplete="cc-name" />
+                <span class="ob-field__error" id="err-cardName">Required field</span>
+              </div>
+            </div>
+
+            <!-- Card Number — full width + card icon -->
+            <div class="ob-form__row ob-form__row--full">
+              <div class="ob-field">
+                <label class="ob-field__label" for="cardNumber" id="lbl-cardNumber">Card Number</label>
+                <div class="ob-field__wrap">
+                  <input class="ob-field__input ob-field__input--icon" type="text" id="cardNumber"
+                         name="cardNumber" placeholder="1234 5678 9012 3456"
+                         inputmode="numeric" autocomplete="cc-number"
+                         maxlength="19" />
+                  <span class="ob-field__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                      <line x1="1" y1="10" x2="23" y2="10"/>
+                    </svg>
+                  </span>
+                </div>
+                <span class="ob-field__error" id="err-cardNumber">Enter a valid 16-digit card number</span>
+              </div>
+            </div>
+
+            <!-- Row of 3: Expiry | CVV | Zip -->
+            <div class="ob-form__row ob-form__row--three">
+              <div class="ob-field">
+                <label class="ob-field__label" for="expiry" id="lbl-expiry">Expiration Date</label>
+                <input class="ob-field__input" type="text" id="expiry" name="expiry"
+                       placeholder="MM / YY" inputmode="numeric" autocomplete="cc-exp"
+                       maxlength="7" />
+                <span class="ob-field__error" id="err-expiry">Invalid date</span>
+              </div>
+              <div class="ob-field">
+                <label class="ob-field__label" for="cvv" id="lbl-cvv">CVV</label>
+                <input class="ob-field__input" type="text" id="cvv" name="cvv"
+                       placeholder="•••" inputmode="numeric" autocomplete="cc-csc"
+                       maxlength="3" />
+                <span class="ob-field__error" id="err-cvv">3 digits required</span>
+              </div>
+              <div class="ob-field">
+                <label class="ob-field__label" for="zip" id="lbl-zip">Zip Code</label>
+                <input class="ob-field__input" type="text" id="zip" name="zip"
+                       placeholder="06600" inputmode="numeric" maxlength="6" />
+                <span class="ob-field__error" id="err-zip">Required field</span>
+              </div>
+            </div>
+
+            <!-- Promo code accordion -->
+            <div class="ob-promo">
+              <button type="button" class="ob-promo__toggle" id="promoToggle"
+                      aria-expanded="false">
+                <span class="ob-promo__arrow" aria-hidden="true">▶</span>
+                <span id="promo-label">Have a promo code?</span>
+              </button>
+              <div class="ob-promo__field" id="promoField" aria-hidden="true">
+                <input class="ob-promo__input" type="text" id="promoCode" name="promoCode"
+                       placeholder="ENTER DISCOUNT CODE" autocomplete="off" />
+              </div>
+            </div>
+
+            <!-- CTA -->
+            <button type="submit" class="ob-cta" id="ob-cta">
+              Pay &amp; Continue →
+            </button>
+
+          </form>
+        </div>
+
+      </div>
+    </section>
+
+  </div><!-- /.ob-page -->
+
+
+  <!-- ════════════════════════════════════════════════════════
+       FOOTER — identical to Step 1
+  ═════════════════════════════════════════════════════════ -->
+  <footer class="wd-footer" id="contact">
+    <div class="xcontainer wd-footer__inner">
+
+      <div class="wd-footer__brand">
+        <a href="/" class="wd-footer__logo-link" aria-label="XILO — Home">
+          <img src="assets/xilo-logo.png" alt="XILO" class="xilo-logo xilo-logo--footer" />
+          <span class="wd-footer__logo-tagline" id="footer-tagline">VENTURE STUDIO</span>
+        </a>
+      </div>
+
+      <div class="wd-footer__info">
+        <div class="wd-footer__contact">
+          <p class="wd-footer__contact-label" id="footer-contact-label">Contact:</p>
+          <a href="mailto:Contac@xipetechnology.com" class="wd-footer__email">
+            Contac@xipetechnology.com
+          </a>
+        </div>
+
+        <div class="wd-footer__social-block">
+          <p class="wd-footer__social-label" id="footer-follow-label">Follow us at</p>
+          <div class="wd-footer__social-row">
+            <div class="wd-footer__social-icons">
+              <a href="https://www.instagram.com/xilostudio/" target="_blank" rel="noopener noreferrer"
+                 class="wd-footer__social-icon" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                  <circle cx="12" cy="12" r="4"/>
+                  <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+                </svg>
+              </a>
+              <a href="https://www.linkedin.com/company/xilo-studio/" target="_blank" rel="noopener noreferrer"
+                 class="wd-footer__social-icon" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
+                  <rect x="2" y="9" width="4" height="12"/>
+                  <circle cx="4" cy="4" r="2"/>
+                </svg>
+              </a>
+              <a href="https://www.facebook.com/xilostudio/" target="_blank" rel="noopener noreferrer"
+                 class="wd-footer__social-icon" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                </svg>
+              </a>
+            </div>
+            <div class="wd-footer__controls">
+              <div class="lang-toggle lang-toggle--footer" role="group" aria-label="Language">
+                <button class="lang-toggle__btn active" data-lang="en" aria-pressed="true">EN</button>
+                <span class="lang-toggle__sep" aria-hidden="true">/</span>
+                <button class="lang-toggle__btn" data-lang="es" aria-pressed="false">SP</button>
+              </div>
+              <button class="wd-footer__totop" id="backToTop" aria-label="Back to top">↑</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ── TRANSLATIONS ─────────────────────────────────── */
+      const T = {
+        en: {
+          badge:         'Step 2 of 6',
+          headline:      'SECURE<br />YOUR<br />SPOT.',
+          sub:           'One-time investment of $950 USD. Covers your full website build, kickoff session, and dedicated support.',
+          price:         '$950',
+          pricePeriod:   'USD · One-time payment',
+          priceSecure:   'Secured payment.',
+          cardTitle:     'Payment Details',
+          lblCardName:   'Cardholder Name',
+          phCardName:    'Maria Garcia',
+          lblCardNumber: 'Card Number',
+          phCardNumber:  '1234 5678 9012 3456',
+          lblExpiry:     'Expiration Date',
+          phExpiry:      'MM / YY',
+          lblCvv:        'CVV',
+          phCvv:         '•••',
+          lblZip:        'Zip Code',
+          phZip:         '06600',
+          promoLabel:    'Have a promo code?',
+          phPromo:       'ENTER DISCOUNT CODE',
+          cta:           'Pay & Continue →',
+          errRequired:   'Required field',
+          errCard:       'Enter a valid 16-digit card number',
+          errExpiry:     'Invalid date',
+          errCvv:        '3 digits required',
+          /* stepper */
+          s1: 'About You', s2: 'Payment', s3: "You're In!", s4: 'Book a Call', s5: 'Your Assets', s6: 'Your URL',
+          /* footer */
+          tagline:       'VENTURE STUDIO',
+          contactLabel:  'Contact:',
+          followLabel:   'Follow us at',
+        },
+        es: {
+          badge:         'Paso 2 de 6',
+          headline:      'ASEGURA<br />TU<br />LUGAR.',
+          sub:           'Inversión única de $950 USD. Incluye el desarrollo completo de tu sitio, sesión de inicio y soporte dedicado.',
+          price:         '$950',
+          pricePeriod:   'USD · Pago único',
+          priceSecure:   'Pago seguro.',
+          cardTitle:     'Datos de Pago',
+          lblCardName:   'Nombre del Titular',
+          phCardName:    'María García',
+          lblCardNumber: 'Número de Tarjeta',
+          phCardNumber:  '1234 5678 9012 3456',
+          lblExpiry:     'Fecha de Vencimiento',
+          phExpiry:      'MM / AA',
+          lblCvv:        'CVV',
+          phCvv:         '•••',
+          lblZip:        'Código Postal',
+          phZip:         '06600',
+          promoLabel:    '¿Tienes un código de descuento?',
+          phPromo:       'INGRESA TU CÓDIGO',
+          cta:           'Pagar y Continuar →',
+          errRequired:   'Campo requerido',
+          errCard:       'Ingresa un número de tarjeta válido (16 dígitos)',
+          errExpiry:     'Fecha inválida',
+          errCvv:        'Se requieren 3 dígitos',
+          /* stepper */
+          s1: 'Sobre Ti', s2: 'Pago', s3: '¡Estás Dentro!', s4: 'Agenda Llamada', s5: 'Tus Recursos', s6: 'Tu URL',
+          /* footer */
+          tagline:       'VENTURE STUDIO',
+          contactLabel:  'Contacto:',
+          followLabel:   'Síguenos en',
+        },
+      };
+
+      const STORAGE_KEY = 'xipe-lang';
+      let currentLang = localStorage.getItem(STORAGE_KEY) || 'en';
+
+      /* ── APPLY LANGUAGE ──────────────────────────────── */
+      function applyLang(lang) {
+        const d = T[lang];
+        if (!d) return;
+        currentLang = lang;
+        localStorage.setItem(STORAGE_KEY, lang);
+        document.documentElement.setAttribute('lang', lang === 'es' ? 'es' : 'en');
+
+        setHTML('ob-headline',    d.headline);
+        setText('ob-step-badge',  d.badge);
+        setText('ob-sub',         d.sub);
+        setText('ob-price',       d.price);
+        setText('ob-price-period', d.pricePeriod);
+        setText('ob-price-secure', d.priceSecure);
+        setText('ob-card-title',  d.cardTitle);
+        setText('ob-cta',         d.cta);
+        setText('promo-label',    d.promoLabel);
+
+        /* Labels + placeholders */
+        setField('cardName',   'lbl-cardName',   d.lblCardName,   d.phCardName);
+        setField('cardNumber', 'lbl-cardNumber',  d.lblCardNumber, d.phCardNumber);
+        setField('expiry',     'lbl-expiry',      d.lblExpiry,     d.phExpiry);
+        setField('cvv',        'lbl-cvv',         d.lblCvv,        d.phCvv);
+        setField('zip',        'lbl-zip',         d.lblZip,        d.phZip);
+
+        const promoInput = document.getElementById('promoCode');
+        if (promoInput) promoInput.placeholder = d.phPromo;
+
+        /* Stepper labels */
+        for (let i = 1; i <= 6; i++) {
+          const el = document.getElementById('s-label-' + i);
+          if (el) el.textContent = d['s' + i];
+        }
+
+        /* Footer */
+        setText('footer-tagline',       d.tagline);
+        setText('footer-contact-label', d.contactLabel);
+        setText('footer-follow-label',  d.followLabel);
+
+        /* Lang buttons */
+        document.querySelectorAll('.lang-toggle__btn').forEach((btn) => {
+          const active = btn.dataset.lang === lang;
+          btn.classList.toggle('active', active);
+          btn.setAttribute('aria-pressed', String(active));
+        });
+      }
+
+      function setText(id, val) {
+        const el = document.getElementById(id);
+        if (el && val !== undefined) el.textContent = val;
+      }
+      function setHTML(id, val) {
+        const el = document.getElementById(id);
+        if (el && val !== undefined) el.innerHTML = val;
+      }
+      function setField(inputId, labelId, labelText, placeholder) {
+        const input = document.getElementById(inputId);
+        const label = document.getElementById(labelId);
+        if (input && placeholder) input.placeholder = placeholder;
+        if (label && labelText)  label.textContent  = labelText;
+      }
+
+      /* ── NAV ─────────────────────────────────────────── */
+      const nav = document.getElementById('xnav');
+      if (nav) {
+        const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 40);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+      }
+      const hamburger = document.getElementById('xHamburger');
+      const navLinks  = document.getElementById('xnavLinks');
+      if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+          const open = navLinks.classList.toggle('open');
+          hamburger.setAttribute('aria-expanded', String(open));
+          hamburger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        });
+        document.addEventListener('click', (e) => {
+          if (nav && !nav.contains(e.target)) {
+            navLinks.classList.remove('open');
+            hamburger.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+
+      /* ── LANG TOGGLE ─────────────────────────────────── */
+      document.querySelectorAll('.lang-toggle__btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const lang = btn.dataset.lang;
+          if (lang !== currentLang) applyLang(lang);
+        });
+      });
+
+      /* ── CARD NUMBER FORMATTING (groups of 4) ────────── */
+      const cardNumberInput = document.getElementById('cardNumber');
+      if (cardNumberInput) {
+        cardNumberInput.addEventListener('input', (e) => {
+          let val = e.target.value.replace(/\D/g, '').slice(0, 16);
+          e.target.value = val.replace(/(.{4})/g, '$1 ').trim();
+        });
+      }
+
+      /* ── EXPIRY FORMATTING (MM / YY) ─────────────────── */
+      const expiryInput = document.getElementById('expiry');
+      if (expiryInput) {
+        expiryInput.addEventListener('input', (e) => {
+          let val = e.target.value.replace(/\D/g, '').slice(0, 4);
+          if (val.length >= 3) {
+            val = val.slice(0, 2) + ' / ' + val.slice(2);
+          }
+          e.target.value = val;
+        });
+      }
+
+      /* ── CVV — digits only, max 3 ────────────────────── */
+      const cvvInput = document.getElementById('cvv');
+      if (cvvInput) {
+        cvvInput.addEventListener('input', (e) => {
+          e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
+        });
+      }
+
+      /* ── ZIP — digits only ───────────────────────────── */
+      const zipInput = document.getElementById('zip');
+      if (zipInput) {
+        zipInput.addEventListener('input', (e) => {
+          e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
+        });
+      }
+
+      /* ── PROMO CODE TOGGLE ───────────────────────────── */
+      const promoToggle = document.getElementById('promoToggle');
+      const promoField  = document.getElementById('promoField');
+      if (promoToggle && promoField) {
+        promoToggle.addEventListener('click', () => {
+          const open = promoField.classList.toggle('visible');
+          promoToggle.classList.toggle('open', open);
+          promoToggle.setAttribute('aria-expanded', String(open));
+          promoField.setAttribute('aria-hidden', String(!open));
+          if (open) document.getElementById('promoCode')?.focus();
+        });
+      }
+
+      /* ── VALIDATION HELPERS ──────────────────────────── */
+      function showError(input, errEl, msg) {
+        input.classList.add('ob-error');
+        if (errEl) { if (msg) errEl.textContent = msg; errEl.classList.add('visible'); }
+      }
+      function clearError(input, errEl) {
+        if (!input) return;
+        input.classList.remove('ob-error');
+        if (errEl) errEl.classList.remove('visible');
+      }
+
+      /* Clear on input */
+      ['cardName','cardNumber','expiry','cvv','zip'].forEach((id) => {
+        const input = document.getElementById(id);
+        const errEl = document.getElementById('err-' + id);
+        if (input) input.addEventListener('input', () => clearError(input, errEl));
+      });
+
+      function isValidCard(v) {
+        return v.replace(/\s/g, '').length === 16;
+      }
+      function isValidExpiry(v) {
+        const clean = v.replace(/\s/g, '');
+        const m = clean.replace('/', '');
+        if (m.length < 4) return false;
+        const month = parseInt(m.slice(0, 2), 10);
+        const year  = parseInt('20' + m.slice(2, 4), 10);
+        if (month < 1 || month > 12) return false;
+        const now = new Date();
+        return year > now.getFullYear() || (year === now.getFullYear() && month >= now.getMonth() + 1);
+      }
+
+      /* ── FORM SUBMIT ─────────────────────────────────── */
+      const form = document.getElementById('ob-form');
+      const card = document.getElementById('ob-card');
+
+      if (form) {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const d = T[currentLang];
+          let isValid = true;
+
+          const fields = [
+            { id: 'cardName',   errId: 'err-cardName',   check: (v) => v.trim().length > 1,  msg: d.errRequired },
+            { id: 'cardNumber', errId: 'err-cardNumber',  check: isValidCard,                  msg: d.errCard     },
+            { id: 'expiry',     errId: 'err-expiry',      check: isValidExpiry,                msg: d.errExpiry   },
+            { id: 'cvv',        errId: 'err-cvv',         check: (v) => v.trim().length === 3, msg: d.errCvv      },
+            { id: 'zip',        errId: 'err-zip',         check: (v) => v.trim().length >= 4,  msg: d.errRequired },
+          ];
+
+          fields.forEach(({ id, errId, check, msg }) => {
+            const input = document.getElementById(id);
+            const errEl = document.getElementById(errId);
+            if (!input) return;
+            if (!check(input.value)) {
+              showError(input, errEl, msg);
+              isValid = false;
+            } else {
+              clearError(input, errEl);
+            }
+          });
+
+          if (!isValid) {
+            card.classList.remove('ob-shake');
+            void card.offsetWidth;
+            card.classList.add('ob-shake');
+            card.addEventListener('animationend', () => card.classList.remove('ob-shake'), { once: true });
+            const firstErr = card.querySelector('.ob-field__input.ob-error');
+            if (firstErr) firstErr.focus();
+            return;
+          }
+
+          /* ✅ Valid — redirect to Step 3 (placeholder until defined) */
+          window.location.href = 'onboarding-step3.html';
+        });
+      }
+
+      /* ── BACK TO TOP ─────────────────────────────────── */
+      const backToTop = document.getElementById('backToTop');
+      if (backToTop) {
+        backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+      }
+
+      /* ── INIT ────────────────────────────────────────── */
+      applyLang(currentLang);
+
+    })();
+  </script>
+
+</body>
+</html>
