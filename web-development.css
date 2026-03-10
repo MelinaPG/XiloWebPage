@@ -487,8 +487,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   flex-shrink: 0;
   font-family: var(--x-font-body);
   font-size: 0.875rem;
-  font-style: italic;
-  color: var(--x-neutral);
+  color: var(--x-dark);
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-color: var(--x-dark);
