@@ -1047,13 +1047,13 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
 .wd-footer__logo-tagline {
   font-family: var(--x-font-body);
-  font-size: 0.75rem;
+  font-size: clamp(0.7rem, 1.2vw, 0.9rem);
   font-weight: 600;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.35em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.55);
+  color: #fff;
   display: block;
-  padding-left: 0.1em;
+  margin-top: 0.5rem;
 }
 
 /* ── Info (right) ──────────────────────────────────────── */
