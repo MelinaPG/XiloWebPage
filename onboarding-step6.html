@@ -559,15 +559,47 @@
     .ob-url-copy.copied .icon-copy  { display: none; }
     .ob-url-copy.copied .icon-check { display: block; }
 
+    /* ── SECTION LABEL (YOUR PROJECT / KICKOFF CALL) ────── */
+    .ob-section-label {
+      font-family: var(--x-font-body);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #a0a0a8;
+    }
+
+    /* ── STATUS PILL ROW ─────────────────────────────────── */
+    .ob-status-pill-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #F5F5F3;
+      border-radius: 6px;
+      padding: 0.85rem 1rem;
+    }
+
+    /* ── DIVIDER ─────────────────────────────────────────── */
+    .ob-divider {
+      border: none;
+      border-top: 1px solid var(--x-mid);
+      margin: 0;
+    }
+
+    /* ── KICKOFF QUOTE BLOCK ─────────────────────────────── */
+    .ob-quote {
+      border-left: 3px solid var(--x-dark);
+      padding-left: 1.1rem;
+    }
+
     /* ── MEETING NARRATIVE ───────────────────────────────── */
     .ob-meeting-narrative {
-      font-family: var(--x-font-head);
-      font-size: 2.8rem;
+      font-family: var(--x-font-body);
+      font-size: 0.92rem;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
+      font-style: italic;
       color: var(--x-dark);
-      line-height: 1.15;
+      line-height: 1.6;
     }
 
     /* ── CLOSING PARAGRAPH ───────────────────────────────── */
@@ -851,61 +883,33 @@
         <!-- RIGHT: Project dashboard card -->
         <div class="ob-card">
 
-          <div class="ob-card__header">
-            <p class="ob-card__title" id="ob-card-title">Your Project Dashboard</p>
-          </div>
-
           <div class="ob-card__body">
 
-            <!-- Status block -->
-            <div class="ob-status" role="list">
-              <div class="ob-status__col" role="listitem">
-                <p class="ob-status__label" id="st-label-1">Status</p>
-                <span class="ob-status__badge">
-                  <span class="ob-status__dot"></span>
-                  <span id="st-val-1">In Progress</span>
-                </span>
-              </div>
-              <div class="ob-status__col" role="listitem">
-                <p class="ob-status__label" id="st-label-2">Started</p>
-                <p class="ob-status__value" id="st-val-2">March 5, 2026</p>
-              </div>
-              <div class="ob-status__col" role="listitem">
-                <p class="ob-status__label" id="st-label-3">Delivery</p>
-                <p class="ob-status__value" id="st-val-3">March 10, 2026</p>
-              </div>
+            <!-- Section: Your Project -->
+            <p class="ob-section-label" id="ob-card-title">Your Project</p>
+
+            <!-- Status pill row -->
+            <div class="ob-status-pill-row">
+              <p class="ob-section-label" id="st-label-1">Status</p>
+              <span class="ob-status__badge">
+                <span class="ob-status__dot"></span>
+                <span id="st-val-1">In Progress</span>
+              </span>
             </div>
 
-            <!-- Staging URL -->
-            <div class="ob-url-block">
-              <p class="ob-url-label" id="ob-url-label">Your Staging URL</p>
-              <div class="ob-url-field">
-                <span class="ob-url-field__text" id="ob-url-text">staging.yoursite.com</span>
-                <button class="ob-url-copy" id="ob-url-copy" aria-label="Copy URL" type="button">
-                  <svg class="icon-copy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                  </svg>
-                  <svg class="icon-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"/>
-                  </svg>
-                  <span class="ob-url-copy__tooltip" id="ob-copy-tooltip">Copied!</span>
-                </button>
-              </div>
-            </div>
+            <hr class="ob-divider" />
 
-            <!-- Narrative -->
-            <p class="ob-meeting-narrative" id="ob-meeting-narrative">
-              Almost there. We'll see you on your kickoff call — that's when the real magic starts. Come with questions.
-            </p>
+            <!-- Section: Kickoff Call -->
+            <p class="ob-section-label" id="ob-kickoff-label">Kickoff Call</p>
 
-            <!-- Closing -->
-            <p class="ob-closing" id="ob-closing">We'll keep you updated every step of the way.<br />In the meantime, feel free to reach out anytime.</p>
-
-            <!-- CTA -->
-            <a href="#" class="ob-cta" id="ob-cta-label">Go to Your Dashboard →</a>
+            <blockquote class="ob-quote">
+              <p class="ob-meeting-narrative" id="ob-meeting-narrative">
+                Almost there. We'll see you on your kickoff call — that's when the real magic starts. Come with questions.
+              </p>
+            </blockquote>
 
             <!-- Chat link -->
-            <a href="#" class="ob-chat-link" id="ob-chat-label">Have questions? Chat with your project manager →</a>
+            <a href="#" class="ob-chat-link" id="ob-chat-label">Chat with your project manager →</a>
 
           </div>
 
@@ -990,18 +994,12 @@
           badge:      '✓ Step 6 of 6',
           headline:   'WE\'RE ON IT.<br />YOUR SITE<br />IS COMING.',
           sub:        'Our team has everything they need to get started. You\'ll receive your staging URL within 7 business days.',
-          cardTitle:  'Your Project Dashboard',
+          cardTitle:      'Your Project',
+          kickoffLabel:   'Kickoff Call',
           /* status */
-          stLabel1: 'Status',  stVal1: 'In Progress',
-          stLabel2: 'Started', stVal2: 'March 5, 2026',
-          stLabel3: 'Delivery',stVal3: 'March 10, 2026',
-          /* url */
-          urlLabel:   'Your Staging URL',
-          copyTip:    'Copied!',
-          /* closing */
-          closing:    'We\'ll keep you updated every step of the way.<br />In the meantime, feel free to reach out anytime.',
-          ctaLabel:   'Go to Your Dashboard →',
-          chatLabel:  'Have questions? Chat with your project manager →',
+          stLabel1: 'Status', stVal1: 'In Progress',
+          /* chat */
+          chatLabel: 'Chat with your project manager →',
           /* timeline */
           tlDay1: 'Today',   tlDesc1: 'Assets received & reviewed',
           tlDay2: 'Day 1–2', tlDesc2: 'Design & structure',
@@ -1018,18 +1016,12 @@
           badge:      '✓ Paso 6 de 6',
           headline:   'ESTAMOS<br />EN ELLO.<br />TU SITIO VIENE.',
           sub:        'Nuestro equipo tiene todo lo que necesita para comenzar. Recibirás tu URL de staging en 7 días hábiles.',
-          cardTitle:  'Tu Panel de Proyecto',
+          cardTitle:      'Tu Proyecto',
+          kickoffLabel:   'Llamada de Inicio',
           /* status */
-          stLabel1: 'Estado',   stVal1: 'En Progreso',
-          stLabel2: 'Inicio',   stVal2: '5 de marzo, 2026',
-          stLabel3: 'Entrega',  stVal3: '10 de marzo, 2026',
-          /* url */
-          urlLabel:   'Tu URL de Staging',
-          copyTip:    '¡Copiado!',
-          /* closing */
-          closing:    'Te mantendremos informado en cada paso.<br />Mientras tanto, no dudes en contactarnos.',
-          ctaLabel:   'Ir a Tu Panel →',
-          chatLabel:  '¿Preguntas? Chatea con tu project manager →',
+          stLabel1: 'Estado', stVal1: 'En Progreso',
+          /* chat */
+          chatLabel: '¿Preguntas? Chatea con tu project manager →',
           /* timeline */
           tlDay1: 'Hoy',       tlDesc1: 'Recursos recibidos y revisados',
           tlDay2: 'Día 1–2',   tlDesc2: 'Diseño y estructura',
@@ -1056,22 +1048,16 @@
         document.documentElement.setAttribute('lang', lang === 'es' ? 'es' : 'en');
 
         setHTML('ob-headline', d.headline);
-        setHTML('ob-closing',  d.closing);
-        setText('ob-step-badge',  d.badge);
-        setText('ob-sub',         d.sub);
-        setText('ob-card-title',  d.cardTitle);
+        setText('ob-step-badge',    d.badge);
+        setText('ob-sub',           d.sub);
+        setText('ob-card-title',    d.cardTitle);
+        setText('ob-kickoff-label', d.kickoffLabel);
 
         /* status */
-        setText('st-label-1', d.stLabel1); setText('st-val-1', d.stVal1);
-        setText('st-label-2', d.stLabel2); setText('st-val-2', d.stVal2);
-        setText('st-label-3', d.stLabel3); setText('st-val-3', d.stVal3);
+        setText('st-label-1', d.stLabel1);
+        setText('st-val-1',   d.stVal1);
 
-        /* url */
-        setText('ob-url-label',   d.urlLabel);
-        setText('ob-copy-tooltip', d.copyTip);
-
-        /* cta + chat */
-        setText('ob-cta-label',  d.ctaLabel);
+        /* chat */
         setText('ob-chat-label', d.chatLabel);
 
         /* timeline */
