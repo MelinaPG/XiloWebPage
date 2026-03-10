@@ -559,6 +559,17 @@
     .ob-url-copy.copied .icon-copy  { display: none; }
     .ob-url-copy.copied .icon-check { display: block; }
 
+    /* ── MEETING NARRATIVE ───────────────────────────────── */
+    .ob-meeting-narrative {
+      font-family: var(--x-font-head);
+      font-size: 2.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: var(--x-dark);
+      line-height: 1.15;
+    }
+
     /* ── CLOSING PARAGRAPH ───────────────────────────────── */
     .ob-closing {
       font-family: var(--x-font-body);
@@ -837,71 +848,14 @@
           </div>
         </div>
 
-        <!-- RIGHT: Dashboard card -->
+        <!-- RIGHT: Meeting narrative -->
         <div class="ob-card">
 
-          <div class="ob-card__header">
-            <p class="ob-card__title" id="ob-card-title">Your Project Dashboard</p>
-          </div>
+          <div class="ob-card__body" style="padding: 2.5rem 2rem;">
 
-          <div class="ob-card__body">
-
-            <!-- Status block -->
-            <div class="ob-status">
-              <div class="ob-status__col">
-                <p class="ob-status__label" id="st-label-1">Status</p>
-                <div class="ob-status__badge">
-                  <span class="ob-status__dot"></span>
-                  <span id="st-val-1">In Progress</span>
-                </div>
-              </div>
-              <div class="ob-status__col">
-                <p class="ob-status__label" id="st-label-2">Started</p>
-                <p class="ob-status__value" id="st-val-2">March 5, 2026</p>
-              </div>
-              <div class="ob-status__col">
-                <p class="ob-status__label" id="st-label-3">Delivery</p>
-                <p class="ob-status__value" id="st-val-3">March 10, 2026</p>
-              </div>
-            </div>
-
-            <!-- Staging URL -->
-            <div class="ob-url-block">
-              <p class="ob-url-label" id="ob-url-label">Your Staging URL</p>
-              <div class="ob-url-field">
-                <span class="ob-url-field__text" id="ob-url-text">staging.xipetechnology.dev/maria-garcia-project</span>
-                <button class="ob-url-copy" id="obCopyBtn" aria-label="Copy staging URL">
-                  <!-- Copy icon -->
-                  <svg class="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                       stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="9" y="9" width="13" height="13" rx="2"/>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                  </svg>
-                  <!-- Check icon -->
-                  <svg class="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                       stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"/>
-                  </svg>
-                  <span class="ob-url-copy__tooltip" id="ob-copy-tooltip">Copied!</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Closing paragraph -->
-            <p class="ob-closing" id="ob-closing">
-              We'll keep you updated every step of the way.<br />
-              In the meantime, feel free to reach out anytime.
+            <p class="ob-meeting-narrative" id="ob-meeting-narrative">
+              Nos vemos en la reunión.
             </p>
-
-            <!-- CTA -->
-            <a href="#" class="ob-cta" id="ob-cta">
-              <span id="ob-cta-label">Go to Your Dashboard →</span>
-            </a>
-
-            <!-- Chat link -->
-            <a href="mailto:melina.peralta@xipetechnology.com" class="ob-chat-link" id="ob-chat-link">
-              <span id="ob-chat-label">Have questions? Chat with your project manager →</span>
-            </a>
 
           </div>
 
