@@ -848,14 +848,64 @@
           </div>
         </div>
 
-        <!-- RIGHT: Meeting narrative -->
+        <!-- RIGHT: Project dashboard card -->
         <div class="ob-card">
 
-          <div class="ob-card__body" style="padding: 2.5rem 2rem;">
+          <div class="ob-card__header">
+            <p class="ob-card__title" id="ob-card-title">Your Project Dashboard</p>
+          </div>
 
+          <div class="ob-card__body">
+
+            <!-- Status block -->
+            <div class="ob-status" role="list">
+              <div class="ob-status__col" role="listitem">
+                <p class="ob-status__label" id="st-label-1">Status</p>
+                <span class="ob-status__badge">
+                  <span class="ob-status__dot"></span>
+                  <span id="st-val-1">In Progress</span>
+                </span>
+              </div>
+              <div class="ob-status__col" role="listitem">
+                <p class="ob-status__label" id="st-label-2">Started</p>
+                <p class="ob-status__value" id="st-val-2">March 5, 2026</p>
+              </div>
+              <div class="ob-status__col" role="listitem">
+                <p class="ob-status__label" id="st-label-3">Delivery</p>
+                <p class="ob-status__value" id="st-val-3">March 10, 2026</p>
+              </div>
+            </div>
+
+            <!-- Staging URL -->
+            <div class="ob-url-block">
+              <p class="ob-url-label" id="ob-url-label">Your Staging URL</p>
+              <div class="ob-url-field">
+                <span class="ob-url-field__text" id="ob-url-text">staging.yoursite.com</span>
+                <button class="ob-url-copy" id="ob-url-copy" aria-label="Copy URL" type="button">
+                  <svg class="icon-copy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                  </svg>
+                  <svg class="icon-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  <span class="ob-url-copy__tooltip" id="ob-copy-tooltip">Copied!</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Narrative -->
             <p class="ob-meeting-narrative" id="ob-meeting-narrative">
               Almost there. We'll see you on your kickoff call — that's when the real magic starts. Come with questions.
             </p>
+
+            <!-- Closing -->
+            <p class="ob-closing" id="ob-closing">We'll keep you updated every step of the way.<br />In the meantime, feel free to reach out anytime.</p>
+
+            <!-- CTA -->
+            <a href="#" class="ob-cta" id="ob-cta-label">Go to Your Dashboard →</a>
+
+            <!-- Chat link -->
+            <a href="#" class="ob-chat-link" id="ob-chat-label">Have questions? Chat with your project manager →</a>
 
           </div>
 
