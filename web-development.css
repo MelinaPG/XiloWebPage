@@ -474,8 +474,27 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 }
 
 .wd-features__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
   margin-bottom: 4rem;
 }
+.wd-features__header-left {
+  flex: 1;
+}
+.wd-features__cta {
+  flex-shrink: 0;
+  font-family: var(--x-font-body);
+  font-size: 0.875rem;
+  color: var(--x-dark);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--x-dark);
+  transition: opacity var(--x-dur) var(--x-ease);
+  white-space: nowrap;
+}
+.wd-features__cta:hover { opacity: 0.55; }
 .wd-features__headline {
   font-family: var(--x-font-head);
   font-size: clamp(2.5rem, 5vw, 4.5rem);

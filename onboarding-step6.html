@@ -246,7 +246,7 @@
       display: grid;
       grid-template-columns: 1fr 1.4fr;
       gap: 4rem;
-      align-items: start;
+      align-items: center;
     }
 
     /* ── LEFT COLUMN ─────────────────────────────────────── */
@@ -559,6 +559,82 @@
     .ob-url-copy.copied .icon-copy  { display: none; }
     .ob-url-copy.copied .icon-check { display: block; }
 
+    /* ── SECTION LABEL (YOUR PROJECT / KICKOFF CALL) ────── */
+    .ob-section-label {
+      font-family: var(--x-font-body);
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #b8b8bf;
+    }
+
+    /* ── STATUS PILL ROW ─────────────────────────────────── */
+    .ob-status-pill-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #F5F5F3;
+      border-radius: 6px;
+      padding: 0.85rem 1rem;
+    }
+
+    /* ── STATUS DOT — enhanced pulse ─────────────────────── */
+    .ob-status__dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--x-green);
+      flex-shrink: 0;
+      animation: pulse-ring 2s ease-in-out infinite;
+    }
+    @keyframes pulse-ring {
+      0%   { box-shadow: 0 0 0 0 rgba(136,217,141,0.7); transform: scale(1); }
+      60%  { box-shadow: 0 0 0 5px rgba(136,217,141,0);  transform: scale(1.15); }
+      100% { box-shadow: 0 0 0 0 rgba(136,217,141,0);    transform: scale(1); }
+    }
+
+    /* ── DIVIDER ─────────────────────────────────────────── */
+    .ob-divider {
+      border: none;
+      border-top: 1px solid var(--x-mid);
+      margin: 0;
+    }
+
+    /* ── KICKOFF BLOCK (label + quote + cta) ─────────────── */
+    .ob-kickoff-block {
+      border-left: 3px solid var(--x-dark);
+      background: #fafaf8;
+      border-radius: 0 5px 5px 0;
+      padding: 1rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    /* ── MEETING NARRATIVE ───────────────────────────────── */
+    .ob-meeting-narrative {
+      font-family: var(--x-font-head);
+      font-size: 1.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: var(--x-dark);
+      line-height: 1.15;
+    }
+
+    /* ── MICRO CTA ───────────────────────────────────────── */
+    .ob-micro-cta {
+      font-family: var(--x-font-body);
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--x-dark);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color var(--x-dur) var(--x-ease);
+    }
+    .ob-micro-cta:hover { color: var(--x-dark); }
+
     /* ── CLOSING PARAGRAPH ───────────────────────────────── */
     .ob-closing {
       font-family: var(--x-font-body);
@@ -837,71 +913,39 @@
           </div>
         </div>
 
-        <!-- RIGHT: Dashboard card -->
+        <!-- RIGHT: Project dashboard card -->
         <div class="ob-card">
 
           <div class="ob-card__header">
-            <p class="ob-card__title" id="ob-card-title">Your Project Dashboard</p>
+            <p class="ob-card__title" id="ob-card-title">Your Project</p>
           </div>
 
           <div class="ob-card__body">
 
-            <!-- Status block -->
-            <div class="ob-status">
-              <div class="ob-status__col">
-                <p class="ob-status__label" id="st-label-1">Status</p>
-                <div class="ob-status__badge">
-                  <span class="ob-status__dot"></span>
-                  <span id="st-val-1">In Progress</span>
-                </div>
-              </div>
-              <div class="ob-status__col">
-                <p class="ob-status__label" id="st-label-2">Started</p>
-                <p class="ob-status__value" id="st-val-2">March 5, 2026</p>
-              </div>
-              <div class="ob-status__col">
-                <p class="ob-status__label" id="st-label-3">Delivery</p>
-                <p class="ob-status__value" id="st-val-3">March 10, 2026</p>
-              </div>
+            <!-- Status pill row -->
+            <div class="ob-status-pill-row">
+              <p class="ob-section-label" id="st-label-1">Status</p>
+              <span class="ob-status__badge">
+                <span class="ob-status__dot"></span>
+                <span id="st-val-1">In Progress</span>
+              </span>
             </div>
 
-            <!-- Staging URL -->
-            <div class="ob-url-block">
-              <p class="ob-url-label" id="ob-url-label">Your Staging URL</p>
-              <div class="ob-url-field">
-                <span class="ob-url-field__text" id="ob-url-text">staging.xipetechnology.dev/maria-garcia-project</span>
-                <button class="ob-url-copy" id="obCopyBtn" aria-label="Copy staging URL">
-                  <!-- Copy icon -->
-                  <svg class="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                       stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="9" y="9" width="13" height="13" rx="2"/>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                  </svg>
-                  <!-- Check icon -->
-                  <svg class="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                       stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"/>
-                  </svg>
-                  <span class="ob-url-copy__tooltip" id="ob-copy-tooltip">Copied!</span>
-                </button>
-              </div>
+            <hr class="ob-divider" />
+
+            <!-- Kickoff block -->
+            <div class="ob-kickoff-block">
+
+              <p class="ob-section-label" id="ob-kickoff-label">Kickoff Call</p>
+
+              <p class="ob-meeting-narrative">
+                Almost there!<br>
+                <span style="font-family: var(--x-font-body); font-weight: 400; font-size: 0.82rem; text-transform: none; letter-spacing: 0; color: #9a9a9a; line-height: 1.65; display: block; margin-top: 0.35rem;">We'll see you on your kickoff call — that's when the real magic starts. Come with questions.</span>
+              </p>
+
+              <a href="#contact" class="ob-micro-cta">Have questions before your call? Contact us →</a>
+
             </div>
-
-            <!-- Closing paragraph -->
-            <p class="ob-closing" id="ob-closing">
-              We'll keep you updated every step of the way.<br />
-              In the meantime, feel free to reach out anytime.
-            </p>
-
-            <!-- CTA -->
-            <a href="#" class="ob-cta" id="ob-cta">
-              <span id="ob-cta-label">Go to Your Dashboard →</span>
-            </a>
-
-            <!-- Chat link -->
-            <a href="mailto:melina.peralta@xipetechnology.com" class="ob-chat-link" id="ob-chat-link">
-              <span id="ob-chat-label">Have questions? Chat with your project manager →</span>
-            </a>
 
           </div>
 
@@ -986,18 +1030,10 @@
           badge:      '✓ Step 6 of 6',
           headline:   'WE\'RE ON IT.<br />YOUR SITE<br />IS COMING.',
           sub:        'Our team has everything they need to get started. You\'ll receive your staging URL within 7 business days.',
-          cardTitle:  'Your Project Dashboard',
+          cardTitle:    'Your Project',
+          kickoffLabel: 'Kickoff Call',
           /* status */
-          stLabel1: 'Status',  stVal1: 'In Progress',
-          stLabel2: 'Started', stVal2: 'March 5, 2026',
-          stLabel3: 'Delivery',stVal3: 'March 10, 2026',
-          /* url */
-          urlLabel:   'Your Staging URL',
-          copyTip:    'Copied!',
-          /* closing */
-          closing:    'We\'ll keep you updated every step of the way.<br />In the meantime, feel free to reach out anytime.',
-          ctaLabel:   'Go to Your Dashboard →',
-          chatLabel:  'Have questions? Chat with your project manager →',
+          stLabel1: 'Status', stVal1: 'In Progress',
           /* timeline */
           tlDay1: 'Today',   tlDesc1: 'Assets received & reviewed',
           tlDay2: 'Day 1–2', tlDesc2: 'Design & structure',
@@ -1014,18 +1050,10 @@
           badge:      '✓ Paso 6 de 6',
           headline:   'ESTAMOS<br />EN ELLO.<br />TU SITIO VIENE.',
           sub:        'Nuestro equipo tiene todo lo que necesita para comenzar. Recibirás tu URL de staging en 7 días hábiles.',
-          cardTitle:  'Tu Panel de Proyecto',
+          cardTitle:      'Tu Proyecto',
+          kickoffLabel:   'Llamada de Inicio',
           /* status */
-          stLabel1: 'Estado',   stVal1: 'En Progreso',
-          stLabel2: 'Inicio',   stVal2: '5 de marzo, 2026',
-          stLabel3: 'Entrega',  stVal3: '10 de marzo, 2026',
-          /* url */
-          urlLabel:   'Tu URL de Staging',
-          copyTip:    '¡Copiado!',
-          /* closing */
-          closing:    'Te mantendremos informado en cada paso.<br />Mientras tanto, no dudes en contactarnos.',
-          ctaLabel:   'Ir a Tu Panel →',
-          chatLabel:  '¿Preguntas? Chatea con tu project manager →',
+          stLabel1: 'Estado', stVal1: 'En Progreso',
           /* timeline */
           tlDay1: 'Hoy',       tlDesc1: 'Recursos recibidos y revisados',
           tlDay2: 'Día 1–2',   tlDesc2: 'Diseño y estructura',
@@ -1052,23 +1080,14 @@
         document.documentElement.setAttribute('lang', lang === 'es' ? 'es' : 'en');
 
         setHTML('ob-headline', d.headline);
-        setHTML('ob-closing',  d.closing);
-        setText('ob-step-badge',  d.badge);
-        setText('ob-sub',         d.sub);
-        setText('ob-card-title',  d.cardTitle);
+        setText('ob-step-badge',    d.badge);
+        setText('ob-sub',           d.sub);
+        setText('ob-card-title',    d.cardTitle);
+        setText('ob-kickoff-label', d.kickoffLabel);
 
         /* status */
-        setText('st-label-1', d.stLabel1); setText('st-val-1', d.stVal1);
-        setText('st-label-2', d.stLabel2); setText('st-val-2', d.stVal2);
-        setText('st-label-3', d.stLabel3); setText('st-val-3', d.stVal3);
-
-        /* url */
-        setText('ob-url-label',   d.urlLabel);
-        setText('ob-copy-tooltip', d.copyTip);
-
-        /* cta + chat */
-        setText('ob-cta-label',  d.ctaLabel);
-        setText('ob-chat-label', d.chatLabel);
+        setText('st-label-1', d.stLabel1);
+        setText('st-val-1',   d.stVal1);
 
         /* timeline */
         setText('tl-day-1', d.tlDay1); setText('tl-desc-1', d.tlDesc1);
