@@ -326,6 +326,16 @@
     .ob-card__widget .calendly-inline-widget {
       display: block;
     }
+    .ob-card__continue {
+      padding: 1.5rem;
+      border-top: 1px solid var(--x-mid);
+      text-align: center;
+    }
+    .ob-continue-btn {
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+    }
 
     /* ============================================================
        FOOTER — identical to Steps 1–3
@@ -519,6 +529,10 @@
             </div>
           </div>
 
+          <div class="ob-card__continue" id="ob-continue-wrap" style="display:none;">
+            <a href="onboarding-step5.html" class="xbtn xbtn--primary ob-continue-btn" id="ob-continue-btn">Continue →</a>
+          </div>
+
         </div>
 
       </div>
@@ -706,10 +720,14 @@
         backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
       }
 
-      /* ── CALENDLY → redirect to step 5 ──────────────── */
+      /* ── CALENDLY → show continue button when scheduled ─ */
       window.addEventListener('message', function (e) {
         if (e.data && e.data.event === 'calendly.event_scheduled') {
-          window.location.href = 'onboarding-step5.html';
+          const wrap = document.getElementById('ob-continue-wrap');
+          if (wrap) {
+            wrap.style.display = 'block';
+            wrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
         }
       });
 
