@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>You're In! — XIPE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       DESIGN SYSTEM TOKENS
+    ============================================================ */
+    :root {
+      --x-neutral:   #707070;
+      --x-teal:      #E2FFFD;
+      --x-green:     #88D98D;
+      --x-bg:        #FDFCF8;
+      --x-dark:      #2E2E2E;
+      --x-mid:       #E3E4E8;
+      --x-blue:      #88AEF5;
+      --x-red:       #FD3F28;
+
+      --x-font-head: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+      --x-font-body: 'Barlow', Helvetica, Arial, sans-serif;
+
+      --x-ease:      cubic-bezier(0.4, 0, 0.2, 1);
+      --x-dur:       0.2s;
+      --x-radius:    8px;
+      --x-pill:      999px;
+      --x-gutter:    2rem;
+      --x-max:       1200px;
+    }
+
+    /* ── RESET ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: var(--x-font-body);
+      color: var(--x-dark);
+      background: var(--x-bg);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    button { cursor: pointer; border: none; background: none; font: inherit; }
+
+    /* ── LAYOUT ──────────────────────────────────────────── */
+    .xcontainer {
+      max-width: var(--x-max);
+      margin: 0 auto;
+      padding: 0 var(--x-gutter);
+    }
+
+    /* ============================================================
+       NAV — identical to Steps 1 & 2
+    ============================================================ */
+    .xnav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: #2C2C2C;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: box-shadow var(--x-dur) var(--x-ease);
+    }
+    .xnav.scrolled { box-shadow: 0 2px 24px rgba(0,0,0,0.35); }
+    .xnav__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .xnav__logo { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+    .xilo-logo  { display: block; flex-shrink: 0; }
+    .xilo-logo--nav    { height: 28px; width: auto; }
+    .xilo-logo--footer { height: clamp(70px, 10vw, 115px); width: auto; }
+
+    .xnav__links {
+      display: flex;
+      align-items: center;
+      gap: 2.75rem;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .xnav__links a {
+      font-family: var(--x-font-body);
+      font-size: 0.82rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      color: rgba(255,255,255,0.7);
+      transition: color var(--x-dur) var(--x-ease);
+      position: relative;
+      white-space: nowrap;
+    }
+    .xnav__links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 1.5px;
+      background: #fff;
+      transform: scaleX(0);
+      transition: transform var(--x-dur) var(--x-ease);
+      transform-origin: left;
+    }
+    .xnav__links a:hover,
+    .xnav__links a.active { color: #fff; }
+    .xnav__links a.active::after,
+    .xnav__links a:hover::after { transform: scaleX(1); }
+
+    .xnav__right { display: flex; align-items: center; gap: 1.25rem; }
+    .lang-toggle { display: flex; align-items: center; gap: 0.25rem; }
+    .lang-toggle__sep {
+      font-family: var(--x-font-body);
+      font-size: 0.72rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.35);
+    }
+    .lang-toggle__btn {
+      font-family: var(--x-font-body);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.35);
+      padding: 0.15rem 0;
+      transition: color var(--x-dur) var(--x-ease);
+    }
+    .lang-toggle__btn.active { color: #fff; font-weight: 600; }
+    .lang-toggle__btn:hover  { color: rgba(255,255,255,0.8); }
+
+    .xnav__hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 4px;
+    }
+    .xnav__hamburger span {
+      display: block; width: 20px; height: 1.5px;
+      background: rgba(255,255,255,0.8); border-radius: 2px;
+      transition: all var(--x-dur) var(--x-ease);
+    }
+
+    /* ============================================================
+       PAGE WRAPPER
+    ============================================================ */
+    .ob-page {
+      padding-top: 64px;
+      min-height: 100vh;
+      background: var(--x-bg);
+    }
+
+    /* ============================================================
+       STEPPER
+    ============================================================ */
+    .ob-stepper {
+      background: var(--x-bg);
+      border-bottom: 1px solid var(--x-mid);
+      padding: 3rem 0 2.5rem;
+    }
+    .ob-stepper__inner {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0;
+      position: relative;
+    }
+    .ob-stepper__inner::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: calc(100% / 12);
+      right: calc(100% / 12);
+      height: 1px;
+      background: var(--x-mid);
+      z-index: 0;
+    }
+    .ob-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+    .ob-step__circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: var(--x-font-body);
+      font-size: 0.72rem;
+      font-weight: 600;
+      transition: background var(--x-dur) var(--x-ease),
+                  border-color var(--x-dur) var(--x-ease),
+                  color var(--x-dur) var(--x-ease);
+      border: 1.5px solid var(--x-mid);
+      background: var(--x-bg);
+      color: #b0b0b0;
+    }
+    /* Active — step 3 */
+    .ob-step--active .ob-step__circle {
+      background: var(--x-dark);
+      border-color: var(--x-dark);
+      color: #fff;
+    }
+    /* Done — steps 1 & 2 */
+    .ob-step--done .ob-step__circle {
+      background: var(--x-dark);
+      border-color: var(--x-dark);
+      color: #fff;
+      font-size: 0.75rem;
+    }
+    .ob-step__label {
+      font-family: var(--x-font-body);
+      font-size: 0.62rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #b0b0b0;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .ob-step--active .ob-step__label { color: var(--x-dark); font-weight: 700; }
+    .ob-step--done   .ob-step__label { color: var(--x-neutral); }
+
+    /* ============================================================
+       STEP CONTENT AREA
+    ============================================================ */
+    .ob-content {
+      padding: 5rem 0 7rem;
+    }
+    .ob-content__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    /* ── LEFT COLUMN ─────────────────────────────────────── */
+    .ob-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      padding-top: 1rem;
+    }
+    .ob-step-badge {
+      display: inline-flex;
+      align-items: center;
+      border: 1.5px solid var(--x-mid);
+      border-radius: var(--x-pill);
+      padding: 0.35rem 0.9rem;
+      font-family: var(--x-font-body);
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--x-neutral);
+      width: fit-content;
+    }
+    .ob-headline {
+      font-family: var(--x-font-head);
+      font-size: clamp(2.5rem, 4.5vw, 4rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      color: var(--x-dark);
+    }
+    .ob-sub {
+      font-family: var(--x-font-body);
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.85;
+      color: var(--x-neutral);
+      max-width: 400px;
+    }
+
+    /* ── RIGHT COLUMN — confirmation card ────────────────── */
+
+    /* Fade-in + rise animation on load */
+    @keyframes ob-card-enter {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .ob-card {
+      background: #fff;
+      border: 1px solid var(--x-mid);
+      border-radius: 12px;
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+      animation: ob-card-enter 0.55s var(--x-ease) both;
+      animation-delay: 0.1s;
+    }
+
+    /* Card header: check icon + title */
+    .ob-card__head {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .ob-card__check {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .ob-card__check-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(136, 217, 141, 0.15);
+      flex-shrink: 0;
+    }
+    .ob-card__check-icon svg { width: 14px; height: 14px; }
+    .ob-card__check-line {
+      flex: 1;
+      height: 1px;
+      background: rgba(136, 217, 141, 0.3);
+    }
+
+    .ob-card__title {
+      font-family: var(--x-font-head);
+      font-size: 1.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: var(--x-dark);
+      line-height: 1.1;
+    }
+
+    /* Email confirmation row */
+    .ob-confirm-email {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: #f7f7f5;
+      border: 1px solid var(--x-mid);
+      border-radius: 6px;
+      padding: 0.7rem 0.9rem;
+    }
+    .ob-confirm-email__icon {
+      color: var(--x-neutral);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+    }
+    .ob-confirm-email__icon svg { width: 15px; height: 15px; }
+    .ob-confirm-email__text {
+      font-family: var(--x-font-body);
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: var(--x-neutral);
+      line-height: 1.4;
+    }
+    .ob-confirm-email__text strong {
+      color: var(--x-dark);
+      font-weight: 500;
+    }
+
+    /* Summary table */
+    .ob-summary {
+      background: #f7f7f5;
+      border: 1px solid var(--x-mid);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .ob-summary__row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem 1.1rem;
+      gap: 1rem;
+    }
+    .ob-summary__row + .ob-summary__row {
+      border-top: 1px solid var(--x-mid);
+    }
+    .ob-summary__label {
+      font-family: var(--x-font-body);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--x-dark);
+      white-space: nowrap;
+    }
+    .ob-summary__value {
+      font-family: var(--x-font-body);
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: var(--x-neutral);
+      text-align: right;
+    }
+    .ob-summary__value--accent {
+      color: var(--x-green);
+      font-weight: 600;
+    }
+
+    /* Context paragraph */
+    .ob-card__context {
+      font-family: var(--x-font-body);
+      font-size: 0.82rem;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--x-neutral);
+    }
+
+    /* CTA block */
+    .ob-card__actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .ob-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 0.9rem 1.75rem;
+      background: var(--x-dark);
+      color: #fff;
+      border: 1.5px solid var(--x-dark);
+      border-radius: 6px;
+      font-family: var(--x-font-body);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background var(--x-dur) var(--x-ease),
+                  border-color var(--x-dur) var(--x-ease),
+                  transform var(--x-dur) var(--x-ease);
+    }
+    .ob-cta:hover {
+      background: var(--x-red);
+      border-color: var(--x-red);
+      transform: translateY(-1px);
+    }
+
+    /* Secondary link */
+    .ob-link-secondary {
+      font-family: var(--x-font-body);
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: var(--x-neutral);
+      letter-spacing: 0.02em;
+      position: relative;
+      cursor: pointer;
+      text-decoration: none;
+      padding-bottom: 1px;
+    }
+    .ob-link-secondary::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: var(--x-neutral);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--x-dur) var(--x-ease);
+    }
+    .ob-link-secondary:hover { color: var(--x-dark); }
+    .ob-link-secondary:hover::after { transform: scaleX(1); }
+
+    /* ============================================================
+       FOOTER — identical to Steps 1 & 2
+    ============================================================ */
+    .wd-footer { background: #2C2C2C; padding: 3.5rem 0; }
+    .wd-footer__inner { display: flex; justify-content: space-between; align-items: flex-end; gap: 3rem; }
+    .wd-footer__brand { flex-shrink: 0; }
+    .wd-footer__logo-link { display: flex; flex-direction: column; gap: 0.35rem; text-decoration: none; line-height: 1; }
+    .wd-footer__logo-tagline {
+      font-family: var(--x-font-body);
+      font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+      font-weight: 600;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #fff;
+      display: block;
+      margin-top: 0.5rem;
+    }
+    .wd-footer__info { display: flex; flex-direction: column; gap: 1.5rem; align-items: flex-start; padding-bottom: 0.25rem; }
+    .wd-footer__contact { display: flex; flex-direction: column; gap: 0.25rem; }
+    .wd-footer__contact-label { font-family: var(--x-font-body); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; color: rgba(255,255,255,0.9); }
+    .wd-footer__email { font-family: var(--x-font-body); font-size: 0.82rem; color: rgba(255,255,255,0.55); transition: color var(--x-dur) var(--x-ease); text-decoration: none; }
+    .wd-footer__email:hover { color: #fff; }
+    .wd-footer__social-block { display: flex; flex-direction: column; gap: 0.5rem; }
+    .wd-footer__social-label { font-family: var(--x-font-body); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; color: rgba(255,255,255,0.9); }
+    .wd-footer__social-row { display: flex; align-items: center; gap: 2rem; }
+    .wd-footer__social-icons { display: flex; align-items: center; gap: 0.6rem; }
+    .wd-footer__social-icon {
+      display: flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.7);
+      transition: border-color var(--x-dur) var(--x-ease), color var(--x-dur) var(--x-ease), background var(--x-dur) var(--x-ease);
+      flex-shrink: 0;
+    }
+    .wd-footer__social-icon svg { width: 16px; height: 16px; }
+    .wd-footer__social-icon:hover { border-color: #fff; color: #fff; background: rgba(255,255,255,0.08); }
+    .wd-footer__controls { display: flex; align-items: center; gap: 0.9rem; }
+    .lang-toggle--footer .lang-toggle__btn { font-size: 0.72rem; }
+    .wd-footer__totop {
+      display: flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.6);
+      font-size: 0.85rem; font-family: var(--x-font-body); cursor: pointer;
+      transition: border-color var(--x-dur) var(--x-ease), color var(--x-dur) var(--x-ease), transform var(--x-dur) var(--x-ease);
+      background: none; line-height: 1;
+    }
+    .wd-footer__totop:hover { border-color: #fff; color: #fff; transform: translateY(-2px); }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 900px) {
+      .ob-content__inner { grid-template-columns: 1fr; gap: 3rem; }
+      .ob-left { padding-top: 0; }
+      .ob-headline { font-size: clamp(2rem, 6vw, 3rem); }
+    }
+    @media (max-width: 768px) {
+      .xnav__links {
+        position: fixed;
+        top: 64px; left: 0; right: 0;
+        background: #2C2C2C;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        flex-direction: column;
+        padding: 1.75rem var(--x-gutter);
+        gap: 1.5rem;
+        z-index: 99;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+        display: none;
+        transform: none;
+      }
+      .xnav__links.open { display: flex; }
+      .xnav__links a { font-size: 1rem; color: rgba(255,255,255,0.8); }
+      .xnav__hamburger { display: flex; }
+      .ob-step__label { display: none; }
+      .ob-stepper { padding: 2rem 0 1.75rem; }
+      .ob-card { padding: 1.75rem; }
+      .wd-footer__inner { flex-direction: column; align-items: flex-start; gap: 2.5rem; }
+      .xilo-logo--footer { height: 64px; }
+      .wd-footer__social-row { flex-wrap: wrap; gap: 1rem; }
+    }
+    @media (max-width: 480px) {
+      .ob-step__circle { width: 30px; height: 30px; font-size: 0.62rem; }
+      .ob-content { padding: 3rem 0 5rem; }
+      .ob-summary__row { flex-direction: column; align-items: flex-start; gap: 0.2rem; }
+      .ob-summary__value { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════════════════════
+       NAV
+  ═════════════════════════════════════════════════════════ -->
+  <header class="xnav" id="xnav">
+    <div class="xnav__inner xcontainer">
+
+      <a href="web-development.html" class="xnav__logo" aria-label="XILO — Home">
+        <img src="assets/xilo-logo.png" alt="XILO" class="xilo-logo xilo-logo--nav" />
+      </a>
+
+      <nav class="xnav__links" id="xnavLinks" aria-label="Main navigation">
+        <a href="web-development.html">Web Development</a>
+        <a href="web-development.html#portfolio">Portfolio</a>
+      </nav>
+
+      <div class="xnav__right">
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button class="lang-toggle__btn active" data-lang="en" aria-pressed="true">EN</button>
+          <span class="lang-toggle__sep" aria-hidden="true">/</span>
+          <button class="lang-toggle__btn" data-lang="es" aria-pressed="false">SP</button>
+        </div>
+        <button class="xnav__hamburger" id="xHamburger" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+
+  <!-- ════════════════════════════════════════════════════════
+       ONBOARDING — STEP 3
+  ═════════════════════════════════════════════════════════ -->
+  <div class="ob-page">
+
+    <!-- ── STEPPER ─────────────────────────────────────────── -->
+    <div class="ob-stepper">
+      <div class="ob-stepper__inner xcontainer">
+
+        <div class="ob-step ob-step--done">
+          <div class="ob-step__circle" aria-label="Step 1 completed">✓</div>
+          <span class="ob-step__label" id="s-label-1">About You</span>
+        </div>
+
+        <div class="ob-step ob-step--done">
+          <div class="ob-step__circle" aria-label="Step 2 completed">✓</div>
+          <span class="ob-step__label" id="s-label-2">Payment</span>
+        </div>
+
+        <div class="ob-step ob-step--active" aria-current="step">
+          <div class="ob-step__circle">3</div>
+          <span class="ob-step__label" id="s-label-3">You're In!</span>
+        </div>
+
+        <div class="ob-step">
+          <div class="ob-step__circle">4</div>
+          <span class="ob-step__label" id="s-label-4">Book a Call</span>
+        </div>
+
+        <div class="ob-step">
+          <div class="ob-step__circle">5</div>
+          <span class="ob-step__label" id="s-label-5">Your Assets</span>
+        </div>
+
+        <div class="ob-step">
+          <div class="ob-step__circle">6</div>
+          <span class="ob-step__label" id="s-label-6">Your URL</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── STEP 3 CONTENT ──────────────────────────────────── -->
+    <section class="ob-content">
+      <div class="ob-content__inner xcontainer">
+
+        <!-- LEFT: welcome copy -->
+        <div class="ob-left">
+          <span class="ob-step-badge" id="ob-step-badge">Step 3 of 6</span>
+
+          <h1 class="ob-headline" id="ob-headline">
+            WELCOME<br />TO<br />XILO.
+          </h1>
+
+          <p class="ob-sub" id="ob-sub">
+            Your payment was confirmed.<br />
+            Now let's schedule your kickoff.
+          </p>
+        </div>
+
+        <!-- RIGHT: confirmation card -->
+        <div class="ob-card">
+
+          <!-- Header: check + title -->
+          <div class="ob-card__head">
+            <div class="ob-card__check">
+              <div class="ob-card__check-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#88D98D" stroke-width="2.5"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
+              <div class="ob-card__check-line" aria-hidden="true"></div>
+            </div>
+            <h2 class="ob-card__title" id="ob-card-title">You're all set!</h2>
+          </div>
+
+          <!-- Email confirmation row -->
+          <div class="ob-confirm-email">
+            <span class="ob-confirm-email__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </span>
+            <p class="ob-confirm-email__text" id="ob-confirm-text">
+              Confirmation sent to <strong>maria@company.com</strong>
+            </p>
+          </div>
+
+          <!-- Summary table -->
+          <div class="ob-summary" role="table" aria-label="Order summary">
+
+            <div class="ob-summary__row" role="row">
+              <span class="ob-summary__label" id="sum-lbl-1">Payment</span>
+              <span class="ob-summary__value ob-summary__value--accent" id="sum-val-1">
+                $950 USD · Confirmed
+              </span>
+            </div>
+
+            <div class="ob-summary__row" role="row">
+              <span class="ob-summary__label" id="sum-lbl-2">Project start</span>
+              <span class="ob-summary__value" id="sum-val-2">Within 5 business days</span>
+            </div>
+
+            <div class="ob-summary__row" role="row">
+              <span class="ob-summary__label" id="sum-lbl-3">Project manager</span>
+              <span class="ob-summary__value" id="sum-val-3">Will reach out within 24h</span>
+            </div>
+
+          </div>
+
+          <!-- Context paragraph -->
+          <p class="ob-card__context" id="ob-card-context">
+            We've sent you a calendar invite. Click below to schedule your
+            kickoff call and pick a time that works for you.
+          </p>
+
+          <!-- CTA + secondary link -->
+          <div class="ob-card__actions">
+            <button class="ob-cta" id="ob-cta" onclick="window.location.href='onboarding-step4.html'">
+              Schedule My Kickoff Call →
+            </button>
+            <a href="mailto:Contac@xipetechnology.com" class="ob-link-secondary" id="ob-link-secondary">
+              Have questions? Contact us
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </div><!-- /.ob-page -->
+
+
+  <!-- ════════════════════════════════════════════════════════
+       FOOTER — identical to Steps 1 & 2
+  ═════════════════════════════════════════════════════════ -->
+  <footer class="wd-footer" id="contact">
+    <div class="xcontainer wd-footer__inner">
+
+      <div class="wd-footer__brand">
+        <a href="web-development.html" class="wd-footer__logo-link" aria-label="XILO — Home">
+          <img src="assets/xilo-logo.png" alt="XILO" class="xilo-logo xilo-logo--footer" />
+          <span class="wd-footer__logo-tagline" id="footer-tagline">VENTURE STUDIO</span>
+        </a>
+      </div>
+
+      <div class="wd-footer__info">
+        <div class="wd-footer__contact">
+          <p class="wd-footer__contact-label" id="footer-contact-label">Contact:</p>
+          <a href="mailto:Contac@xipetechnology.com" class="wd-footer__email">
+            Contac@xipetechnology.com
+          </a>
+        </div>
+        <div class="wd-footer__social-block">
+          <p class="wd-footer__social-label" id="footer-follow-label">Follow us at</p>
+          <div class="wd-footer__social-row">
+            <div class="wd-footer__social-icons">
+              <a href="https://www.instagram.com/xilostudio/" target="_blank" rel="noopener noreferrer"
+                 class="wd-footer__social-icon" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                  <circle cx="12" cy="12" r="4"/>
+                  <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+                </svg>
+              </a>
+              <a href="https://www.linkedin.com/company/xilo-studio/" target="_blank" rel="noopener noreferrer"
+                 class="wd-footer__social-icon" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
+                  <rect x="2" y="9" width="4" height="12"/>
+                  <circle cx="4" cy="4" r="2"/>
+                </svg>
+              </a>
+              <a href="https://www.facebook.com/xilostudio/" target="_blank" rel="noopener noreferrer"
+                 class="wd-footer__social-icon" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                </svg>
+              </a>
+            </div>
+            <div class="wd-footer__controls">
+              <div class="lang-toggle lang-toggle--footer" role="group" aria-label="Language">
+                <button class="lang-toggle__btn active" data-lang="en" aria-pressed="true">EN</button>
+                <span class="lang-toggle__sep" aria-hidden="true">/</span>
+                <button class="lang-toggle__btn" data-lang="es" aria-pressed="false">SP</button>
+              </div>
+              <button class="wd-footer__totop" id="backToTop" aria-label="Back to top">↑</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ── TRANSLATIONS ─────────────────────────────────── */
+      const T = {
+        en: {
+          badge:        'Step 3 of 6',
+          headline:     'WELCOME<br />TO<br />XILO.',
+          sub:          'Your payment was confirmed.\nNow let\'s schedule your kickoff.',
+          cardTitle:    'You\'re all set!',
+          confirmText:  'Confirmation sent to',
+          sumLbl1:      'Payment',      sumVal1: '$950 USD · Confirmed',
+          sumLbl2:      'Project start', sumVal2: 'Within 5 business days',
+          sumLbl3:      'Project manager', sumVal3: 'Will reach out within 24h',
+          context:      'We\'ve sent you a calendar invite. Click below to schedule your kickoff call and pick a time that works for you.',
+          cta:          'Schedule My Kickoff Call →',
+          linkSecondary: 'Have questions? Contact us',
+          /* stepper */
+          s1: 'About You', s2: 'Payment', s3: "You're In!", s4: 'Book a Call', s5: 'Your Assets', s6: 'Your URL',
+          /* footer */
+          tagline:      'VENTURE STUDIO',
+          contactLabel: 'Contact:',
+          followLabel:  'Follow us at',
+        },
+        es: {
+          badge:        'Paso 3 de 6',
+          headline:     'BIENVENIDO<br />A<br />XILO.',
+          sub:          'Tu pago fue confirmado.\nAhora agendemos tu kickoff.',
+          cardTitle:    '¡Todo listo!',
+          confirmText:  'Confirmación enviada a',
+          sumLbl1:      'Pago',          sumVal1: '$950 USD · Confirmado',
+          sumLbl2:      'Inicio del proyecto', sumVal2: 'En 5 días hábiles',
+          sumLbl3:      'Project manager',     sumVal3: 'Se pondrá en contacto en 24h',
+          context:      'Te hemos enviado una invitación al calendario. Haz clic abajo para agendar tu llamada de inicio y elegir el horario que mejor te funcione.',
+          cta:          'Agendar Mi Llamada de Inicio →',
+          linkSecondary: '¿Tienes preguntas? Contáctanos',
+          /* stepper */
+          s1: 'Sobre Ti', s2: 'Pago', s3: '¡Estás Dentro!', s4: 'Agenda Llamada', s5: 'Tus Recursos', s6: 'Tu URL',
+          /* footer */
+          tagline:      'VENTURE STUDIO',
+          contactLabel: 'Contacto:',
+          followLabel:  'Síguenos en',
+        },
+      };
+
+      const STORAGE_KEY = 'xipe-lang';
+      let currentLang = localStorage.getItem(STORAGE_KEY) || 'en';
+
+      /* ── APPLY LANGUAGE ──────────────────────────────── */
+      function applyLang(lang) {
+        const d = T[lang];
+        if (!d) return;
+        currentLang = lang;
+        localStorage.setItem(STORAGE_KEY, lang);
+        document.documentElement.setAttribute('lang', lang === 'es' ? 'es' : 'en');
+
+        setHTML('ob-headline',       d.headline);
+        setText('ob-step-badge',     d.badge);
+        setText('ob-card-title',     d.cardTitle);
+        setText('ob-card-context',   d.context);
+        setText('ob-cta',            d.cta);
+        setText('ob-link-secondary', d.linkSecondary);
+
+        /* Sub — preserve line breaks */
+        const subEl = document.getElementById('ob-sub');
+        if (subEl) subEl.innerHTML = d.sub.replace(/\n/g, '<br />');
+
+        /* Confirm email text (preserve email address) */
+        const confirmEl = document.getElementById('ob-confirm-text');
+        if (confirmEl) {
+          const emailEl = confirmEl.querySelector('strong');
+          const email   = emailEl ? emailEl.textContent : 'maria@company.com';
+          confirmEl.innerHTML = d.confirmText + ' <strong>' + email + '</strong>';
+        }
+
+        /* Summary */
+        setText('sum-lbl-1', d.sumLbl1); setText('sum-val-1', d.sumVal1);
+        setText('sum-lbl-2', d.sumLbl2); setText('sum-val-2', d.sumVal2);
+        setText('sum-lbl-3', d.sumLbl3); setText('sum-val-3', d.sumVal3);
+
+        /* Stepper labels */
+        for (let i = 1; i <= 6; i++) {
+          const el = document.getElementById('s-label-' + i);
+          if (el) el.textContent = d['s' + i];
+        }
+
+        /* Footer */
+        setText('footer-tagline',       d.tagline);
+        setText('footer-contact-label', d.contactLabel);
+        setText('footer-follow-label',  d.followLabel);
+
+        /* Lang buttons */
+        document.querySelectorAll('.lang-toggle__btn').forEach((btn) => {
+          const active = btn.dataset.lang === lang;
+          btn.classList.toggle('active', active);
+          btn.setAttribute('aria-pressed', String(active));
+        });
+      }
+
+      function setText(id, val) {
+        const el = document.getElementById(id);
+        if (el && val !== undefined) el.textContent = val;
+      }
+      function setHTML(id, val) {
+        const el = document.getElementById(id);
+        if (el && val !== undefined) el.innerHTML = val;
+      }
+
+      /* ── NAV ─────────────────────────────────────────── */
+      const nav = document.getElementById('xnav');
+      if (nav) {
+        const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 40);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+      }
+      const hamburger = document.getElementById('xHamburger');
+      const navLinks  = document.getElementById('xnavLinks');
+      if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+          const open = navLinks.classList.toggle('open');
+          hamburger.setAttribute('aria-expanded', String(open));
+          hamburger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        });
+        document.addEventListener('click', (e) => {
+          if (nav && !nav.contains(e.target)) {
+            navLinks.classList.remove('open');
+            hamburger.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+
+      /* ── LANG TOGGLE ─────────────────────────────────── */
+      document.querySelectorAll('.lang-toggle__btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const lang = btn.dataset.lang;
+          if (lang !== currentLang) applyLang(lang);
+        });
+      });
+
+      /* ── BACK TO TOP ─────────────────────────────────── */
+      const backToTop = document.getElementById('backToTop');
+      if (backToTop) {
+        backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+      }
+
+      /* ── INIT ────────────────────────────────────────── */
+      applyLang(currentLang);
+
+    })();
+  </script>
+
+</body>
+</html>
