@@ -125,6 +125,7 @@
       'plan3.f4': '1:1 strategy — 5 hours/month',
 
       /* portfolio */
+      'portfolio.label': 'PORTFOLIO',
       'portfolio.headline': "WHAT WE'VE BUILT",
       'portfolio.industry': 'Industry',
       'portfolio.visit': 'VISIT WEBSITE →',
@@ -251,6 +252,7 @@
       'plan3.f4': 'Estrategia 1:1 — 5 horas/mes',
 
       /* portfolio */
+      'portfolio.label': 'PORTAFOLIO',
       'portfolio.headline': 'LO QUE HEMOS CONSTRUIDO',
       'portfolio.industry': 'Industria',
       'portfolio.visit': 'VISITAR SITIO →',
