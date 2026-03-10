@@ -439,13 +439,9 @@
     }
     .ob-include__item:first-of-type { border-radius: var(--x-radius) var(--x-radius) 0 0; }
     .ob-include__item:last-of-type  { border-bottom: 1px solid var(--x-mid); border-radius: 0 0 var(--x-radius) var(--x-radius); }
-    .ob-include__dot {
+    .ob-include__check {
       flex-shrink: 0;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      border: 1.5px solid #ccc;
-      background: #fff;
+      color: #88D98D;
     }
     .ob-include__copy { display: flex; flex-direction: column; gap: 0.1rem; }
     .ob-include__name {
@@ -458,7 +454,7 @@
       font-family: var(--x-font-body);
       font-size: 0.72rem;
       font-weight: 400;
-      color: #C07A3A;
+      color: #88AEF5;
     }
 
     /* ── SKIP LINK ───────────────────────────────────────── */
@@ -734,28 +730,28 @@
             <div class="ob-include">
               <p class="ob-include__label" id="ob-include-label">What to include</p>
               <div class="ob-include__item">
-                <span class="ob-include__dot"></span>
+                <span class="ob-include__check" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
                 <div class="ob-include__copy">
                   <span class="ob-include__name" id="ob-inc-name-1">Logo</span>
                   <span class="ob-include__hint" id="ob-inc-hint-1">PNG or AI file, transparent background preferred</span>
                 </div>
               </div>
               <div class="ob-include__item">
-                <span class="ob-include__dot"></span>
+                <span class="ob-include__check" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
                 <div class="ob-include__copy">
                   <span class="ob-include__name" id="ob-inc-name-2">Brand Guide</span>
                   <span class="ob-include__hint" id="ob-inc-hint-2">Colors, fonts, tone of voice, usage rules</span>
                 </div>
               </div>
               <div class="ob-include__item">
-                <span class="ob-include__dot"></span>
+                <span class="ob-include__check" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
                 <div class="ob-include__copy">
                   <span class="ob-include__name" id="ob-inc-name-3">Photos</span>
                   <span class="ob-include__hint" id="ob-inc-hint-3">Product shots or lifestyle imagery</span>
                 </div>
               </div>
               <div class="ob-include__item">
-                <span class="ob-include__dot"></span>
+                <span class="ob-include__check" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
                 <div class="ob-include__copy">
                   <span class="ob-include__name" id="ob-inc-name-4">Inspiration</span>
                   <span class="ob-include__hint" id="ob-inc-hint-4">References, moodboards, or examples you love</span>
