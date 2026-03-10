@@ -905,37 +905,35 @@
 
       /* ── TOAST ───────────────────────────────────────── */
       let toastTimer = null;
-      function showToast() {
+      function showToast(onDone) {
         const toast = document.getElementById('obToast');
-        if (!toast) return;
+        if (!toast) { if (onDone) onDone(); return; }
         toast.textContent = T[currentLang].toast;
         toast.classList.add('show');
         if (toastTimer) clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+        toastTimer = setTimeout(() => {
+          toast.classList.remove('show');
+          if (onDone) onDone();
+        }, 1500);
       }
 
-      /* ── WETRANSFER OPEN ──────────────────────────────── */
-      function openWeTransfer() {
-        window.open(WETRANSFER_URL, '_blank', 'noopener,noreferrer');
-        showToast();
-      }
-
-      /* ── DROP ZONE ───────────────────────────────────── */
+      /* ── DROP ZONE — solo abre WeTransfer, sin redirigir ── */
       const dropzone = document.getElementById('obDropzone');
       if (dropzone) {
-        dropzone.addEventListener('click', openWeTransfer);
+        const openOnly = () => window.open(WETRANSFER_URL, '_blank', 'noopener,noreferrer');
+        dropzone.addEventListener('click', openOnly);
         dropzone.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            openWeTransfer();
-          }
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openOnly(); }
         });
       }
 
-      /* ── CTA BUTTON ──────────────────────────────────── */
+      /* ── CTA BUTTON — abre WeTransfer + toast + va al Step 6 ── */
       const cta = document.getElementById('obCta');
       if (cta) {
-        cta.addEventListener('click', openWeTransfer);
+        cta.addEventListener('click', () => {
+          window.open(WETRANSFER_URL, '_blank', 'noopener,noreferrer');
+          showToast(() => { window.location.href = 'onboarding-step6.html'; });
+        });
       }
 
       /* ── NAV ─────────────────────────────────────────── */
