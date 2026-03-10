@@ -234,12 +234,21 @@
       padding: 5rem 0 7rem;
     }
     .ob-content__inner {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 4rem;
+      align-items: start;
     }
 
-    /* ── CARD WRAPPER ────────────────────────────────────── */
+    /* ── LEFT COLUMN ─────────────────────────────────────── */
+    .ob-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      padding-top: 1rem;
+      position: sticky;
+      top: 88px;
+    }
     .ob-step-badge {
       display: inline-flex;
       align-items: center;
@@ -279,7 +288,6 @@
 
     .ob-card {
       width: 100%;
-      max-width: 520px;
       background: #fff;
       border: 1px solid var(--x-mid);
       border-radius: 10px;
@@ -616,19 +624,22 @@
     <section class="ob-content">
       <div class="ob-content__inner xcontainer">
 
-        <!-- Single-column: card is self-contained -->
-        <div class="ob-card">
-          <div class="ob-card__body">
+        <!-- LEFT: copy -->
+        <div class="ob-left">
+          <span class="ob-step-badge" id="ob-step-badge">Step 2 of 4</span>
 
-            <!-- Step badge + copy -->
-            <div class="ob-card__copy">
-              <span class="ob-step-badge" id="ob-step-badge">Step 2 of 4</span>
-              <h1 class="ob-headline" id="ob-headline">SHARE YOUR<br />BRAND FILES.</h1>
-              <p class="ob-sub" id="ob-sub">
-                We need your logo, brand guide, or photos to kick off your project.
-                We'll open WeTransfer directly — files land straight in our inbox.
-              </p>
-            </div>
+          <h1 class="ob-headline" id="ob-headline">SHARE YOUR<br />BRAND FILES.</h1>
+
+          <p class="ob-sub" id="ob-sub">
+            We need your logo, brand guide, or photos to kick off your project.
+            We'll open WeTransfer directly — files land straight in our inbox.
+          </p>
+        </div>
+
+        <!-- RIGHT: card -->
+        <div>
+          <div class="ob-card">
+            <div class="ob-card__body">
 
             <!-- Info box: dark icon + title + email -->
             <div class="ob-info">
@@ -674,11 +685,11 @@
               <span id="ob-skip-label">I'll send my files later</span>
             </a>
 
-          </div><!-- /.ob-card__body -->
-        </div><!-- /.ob-card -->
+            </div><!-- /.ob-card__body -->
+          </div><!-- /.ob-card -->
 
-        <!-- Lock notice -->
-        <div class="ob-secure">
+          <!-- Lock notice -->
+          <div class="ob-secure">
           <span class="ob-secure__icon" aria-hidden="true">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="2"
@@ -690,7 +701,8 @@
           <p class="ob-secure__text" id="ob-secure-text">
             You'll be redirected to WeTransfer — your files are never stored on our servers.
           </p>
-        </div>
+          </div><!-- /.ob-secure -->
+        </div><!-- /.right-col -->
 
       </div>
     </section>
