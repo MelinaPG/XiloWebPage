@@ -562,11 +562,11 @@
     /* ── SECTION LABEL (YOUR PROJECT / KICKOFF CALL) ────── */
     .ob-section-label {
       font-family: var(--x-font-body);
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 0.16em;
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: #a0a0a8;
+      color: #b8b8bf;
     }
 
     /* ── STATUS PILL ROW ─────────────────────────────────── */
@@ -579,6 +579,21 @@
       padding: 0.85rem 1rem;
     }
 
+    /* ── STATUS DOT — enhanced pulse ─────────────────────── */
+    .ob-status__dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--x-green);
+      flex-shrink: 0;
+      animation: pulse-ring 2s ease-in-out infinite;
+    }
+    @keyframes pulse-ring {
+      0%   { box-shadow: 0 0 0 0 rgba(136,217,141,0.7); transform: scale(1); }
+      60%  { box-shadow: 0 0 0 5px rgba(136,217,141,0);  transform: scale(1.15); }
+      100% { box-shadow: 0 0 0 0 rgba(136,217,141,0);    transform: scale(1); }
+    }
+
     /* ── DIVIDER ─────────────────────────────────────────── */
     .ob-divider {
       border: none;
@@ -586,22 +601,39 @@
       margin: 0;
     }
 
-    /* ── KICKOFF QUOTE BLOCK ─────────────────────────────── */
-    .ob-quote {
+    /* ── KICKOFF BLOCK (label + quote + cta) ─────────────── */
+    .ob-kickoff-block {
       border-left: 3px solid var(--x-dark);
-      padding-left: 1.1rem;
+      background: rgba(46, 46, 46, 0.03);
+      border-radius: 0 5px 5px 0;
+      padding: 1rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
     }
 
     /* ── MEETING NARRATIVE ───────────────────────────────── */
     .ob-meeting-narrative {
       font-family: var(--x-font-head);
-      font-size: 1.45rem;
+      font-size: 1.9rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.02em;
       color: var(--x-dark);
-      line-height: 1.2;
+      line-height: 1.15;
     }
+
+    /* ── MICRO CTA ───────────────────────────────────────── */
+    .ob-micro-cta {
+      font-family: var(--x-font-body);
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--x-neutral);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color var(--x-dur) var(--x-ease);
+    }
+    .ob-micro-cta:hover { color: var(--x-dark); }
 
     /* ── CLOSING PARAGRAPH ───────────────────────────────── */
     .ob-closing {
@@ -884,11 +916,10 @@
         <!-- RIGHT: Project dashboard card -->
         <div class="ob-card">
 
-          <div class="ob-card__header">
-            <p class="ob-card__title" id="ob-card-title">Your Project</p>
-          </div>
-
           <div class="ob-card__body">
+
+            <!-- Label: YOUR PROJECT -->
+            <p class="ob-section-label" id="ob-card-title">Your Project</p>
 
             <!-- Status pill row -->
             <div class="ob-status-pill-row">
@@ -901,15 +932,19 @@
 
             <hr class="ob-divider" />
 
-            <!-- Section: Kickoff Call -->
-            <p class="ob-section-label" id="ob-kickoff-label">Kickoff Call</p>
+            <!-- Kickoff block -->
+            <div class="ob-kickoff-block">
 
-            <blockquote class="ob-quote">
+              <p class="ob-section-label" id="ob-kickoff-label">Kickoff Call</p>
+
               <p class="ob-meeting-narrative">
                 Almost there!<br>
-                <span style="font-family: var(--x-font-body); font-weight: 400; font-size: 0.82rem; text-transform: none; letter-spacing: 0; color: var(--x-neutral); line-height: 1.65; display: block; margin-top: 0.4rem;">We'll see you on your kickoff call — that's when the real magic starts. Come with questions.</span>
+                <span style="font-family: var(--x-font-body); font-weight: 400; font-size: 0.82rem; text-transform: none; letter-spacing: 0; color: #b8b8bf; line-height: 1.65; display: block; margin-top: 0.35rem;">We'll see you on your kickoff call — that's when the real magic starts. Come with questions.</span>
               </p>
-            </blockquote>
+
+              <a href="#contact" class="ob-micro-cta">Have questions before your call? Contact us →</a>
+
+            </div>
 
           </div>
 
