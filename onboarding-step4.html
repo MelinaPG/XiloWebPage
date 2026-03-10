@@ -264,10 +264,10 @@
       width: fit-content;
     }
     .ob-headline {
-      font-family: var(--x-font-body);
+      font-family: var(--x-font-head);
       font-size: clamp(2rem, 4.5vw, 3rem);
-      font-weight: 300;
-      line-height: 1.15;
+      font-weight: 800;
+      line-height: 1.1;
       letter-spacing: -0.01em;
       color: var(--x-dark);
     }
@@ -285,7 +285,7 @@
     }
     .ob-card__title {
       font-family: var(--x-font-head);
-      font-size: 1.15rem;
+      font-size: 1.5rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.04em;
@@ -417,14 +417,14 @@
       display: block;
       text-align: center;
       font-family: var(--x-font-body);
-      font-size: 0.75rem;
-      font-weight: 400;
-      color: #b0b0b0;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--x-neutral);
       padding: 0.5rem;
       cursor: pointer;
       transition: color var(--x-dur) var(--x-ease);
     }
-    .ob-skip:hover { color: var(--x-neutral); text-decoration: underline; }
+    .ob-skip:hover { color: var(--x-dark); text-decoration: underline; }
 
     /* ── SECURE NOTICE (below card) ──────────────────────── */
     .ob-secure {
@@ -802,7 +802,7 @@
       /* ── TRANSLATIONS ─────────────────────────────────── */
       const T = {
         en: {
-          badge:      'Step 2 of 4',
+          badge:      'Step 4 of 6',
           headline:   'Upload your<br />brand materials.',
           sub:        'Logos, fonts, photos, inspiration — anything that helps us understand your brand and vision.',
           cardTitle:  'Share Your Brand Files',
@@ -818,7 +818,7 @@
           tagline: 'VENTURE STUDIO', contactLabel: 'Contact:', followLabel: 'Follow us at',
         },
         es: {
-          badge:      'Paso 2 de 4',
+          badge:      'Paso 4 de 6',
           headline:   'Sube tus<br />materiales de marca.',
           sub:        'Logos, fuentes, fotos, inspiración — todo lo que nos ayude a entender tu marca y visión.',
           cardTitle:  'Comparte Tus Archivos de Marca',
