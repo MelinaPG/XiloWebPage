@@ -317,72 +317,30 @@
       gap: 1rem;
     }
 
-    /* ── DROP ZONE ───────────────────────────────────────── */
-    .ob-dropzone {
-      min-height: 160px;
-      border: 1.5px dashed var(--x-mid);
-      border-radius: var(--x-radius);
-      background: #F8F8F6;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      cursor: pointer;
-      transition: background var(--x-dur) var(--x-ease),
-                  border-color var(--x-dur) var(--x-ease);
-      padding: 2rem 1rem;
-    }
-    .ob-dropzone:hover {
-      background: #F0F0EC;
-      border-color: #c0c0c8;
-    }
-    .ob-dropzone__icon {
-      color: #b0b0b0;
-    }
-    .ob-dropzone__primary {
-      font-family: var(--x-font-body);
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--x-dark);
-      text-align: center;
-    }
-    .ob-dropzone__secondary {
-      font-family: var(--x-font-body);
-      font-size: 0.75rem;
-      font-weight: 400;
-      color: #b0b0b0;
-      text-align: center;
-    }
-    .ob-dropzone__formats {
-      font-family: var(--x-font-body);
-      font-size: 0.65rem;
-      font-weight: 400;
-      color: #c0c0c8;
-      text-align: center;
-      letter-spacing: 0.02em;
-    }
 
-    /* ── CATEGORY TAGS ───────────────────────────────────── */
-    .ob-tags {
+    /* ── FORMAT PILLS (read-only) ────────────────────────── */
+    .ob-formats {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: calc(16px - 1rem);
+      gap: 0.45rem;
+      margin-top: calc(4px - 1rem);
     }
-    .ob-tag {
+    .ob-format-pill {
       font-family: var(--x-font-body);
-      font-size: 0.72rem;
-      font-weight: 500;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
       color: var(--x-neutral);
       border: 1px solid var(--x-mid);
-      background: #fff;
+      background: #F8F8F6;
       border-radius: var(--x-pill);
-      padding: 0.3rem 0.85rem;
-      transition: background var(--x-dur) var(--x-ease);
-      cursor: default;
+      padding: 0.25rem 0.75rem;
     }
-    .ob-tag:hover { background: var(--x-mid); }
+    .ob-format-pill--dim {
+      font-weight: 400;
+      color: #b0b0b0;
+      border-style: dashed;
+    }
 
     /* ── INFO MESSAGE ────────────────────────────────────── */
     .ob-info {
@@ -394,7 +352,6 @@
       border-left: 3px solid var(--x-dark);
       border-radius: 6px;
       padding: 14px 16px;
-      margin-top: calc(20px - 1rem);
     }
     .ob-info__icon {
       flex-shrink: 0;
@@ -461,20 +418,20 @@
       text-decoration: underline;
     }
 
-    /* ── SECURE NOTICE (below card) ─────────────────────────── */
+    /* ── SECURE NOTICE (below card, inside right col) ────── */
     .ob-secure {
       display: flex;
       align-items: center;
-      gap: 0.55rem;
-      margin-top: 1rem;
-      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 0.85rem;
+      padding: 0 0.25rem;
     }
-    .ob-secure__icon { color: #b0b0b0; flex-shrink: 0; }
+    .ob-secure__icon { color: #c0c0c8; flex-shrink: 0; }
     .ob-secure__text {
       font-family: var(--x-font-body);
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 400;
-      color: #b0b0b0;
+      color: #b8b8b8;
       line-height: 1.5;
     }
 
@@ -673,95 +630,83 @@
 
         <!-- LEFT: copy -->
         <div class="ob-left">
-          <span class="ob-step-badge" id="ob-step-badge">Step 4 of 6</span>
+          <span class="ob-step-badge" id="ob-step-badge">Step 2 of 4</span>
 
           <h1 class="ob-headline" id="ob-headline">
-            UPLOAD YOUR<br />BRAND<br />MATERIALS.
+            SEND YOUR<br />BRAND<br />FILES.
           </h1>
 
           <p class="ob-sub" id="ob-sub">
-            Logos, fonts, photos, inspiration — anything that helps us understand your brand and vision.
+            Logos, fonts, photos, inspiration — anything that helps us capture your brand.
           </p>
         </div>
 
-        <!-- RIGHT: Upload card -->
-        <div class="ob-card">
+        <!-- RIGHT: WeTransfer card -->
+        <div>
+          <div class="ob-card">
 
-          <div class="ob-card__header">
-            <p class="ob-card__title" id="ob-card-title">Share Your Brand Assets</p>
-          </div>
+            <div class="ob-card__header">
+              <p class="ob-card__title" id="ob-card-title">Share Your Brand Assets</p>
+            </div>
 
-          <div class="ob-card__body">
+            <div class="ob-card__body">
 
-            <!-- Drop zone (visual, opens WeTransfer on click) -->
-            <div class="ob-dropzone" id="obDropzone" role="button" tabindex="0"
-                 aria-label="Click to open WeTransfer and upload files">
-              <div class="ob-dropzone__icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="1.5"
-                     stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="16 16 12 12 8 16"/>
-                  <line x1="12" y1="12" x2="12" y2="21"/>
-                  <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
-                </svg>
+              <!-- Info box: destination email -->
+              <div class="ob-info">
+                <span class="ob-info__icon" aria-hidden="true">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"/>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                  </svg>
+                </span>
+                <p class="ob-info__text" id="ob-info-text">
+                  Your files will arrive directly to
+                  <span class="ob-info__email">melina.peralta@xipetechnology.com</span>
+                  — we'll receive them instantly.
+                </p>
               </div>
-              <p class="ob-dropzone__formats" id="ob-drop-formats">Accepts: PDF, PNG, JPG, AI, ZIP · Up to 50MB</p>
-            </div>
 
-            <!-- Category tags -->
-            <div class="ob-tags">
-              <span class="ob-tag" id="ob-tag-1">Logo</span>
-              <span class="ob-tag" id="ob-tag-2">Brand Guide</span>
-              <span class="ob-tag" id="ob-tag-3">Photos</span>
-              <span class="ob-tag" id="ob-tag-4">Inspiration</span>
-            </div>
+              <!-- Format pills (read-only) -->
+              <div class="ob-formats">
+                <span class="ob-format-pill">PDF</span>
+                <span class="ob-format-pill">PNG</span>
+                <span class="ob-format-pill">JPG</span>
+                <span class="ob-format-pill">AI</span>
+                <span class="ob-format-pill">ZIP</span>
+                <span class="ob-format-pill ob-format-pill--dim" id="ob-format-size">Up to 50 MB</span>
+              </div>
 
-            <!-- Info message -->
-            <div class="ob-info">
-              <span class="ob-info__icon" aria-hidden="true">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="22" y1="2" x2="11" y2="13"/>
-                  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                </svg>
-              </span>
-              <p class="ob-info__text" id="ob-info-text">
-                Click the button below to send your files via WeTransfer to
-                <span class="ob-info__email">melina.peralta@xipetechnology.com</span>
-                — we'll receive them instantly in our inbox.
-              </p>
-            </div>
+              <!-- CTA button -->
+              <button class="ob-cta" id="obCta">
+                <span id="ob-cta-label">Open WeTransfer →</span>
+              </button>
 
-            <!-- CTA button -->
-            <button class="ob-cta" id="obCta">
-              <span id="ob-cta-label">Upload &amp; Continue →</span>
-            </button>
+              <!-- Skip link -->
+              <a class="ob-skip" id="obSkip" href="onboarding-step5.html">
+                <span id="ob-skip-label">I'll send my files later</span>
+              </a>
 
-            <!-- Skip link -->
-            <a class="ob-skip" id="obSkip" href="onboarding-step5.html">
-              <span id="ob-skip-label">I'll send my assets later</span>
-            </a>
+            </div><!-- /.ob-card__body -->
 
-          </div><!-- /.ob-card__body -->
+          </div><!-- /.ob-card -->
 
-        </div><!-- /.ob-card -->
-
-        <!-- Lock / secure notice -->
-        <div></div><!-- spacer for left column -->
-        <div class="ob-secure">
-          <span class="ob-secure__icon" aria-hidden="true">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2"
-                 stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-          </span>
-          <p class="ob-secure__text" id="ob-secure-text">
-            You'll be redirected to WeTransfer to send your files — your documents are never stored on our servers.
-          </p>
-        </div>
+          <!-- Lock notice (outside the card box) -->
+          <div class="ob-secure">
+            <span class="ob-secure__icon" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </span>
+            <p class="ob-secure__text" id="ob-secure-text">
+              You'll be redirected to WeTransfer — your files are never stored on our servers.
+            </p>
+          </div>
+        </div><!-- /.right-col -->
 
       </div>
     </section>
@@ -847,17 +792,16 @@
       /* ── TRANSLATIONS ─────────────────────────────────── */
       const T = {
         en: {
-          badge:       'Step 4 of 6',
-          headline:    'UPLOAD YOUR<br />BRAND<br />MATERIALS.',
-          sub:         'Logos, fonts, photos, inspiration — anything that helps us understand your brand and vision.',
+          badge:       'Step 2 of 4',
+          headline:    'SEND YOUR<br />BRAND<br />FILES.',
+          sub:         'Logos, fonts, photos, inspiration — anything that helps us capture your brand.',
           cardTitle:   'Share Your Brand Assets',
-          dropFormats:   'Accepts: PDF, PNG, JPG, AI, ZIP · Up to 50MB',
-          tag1: 'Logo', tag2: 'Brand Guide', tag3: 'Photos', tag4: 'Inspiration',
-          infoText:    'Click the button below to send your files via WeTransfer to <span class="ob-info__email">melina.peralta@xipetechnology.com</span> — we\'ll receive them instantly in our inbox.',
-          ctaLabel:    'Upload & Continue →',
-          skipLabel:   'I\'ll send my assets later',
+          infoText:    'Your files will arrive directly to <span class="ob-info__email">melina.peralta@xipetechnology.com</span> — we\'ll receive them instantly.',
+          formatSize:  'Up to 50 MB',
+          ctaLabel:    'Open WeTransfer →',
+          skipLabel:   'I\'ll send my files later',
           toast:       'Opening WeTransfer · Send files to melina.peralta@xipetechnology.com',
-          secureText:  'You\'ll be redirected to WeTransfer to send your files — your documents are never stored on our servers.',
+          secureText:  'You\'ll be redirected to WeTransfer — your files are never stored on our servers.',
           /* stepper */
           s1: 'About You', s2: 'Payment', s3: "You're In!", s4: 'Your Assets', s5: 'Book a Call', s6: 'Your URL',
           /* footer */
@@ -866,17 +810,16 @@
           followLabel:  'Follow us at',
         },
         es: {
-          badge:       'Paso 4 de 6',
-          headline:    'SUBE TUS<br />MATERIALES<br />DE MARCA.',
-          sub:         'Logos, fuentes, fotos, inspiración — todo lo que nos ayude a entender tu marca y visión.',
+          badge:       'Paso 2 de 4',
+          headline:    'ENVÍA TUS<br />ARCHIVOS<br />DE MARCA.',
+          sub:         'Logos, fuentes, fotos, inspiración — todo lo que nos ayude a capturar tu marca.',
           cardTitle:   'Comparte Tus Recursos de Marca',
-          dropFormats:   'Acepta: PDF, PNG, JPG, AI, ZIP · Hasta 50MB',
-          tag1: 'Logo', tag2: 'Manual de Marca', tag3: 'Fotos', tag4: 'Inspiración',
-          infoText:    'Haz clic en el botón de abajo para enviar tus archivos vía WeTransfer a <span class="ob-info__email">melina.peralta@xipetechnology.com</span> — los recibiremos al instante.',
-          ctaLabel:    'Subir y Continuar →',
-          skipLabel:   'Enviaré mis recursos después',
+          infoText:    'Tus archivos llegarán directamente a <span class="ob-info__email">melina.peralta@xipetechnology.com</span> — los recibiremos al instante.',
+          formatSize:  'Hasta 50 MB',
+          ctaLabel:    'Abrir WeTransfer →',
+          skipLabel:   'Enviaré mis archivos después',
           toast:       'Abriendo WeTransfer · Envía archivos a melina.peralta@xipetechnology.com',
-          secureText:  'Serás redirigido a WeTransfer para enviar tus archivos — tus documentos nunca se almacenan en nuestros servidores.',
+          secureText:  'Serás redirigido a WeTransfer — tus archivos nunca se almacenan en nuestros servidores.',
           /* stepper */
           s1: 'Sobre Ti', s2: 'Pago', s3: '¡Estás Dentro!', s4: 'Tus Recursos', s5: 'Agenda Llamada', s6: 'Tu URL',
           /* footer */
@@ -897,19 +840,15 @@
         localStorage.setItem(STORAGE_KEY, lang);
         document.documentElement.setAttribute('lang', lang === 'es' ? 'es' : 'en');
 
-        setHTML('ob-headline',      d.headline);
-        setText('ob-step-badge',    d.badge);
-        setText('ob-sub',           d.sub);
-        setText('ob-card-title',    d.cardTitle);
-        setText('ob-drop-formats',  d.dropFormats);
-        setText('ob-tag-1',         d.tag1);
-        setText('ob-tag-2',         d.tag2);
-        setText('ob-tag-3',         d.tag3);
-        setText('ob-tag-4',         d.tag4);
-        setHTML('ob-info-text',     d.infoText);
-        setText('ob-cta-label',     d.ctaLabel);
-        setText('ob-skip-label',    d.skipLabel);
-        setText('ob-secure-text',   d.secureText);
+        setHTML('ob-headline',    d.headline);
+        setText('ob-step-badge',  d.badge);
+        setText('ob-sub',         d.sub);
+        setText('ob-card-title',  d.cardTitle);
+        setHTML('ob-info-text',   d.infoText);
+        setText('ob-format-size', d.formatSize);
+        setText('ob-cta-label',   d.ctaLabel);
+        setText('ob-skip-label',  d.skipLabel);
+        setText('ob-secure-text', d.secureText);
 
         /* Stepper labels */
         for (let i = 1; i <= 6; i++) {
@@ -951,16 +890,6 @@
           toast.classList.remove('show');
           if (onDone) onDone();
         }, 1500);
-      }
-
-      /* ── DROP ZONE ───────────────────────────────────── */
-      const dropzone = document.getElementById('obDropzone');
-      if (dropzone) {
-        const openOnly = () => window.open(WETRANSFER_URL, '_blank', 'noopener,noreferrer');
-        dropzone.addEventListener('click', openOnly);
-        dropzone.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openOnly(); }
-        });
       }
 
       /* ── CTA BUTTON ──────────────────────────────────── */
