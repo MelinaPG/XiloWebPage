@@ -594,12 +594,13 @@
 
     /* ── MEETING NARRATIVE ───────────────────────────────── */
     .ob-meeting-narrative {
-      font-family: var(--x-font-body);
-      font-size: 0.92rem;
+      font-family: var(--x-font-head);
+      font-size: 1.45rem;
       font-weight: 700;
-      font-style: italic;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
       color: var(--x-dark);
-      line-height: 1.6;
+      line-height: 1.2;
     }
 
     /* ── CLOSING PARAGRAPH ───────────────────────────────── */
@@ -883,10 +884,11 @@
         <!-- RIGHT: Project dashboard card -->
         <div class="ob-card">
 
-          <div class="ob-card__body">
+          <div class="ob-card__header">
+            <p class="ob-card__title" id="ob-card-title">Your Project</p>
+          </div>
 
-            <!-- Section: Your Project -->
-            <p class="ob-section-label" id="ob-card-title">Your Project</p>
+          <div class="ob-card__body">
 
             <!-- Status pill row -->
             <div class="ob-status-pill-row">
@@ -903,13 +905,10 @@
             <p class="ob-section-label" id="ob-kickoff-label">Kickoff Call</p>
 
             <blockquote class="ob-quote">
-              <p class="ob-meeting-narrative" id="ob-meeting-narrative">
-                Almost there. We'll see you on your kickoff call — that's when the real magic starts. Come with questions.
+              <p class="ob-meeting-narrative">
+                Almost there! We'll see you on your kickoff call — that's when the real magic starts. Come with questions.
               </p>
             </blockquote>
-
-            <!-- Chat link -->
-            <a href="#" class="ob-chat-link" id="ob-chat-label">Chat with your project manager →</a>
 
           </div>
 
@@ -994,12 +993,10 @@
           badge:      '✓ Step 6 of 6',
           headline:   'WE\'RE ON IT.<br />YOUR SITE<br />IS COMING.',
           sub:        'Our team has everything they need to get started. You\'ll receive your staging URL within 7 business days.',
-          cardTitle:      'Your Project',
-          kickoffLabel:   'Kickoff Call',
+          cardTitle:    'Your Project',
+          kickoffLabel: 'Kickoff Call',
           /* status */
           stLabel1: 'Status', stVal1: 'In Progress',
-          /* chat */
-          chatLabel: 'Chat with your project manager →',
           /* timeline */
           tlDay1: 'Today',   tlDesc1: 'Assets received & reviewed',
           tlDay2: 'Day 1–2', tlDesc2: 'Design & structure',
@@ -1020,8 +1017,6 @@
           kickoffLabel:   'Llamada de Inicio',
           /* status */
           stLabel1: 'Estado', stVal1: 'En Progreso',
-          /* chat */
-          chatLabel: '¿Preguntas? Chatea con tu project manager →',
           /* timeline */
           tlDay1: 'Hoy',       tlDesc1: 'Recursos recibidos y revisados',
           tlDay2: 'Día 1–2',   tlDesc2: 'Diseño y estructura',
@@ -1056,9 +1051,6 @@
         /* status */
         setText('st-label-1', d.stLabel1);
         setText('st-val-1',   d.stVal1);
-
-        /* chat */
-        setText('ob-chat-label', d.chatLabel);
 
         /* timeline */
         setText('tl-day-1', d.tlDay1); setText('tl-desc-1', d.tlDesc1);
