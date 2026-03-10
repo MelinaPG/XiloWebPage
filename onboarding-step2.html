@@ -1182,19 +1182,9 @@
         if (input) input.addEventListener('input', () => clearError(input, errEl));
       });
 
-      function isValidCard(v) {
-        return v.replace(/\s/g, '').length === 16;
-      }
-      function isValidExpiry(v) {
-        const clean = v.replace(/\s/g, '');
-        const m = clean.replace('/', '');
-        if (m.length < 4) return false;
-        const month = parseInt(m.slice(0, 2), 10);
-        const year  = parseInt('20' + m.slice(2, 4), 10);
-        if (month < 1 || month > 12) return false;
-        const now = new Date();
-        return year > now.getFullYear() || (year === now.getFullYear() && month >= now.getMonth() + 1);
-      }
+      /* NOTE: validation is relaxed for flow testing.
+         Real card validation will be enforced by Stripe on integration. */
+      function notEmpty(v) { return v.trim().length > 0; }
 
       /* ── FORM SUBMIT ─────────────────────────────────── */
       const form = document.getElementById('ob-form');
@@ -1207,11 +1197,11 @@
           let isValid = true;
 
           const fields = [
-            { id: 'cardName',   errId: 'err-cardName',   check: (v) => v.trim().length > 1,  msg: d.errRequired },
-            { id: 'cardNumber', errId: 'err-cardNumber',  check: isValidCard,                  msg: d.errCard     },
-            { id: 'expiry',     errId: 'err-expiry',      check: isValidExpiry,                msg: d.errExpiry   },
-            { id: 'cvv',        errId: 'err-cvv',         check: (v) => v.trim().length === 3, msg: d.errCvv      },
-            { id: 'zip',        errId: 'err-zip',         check: (v) => v.trim().length >= 4,  msg: d.errRequired },
+            { id: 'cardName',   errId: 'err-cardName',   check: notEmpty, msg: d.errRequired },
+            { id: 'cardNumber', errId: 'err-cardNumber',  check: notEmpty, msg: d.errCard     },
+            { id: 'expiry',     errId: 'err-expiry',      check: notEmpty, msg: d.errExpiry   },
+            { id: 'cvv',        errId: 'err-cvv',         check: notEmpty, msg: d.errCvv      },
+            { id: 'zip',        errId: 'err-zip',         check: notEmpty, msg: d.errRequired },
           ];
 
           fields.forEach(({ id, errId, check, msg }) => {
