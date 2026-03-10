@@ -490,6 +490,36 @@
       margin-top: 0.25rem;
     }
 
+    /* ── FIELD ERROR STATE ───────────────────────────────── */
+    .ob-field__input.ob-error {
+      border-color: var(--x-red);
+      background: #fff8f7;
+    }
+    .ob-field__input.ob-error:focus {
+      border-color: var(--x-red);
+      background: #fff8f7;
+    }
+    .ob-field__error {
+      font-family: var(--x-font-body);
+      font-size: 0.62rem;
+      font-weight: 500;
+      color: var(--x-red);
+      letter-spacing: 0.04em;
+      margin-top: 0.15rem;
+      display: none;
+    }
+    .ob-field__error.visible { display: block; }
+
+    /* Shake animation on failed submit */
+    @keyframes ob-shake {
+      0%, 100% { transform: translateX(0); }
+      20%       { transform: translateX(-6px); }
+      40%       { transform: translateX(6px); }
+      60%       { transform: translateX(-4px); }
+      80%       { transform: translateX(4px); }
+    }
+    .ob-card.ob-shake { animation: ob-shake 0.35s var(--x-ease); }
+
     /* ── CTA BUTTON ──────────────────────────────────────── */
     .ob-cta {
       display: flex;
@@ -795,11 +825,13 @@
                 <label class="ob-field__label" for="fullName">Full Name</label>
                 <input class="ob-field__input" type="text" id="fullName" name="fullName"
                        placeholder="Jane Smith" autocomplete="name" />
+                <span class="ob-field__error" id="err-fullName">Required field</span>
               </div>
               <div class="ob-field">
                 <label class="ob-field__label" for="phone">Phone Number</label>
                 <input class="ob-field__input" type="tel" id="phone" name="phone"
                        placeholder="+1 555 000 0000" autocomplete="tel" />
+                <span class="ob-field__error" id="err-phone">Required field</span>
               </div>
             </div>
 
@@ -809,11 +841,13 @@
                 <label class="ob-field__label" for="email">Work Email</label>
                 <input class="ob-field__input" type="email" id="email" name="email"
                        placeholder="jane@company.com" autocomplete="email" />
+                <span class="ob-field__error" id="err-email">Enter a valid email</span>
               </div>
               <div class="ob-field">
                 <label class="ob-field__label" for="company">Company / Studio</label>
                 <input class="ob-field__input" type="text" id="company" name="company"
                        placeholder="Acme Studio" autocomplete="organization" />
+                <span class="ob-field__error" id="err-company">Required field</span>
               </div>
             </div>
 
@@ -838,6 +872,7 @@
                 <label class="ob-field__label" for="currentUrl">Your current website URL</label>
                 <input class="ob-field__input" type="url" id="currentUrl" name="currentUrl"
                        placeholder="https://www.yourwebsite.com" autocomplete="url" />
+                <span class="ob-field__error" id="err-currentUrl">Enter a valid URL (https://...)</span>
               </div>
             </div>
 
@@ -956,6 +991,9 @@
           labelUrl:     'Your current website URL',
           phUrl:        'https://www.yourwebsite.com',
           cta:          'Get Started →',
+          errRequired:  'Required field',
+          errEmail:     'Enter a valid email address',
+          errUrl:       'Enter a valid URL (https://...)',
           /* stepper */
           s1: 'About You', s2: 'Payment', s3: "You're In!", s4: 'Book a Call', s5: 'Your Assets', s6: 'Your URL',
           /* footer */
@@ -982,6 +1020,9 @@
           labelUrl:     'URL de tu sitio web actual',
           phUrl:        'https://www.tusitio.com',
           cta:          'Comenzar →',
+          errRequired:  'Campo requerido',
+          errEmail:     'Ingresa un correo válido',
+          errUrl:       'Ingresa una URL válida (https://...)',
           /* stepper */
           s1: 'Sobre Ti', s2: 'Pago', s3: '¡Estás Dentro!', s4: 'Agenda Llamada', s5: 'Tus Recursos', s6: 'Tu URL',
           /* footer */
@@ -1094,14 +1135,17 @@
       const toggleNo  = document.getElementById('toggleNo');
       const urlRow    = document.getElementById('urlRow');
       const urlInput  = document.getElementById('currentUrl');
+      let hasWebsite  = true; // default: Yes is active
 
-      function setWebsiteToggle(hasWebsite) {
-        toggleYes.classList.toggle('active', hasWebsite);
-        toggleNo.classList.toggle('active', !hasWebsite);
-        toggleYes.setAttribute('aria-pressed', String(hasWebsite));
-        toggleNo.setAttribute('aria-pressed', String(!hasWebsite));
-        urlRow.classList.toggle('visible', hasWebsite);
-        if (urlInput) urlInput.required = hasWebsite;
+      function setWebsiteToggle(val) {
+        hasWebsite = val;
+        toggleYes.classList.toggle('active', val);
+        toggleNo.classList.toggle('active', !val);
+        toggleYes.setAttribute('aria-pressed', String(val));
+        toggleNo.setAttribute('aria-pressed', String(!val));
+        urlRow.classList.toggle('visible', val);
+        /* clear URL error when hiding */
+        if (!val) clearError(urlInput, document.getElementById('err-currentUrl'));
       }
 
       if (toggleYes && toggleNo) {
@@ -1109,13 +1153,87 @@
         toggleNo.addEventListener('click',  () => setWebsiteToggle(false));
       }
 
+      /* ── VALIDATION HELPERS ──────────────────────────── */
+      function showError(input, errEl, msg) {
+        input.classList.add('ob-error');
+        if (errEl) {
+          if (msg) errEl.textContent = msg;
+          errEl.classList.add('visible');
+        }
+      }
+      function clearError(input, errEl) {
+        if (!input) return;
+        input.classList.remove('ob-error');
+        if (errEl) errEl.classList.remove('visible');
+      }
+
+      /* Clear error on user input */
+      ['fullName','phone','email','company','currentUrl'].forEach((id) => {
+        const input  = document.getElementById(id);
+        const errEl  = document.getElementById('err-' + id);
+        if (input) {
+          input.addEventListener('input', () => clearError(input, errEl));
+        }
+      });
+
+      function isValidEmail(v) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+      }
+      function isValidUrl(v) {
+        try { const u = new URL(v.trim()); return u.protocol === 'https:' || u.protocol === 'http:'; }
+        catch { return false; }
+      }
+
       /* ── FORM SUBMIT ─────────────────────────────────── */
       const form = document.getElementById('ob-form');
+      const card = document.querySelector('.ob-card');
+
       if (form) {
         form.addEventListener('submit', (e) => {
           e.preventDefault();
-          /* Placeholder: advance to step 2 */
-          console.log('Step 1 submitted — proceed to Step 2');
+
+          const d       = T[currentLang];
+          let   isValid = true;
+
+          const fields = [
+            { id: 'fullName',   errId: 'err-fullName',   check: (v) => v.trim().length > 1,   msg: d.errRequired },
+            { id: 'phone',      errId: 'err-phone',      check: (v) => v.trim().length > 4,   msg: d.errRequired },
+            { id: 'email',      errId: 'err-email',      check: isValidEmail,                  msg: d.errEmail    },
+            { id: 'company',    errId: 'err-company',    check: (v) => v.trim().length > 0,    msg: d.errRequired },
+          ];
+
+          /* URL field only when Yes is active */
+          if (hasWebsite) {
+            fields.push({ id: 'currentUrl', errId: 'err-currentUrl', check: isValidUrl, msg: d.errUrl });
+          }
+
+          fields.forEach(({ id, errId, check, msg }) => {
+            const input = document.getElementById(id);
+            const errEl = document.getElementById(errId);
+            if (!input) return;
+            if (!check(input.value)) {
+              showError(input, errEl, msg);
+              isValid = false;
+            } else {
+              clearError(input, errEl);
+            }
+          });
+
+          if (!isValid) {
+            /* Shake card and scroll it into view */
+            card.classList.remove('ob-shake');
+            void card.offsetWidth; // reflow to restart animation
+            card.classList.add('ob-shake');
+            card.addEventListener('animationend', () => card.classList.remove('ob-shake'), { once: true });
+            /* Focus first errored field */
+            const firstErr = card.querySelector('.ob-field__input.ob-error');
+            if (firstErr) firstErr.focus();
+            return;
+          }
+
+          /* ✅ All valid — redirect to next step
+             Replace 'onboarding-step2.html' with the actual URL when ready */
+          window.location.href = 'onboarding-step2.html';
         });
       }
 
