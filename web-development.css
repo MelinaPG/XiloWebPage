@@ -485,19 +485,17 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 }
 .wd-features__cta {
   flex-shrink: 0;
-  color: var(--x-dark);
   font-family: var(--x-font-body);
-  font-size: 1rem;
-  text-decoration: none;
-  background-image: linear-gradient(to right, #4bc94b, #e8bc4b, #e87c4b, #e84b6c, #c44be8, #4b7ce8);
-  background-size: 100% 2px;
-  background-repeat: no-repeat;
-  background-position: 0 100%;
-  padding-bottom: 2px;
+  font-size: 0.875rem;
+  font-style: italic;
+  color: var(--x-neutral);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--x-dark);
   transition: opacity var(--x-dur) var(--x-ease);
   white-space: nowrap;
 }
-.wd-features__cta:hover { opacity: 0.65; }
+.wd-features__cta:hover { opacity: 0.55; }
 .wd-features__headline {
   font-family: var(--x-font-head);
   font-size: clamp(2.5rem, 5vw, 4.5rem);
