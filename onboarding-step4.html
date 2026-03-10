@@ -413,6 +413,54 @@
       flex-shrink: 0;
     }
 
+    /* ── WHAT TO INCLUDE LIST ───────────────────────────── */
+    .ob-include {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .ob-include__label {
+      font-family: var(--x-font-body);
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--x-neutral);
+      margin-bottom: 0.65rem;
+    }
+    .ob-include__item {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.75rem 1rem;
+      background: #F8F8F6;
+      border: 1px solid var(--x-mid);
+      border-bottom: none;
+    }
+    .ob-include__item:first-of-type { border-radius: var(--x-radius) var(--x-radius) 0 0; }
+    .ob-include__item:last-of-type  { border-bottom: 1px solid var(--x-mid); border-radius: 0 0 var(--x-radius) var(--x-radius); }
+    .ob-include__dot {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid #ccc;
+      background: #fff;
+    }
+    .ob-include__copy { display: flex; flex-direction: column; gap: 0.1rem; }
+    .ob-include__name {
+      font-family: var(--x-font-body);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--x-dark);
+    }
+    .ob-include__hint {
+      font-family: var(--x-font-body);
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: #C07A3A;
+    }
+
     /* ── SKIP LINK ───────────────────────────────────────── */
     .ob-skip {
       display: block;
@@ -682,6 +730,39 @@
               <span class="ob-format-pill ob-format-pill--dim" id="ob-format-size">Up to 50 MB</span>
             </div>
 
+            <!-- What to include -->
+            <div class="ob-include">
+              <p class="ob-include__label" id="ob-include-label">What to include</p>
+              <div class="ob-include__item">
+                <span class="ob-include__dot"></span>
+                <div class="ob-include__copy">
+                  <span class="ob-include__name" id="ob-inc-name-1">Logo</span>
+                  <span class="ob-include__hint" id="ob-inc-hint-1">PNG or AI file, transparent background preferred</span>
+                </div>
+              </div>
+              <div class="ob-include__item">
+                <span class="ob-include__dot"></span>
+                <div class="ob-include__copy">
+                  <span class="ob-include__name" id="ob-inc-name-2">Brand Guide</span>
+                  <span class="ob-include__hint" id="ob-inc-hint-2">Colors, fonts, tone of voice, usage rules</span>
+                </div>
+              </div>
+              <div class="ob-include__item">
+                <span class="ob-include__dot"></span>
+                <div class="ob-include__copy">
+                  <span class="ob-include__name" id="ob-inc-name-3">Photos</span>
+                  <span class="ob-include__hint" id="ob-inc-hint-3">Product shots or lifestyle imagery</span>
+                </div>
+              </div>
+              <div class="ob-include__item">
+                <span class="ob-include__dot"></span>
+                <div class="ob-include__copy">
+                  <span class="ob-include__name" id="ob-inc-name-4">Inspiration</span>
+                  <span class="ob-include__hint" id="ob-inc-hint-4">References, moodboards, or examples you love</span>
+                </div>
+              </div>
+            </div>
+
             <!-- CTA button with green badge icon -->
             <button class="ob-cta" id="obCta">
               <span id="ob-cta-label">Open WeTransfer</span>
@@ -811,6 +892,11 @@
           formatSize: 'Up to 50 MB',
           ctaLabel:   'Open WeTransfer',
           skipLabel:  'I\'ll send my files later',
+          includeLabel: 'What to include',
+          inc1n: 'Logo',            inc1h: 'PNG or AI file, transparent background preferred',
+          inc2n: 'Brand Guide',     inc2h: 'Colors, fonts, tone of voice, usage rules',
+          inc3n: 'Photos',          inc3h: 'Product shots or lifestyle imagery',
+          inc4n: 'Inspiration',     inc4h: 'References, moodboards, or examples you love',
           toast:      'Opening WeTransfer · Send files to melina.peralta@xipetechnology.com',
           secureText: 'You\'ll be redirected to WeTransfer — your files are never stored on our servers.',
           /* stepper */
@@ -827,6 +913,11 @@
           formatSize: 'Hasta 50 MB',
           ctaLabel:   'Abrir WeTransfer',
           skipLabel:  'Enviaré mis archivos después',
+          includeLabel: 'Qué incluir',
+          inc1n: 'Logo',             inc1h: 'Archivo PNG o AI, fondo transparente preferido',
+          inc2n: 'Manual de Marca',  inc2h: 'Colores, tipografías, tono de voz, reglas de uso',
+          inc3n: 'Fotos',            inc3h: 'Fotos de producto o lifestyle',
+          inc4n: 'Inspiración',      inc4h: 'Referencias, moodboards o ejemplos que te gusten',
           toast:      'Abriendo WeTransfer · Envía archivos a melina.peralta@xipetechnology.com',
           secureText: 'Serás redirigido a WeTransfer — tus archivos nunca se almacenan en nuestros servidores.',
           /* stepper */
@@ -856,6 +947,11 @@
         setText('ob-cta-label',   d.ctaLabel);
         setText('ob-skip-label',  d.skipLabel);
         setText('ob-secure-text', d.secureText);
+        setText('ob-include-label', d.includeLabel);
+        setText('ob-inc-name-1', d.inc1n); setText('ob-inc-hint-1', d.inc1h);
+        setText('ob-inc-name-2', d.inc2n); setText('ob-inc-hint-2', d.inc2h);
+        setText('ob-inc-name-3', d.inc3n); setText('ob-inc-hint-3', d.inc3h);
+        setText('ob-inc-name-4', d.inc4n); setText('ob-inc-hint-4', d.inc4h);
 
         /* Stepper labels */
         for (let i = 1; i <= 6; i++) {
