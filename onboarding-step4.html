@@ -387,28 +387,37 @@
     /* ── INFO MESSAGE ────────────────────────────────────── */
     .ob-info {
       display: flex;
-      align-items: flex-start;
-      gap: 0.6rem;
-      background: rgba(227,228,232,0.35);
-      border-radius: 4px;
-      padding: 12px;
+      align-items: center;
+      gap: 0.85rem;
+      background: #fff;
+      border: 1.5px solid var(--x-mid);
+      border-left: 3px solid var(--x-dark);
+      border-radius: 6px;
+      padding: 14px 16px;
       margin-top: calc(20px - 1rem);
     }
     .ob-info__icon {
       flex-shrink: 0;
-      color: #a0a0a8;
-      margin-top: 1px;
+      color: var(--x-dark);
+      background: #f0f0ec;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .ob-info__text {
       font-family: var(--x-font-body);
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       font-weight: 400;
-      line-height: 1.6;
+      line-height: 1.65;
       color: var(--x-neutral);
     }
     .ob-info__email {
-      font-weight: 600;
+      font-weight: 700;
       color: var(--x-dark);
+      letter-spacing: 0.01em;
     }
 
     /* ── CTA BUTTON ──────────────────────────────────────── */
@@ -450,6 +459,23 @@
     .ob-skip:hover {
       color: var(--x-neutral);
       text-decoration: underline;
+    }
+
+    /* ── SECURE NOTICE (below card) ─────────────────────────── */
+    .ob-secure {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      margin-top: 1rem;
+      justify-content: center;
+    }
+    .ob-secure__icon { color: #b0b0b0; flex-shrink: 0; }
+    .ob-secure__text {
+      font-family: var(--x-font-body);
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: #b0b0b0;
+      line-height: 1.5;
     }
 
     /* ============================================================
@@ -679,7 +705,6 @@
                   <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
                 </svg>
               </div>
-              <p class="ob-dropzone__secondary" id="ob-drop-secondary">or click to browse your computer</p>
               <p class="ob-dropzone__formats" id="ob-drop-formats">Accepts: PDF, PNG, JPG, AI, ZIP · Up to 50MB</p>
             </div>
 
@@ -694,12 +719,11 @@
             <!-- Info message -->
             <div class="ob-info">
               <span class="ob-info__icon" aria-hidden="true">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2"
                      stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"/>
-                  <line x1="12" y1="8" x2="12" y2="12"/>
-                  <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  <line x1="22" y1="2" x2="11" y2="13"/>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
                 </svg>
               </span>
               <p class="ob-info__text" id="ob-info-text">
@@ -722,6 +746,22 @@
           </div><!-- /.ob-card__body -->
 
         </div><!-- /.ob-card -->
+
+        <!-- Lock / secure notice -->
+        <div></div><!-- spacer for left column -->
+        <div class="ob-secure">
+          <span class="ob-secure__icon" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </span>
+          <p class="ob-secure__text" id="ob-secure-text">
+            You'll be redirected to WeTransfer to send your files — your documents are never stored on our servers.
+          </p>
+        </div>
 
       </div>
     </section>
@@ -811,13 +851,13 @@
           headline:    'UPLOAD YOUR<br />BRAND<br />MATERIALS.',
           sub:         'Logos, fonts, photos, inspiration — anything that helps us understand your brand and vision.',
           cardTitle:   'Share Your Brand Assets',
-          dropSecondary: 'or click to browse your computer',
           dropFormats:   'Accepts: PDF, PNG, JPG, AI, ZIP · Up to 50MB',
           tag1: 'Logo', tag2: 'Brand Guide', tag3: 'Photos', tag4: 'Inspiration',
           infoText:    'Click the button below to send your files via WeTransfer to <span class="ob-info__email">melina.peralta@xipetechnology.com</span> — we\'ll receive them instantly in our inbox.',
           ctaLabel:    'Upload & Continue →',
           skipLabel:   'I\'ll send my assets later',
           toast:       'Opening WeTransfer · Send files to melina.peralta@xipetechnology.com',
+          secureText:  'You\'ll be redirected to WeTransfer to send your files — your documents are never stored on our servers.',
           /* stepper */
           s1: 'About You', s2: 'Payment', s3: "You're In!", s4: 'Your Assets', s5: 'Book a Call', s6: 'Your URL',
           /* footer */
@@ -830,13 +870,13 @@
           headline:    'SUBE TUS<br />MATERIALES<br />DE MARCA.',
           sub:         'Logos, fuentes, fotos, inspiración — todo lo que nos ayude a entender tu marca y visión.',
           cardTitle:   'Comparte Tus Recursos de Marca',
-          dropSecondary: 'o haz clic para explorar tu computadora',
           dropFormats:   'Acepta: PDF, PNG, JPG, AI, ZIP · Hasta 50MB',
           tag1: 'Logo', tag2: 'Manual de Marca', tag3: 'Fotos', tag4: 'Inspiración',
           infoText:    'Haz clic en el botón de abajo para enviar tus archivos vía WeTransfer a <span class="ob-info__email">melina.peralta@xipetechnology.com</span> — los recibiremos al instante.',
           ctaLabel:    'Subir y Continuar →',
           skipLabel:   'Enviaré mis recursos después',
           toast:       'Abriendo WeTransfer · Envía archivos a melina.peralta@xipetechnology.com',
+          secureText:  'Serás redirigido a WeTransfer para enviar tus archivos — tus documentos nunca se almacenan en nuestros servidores.',
           /* stepper */
           s1: 'Sobre Ti', s2: 'Pago', s3: '¡Estás Dentro!', s4: 'Tus Recursos', s5: 'Agenda Llamada', s6: 'Tu URL',
           /* footer */
@@ -861,7 +901,6 @@
         setText('ob-step-badge',    d.badge);
         setText('ob-sub',           d.sub);
         setText('ob-card-title',    d.cardTitle);
-        setText('ob-drop-secondary',d.dropSecondary);
         setText('ob-drop-formats',  d.dropFormats);
         setText('ob-tag-1',         d.tag1);
         setText('ob-tag-2',         d.tag2);
@@ -870,6 +909,7 @@
         setHTML('ob-info-text',     d.infoText);
         setText('ob-cta-label',     d.ctaLabel);
         setText('ob-skip-label',    d.skipLabel);
+        setText('ob-secure-text',   d.secureText);
 
         /* Stepper labels */
         for (let i = 1; i <= 6; i++) {
