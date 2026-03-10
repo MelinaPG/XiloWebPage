@@ -264,20 +264,32 @@
       width: fit-content;
     }
     .ob-headline {
-      font-family: var(--x-font-head);
-      font-size: clamp(2.2rem, 5vw, 3.2rem);
-      font-weight: 800;
-      line-height: 1.05;
+      font-family: var(--x-font-body);
+      font-size: clamp(2rem, 4.5vw, 3rem);
+      font-weight: 300;
+      line-height: 1.15;
       letter-spacing: -0.01em;
-      text-transform: uppercase;
       color: var(--x-dark);
     }
     .ob-sub {
       font-family: var(--x-font-body);
-      font-size: 0.95rem;
+      font-size: 1rem;
       font-weight: 300;
       line-height: 1.8;
       color: var(--x-neutral);
+    }
+    /* card top title */
+    .ob-card__header {
+      padding: 1.25rem 1.75rem;
+      border-bottom: 1px solid var(--x-mid);
+    }
+    .ob-card__title {
+      font-family: var(--x-font-head);
+      font-size: 1.15rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--x-dark);
     }
 
     /* ── CARD ────────────────────────────────────────────── */
@@ -628,17 +640,19 @@
         <div class="ob-left">
           <span class="ob-step-badge" id="ob-step-badge">Step 2 of 4</span>
 
-          <h1 class="ob-headline" id="ob-headline">SHARE YOUR<br />BRAND FILES.</h1>
+          <h1 class="ob-headline" id="ob-headline">Upload your<br />brand materials.</h1>
 
           <p class="ob-sub" id="ob-sub">
-            We need your logo, brand guide, or photos to kick off your project.
-            We'll open WeTransfer directly — files land straight in our inbox.
+            Logos, fonts, photos, inspiration — anything that helps us understand your brand and vision.
           </p>
         </div>
 
         <!-- RIGHT: card -->
         <div>
           <div class="ob-card">
+            <div class="ob-card__header">
+              <p class="ob-card__title" id="ob-card-title">Share Your Brand Files</p>
+            </div>
             <div class="ob-card__body">
 
             <!-- Info box: dark icon + title + email -->
@@ -789,8 +803,9 @@
       const T = {
         en: {
           badge:      'Step 2 of 4',
-          headline:   'SHARE YOUR<br />BRAND FILES.',
-          sub:        'We need your logo, brand guide, or photos to kick off your project. We\'ll open WeTransfer directly — files land straight in our inbox.',
+          headline:   'Upload your<br />brand materials.',
+          sub:        'Logos, fonts, photos, inspiration — anything that helps us understand your brand and vision.',
+          cardTitle:  'Share Your Brand Files',
           infoTitle:  'Files go directly to our inbox',
           formatSize: 'Up to 50 MB',
           ctaLabel:   'Open WeTransfer',
@@ -804,8 +819,9 @@
         },
         es: {
           badge:      'Paso 2 de 4',
-          headline:   'COMPARTE TUS<br />ARCHIVOS DE MARCA.',
-          sub:        'Necesitamos tu logo, manual de marca o fotos para arrancar tu proyecto. Abriremos WeTransfer directo — los archivos llegan a nuestra bandeja.',
+          headline:   'Sube tus<br />materiales de marca.',
+          sub:        'Logos, fuentes, fotos, inspiración — todo lo que nos ayude a entender tu marca y visión.',
+          cardTitle:  'Comparte Tus Archivos de Marca',
           infoTitle:  'Los archivos llegan directo a nuestra bandeja',
           formatSize: 'Hasta 50 MB',
           ctaLabel:   'Abrir WeTransfer',
@@ -833,6 +849,7 @@
         setHTML('ob-headline',    d.headline);
         setText('ob-step-badge',  d.badge);
         setText('ob-sub',         d.sub);
+        setText('ob-card-title',  d.cardTitle);
         setText('ob-info-title',  d.infoTitle);
         setText('ob-format-size', d.formatSize);
         setText('ob-cta-label',   d.ctaLabel);
