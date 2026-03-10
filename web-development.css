@@ -923,17 +923,9 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
 .wd-portfolio__header {
   display: flex;
-  align-items: center;
-  gap: 1.25rem;
+  flex-direction: column;
+  gap: 0.5rem;
   margin-bottom: 4rem;
-}
-
-.wd-portfolio__dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: 1.5px solid var(--x-dark);
-  flex-shrink: 0;
 }
 
 .wd-portfolio__headline {
