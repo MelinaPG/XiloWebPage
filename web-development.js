@@ -42,7 +42,7 @@
       /* package */
       'package.label': 'THE PACKAGE',
       'package.headline': 'WHAT DO<br>YOU GET?',
-      'package.sub': 'More than a landing page. A complete website in a week.',
+      'package.sub': 'More than a landing page. A complete website in just one week.',
       'package.cta': 'Start Here',
 
       /* features */
