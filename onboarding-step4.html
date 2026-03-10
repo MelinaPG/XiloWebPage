@@ -706,6 +706,13 @@
         backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
       }
 
+      /* ── CALENDLY → redirect to step 5 ──────────────── */
+      window.addEventListener('message', function (e) {
+        if (e.data && e.data.event === 'calendly.event_scheduled') {
+          window.location.href = 'onboarding-step5.html';
+        }
+      });
+
       /* ── INIT ────────────────────────────────────────── */
       applyLang(currentLang);
 
