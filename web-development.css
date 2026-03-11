@@ -43,7 +43,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 /* ── TYPE TOKENS ─────────────────────────────────────────── */
 .xlabel {
   font-family: var(--x-font-body);
-  font-size: 0.65rem;
+  font-size: 0.84rem;
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -51,14 +51,14 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 }
 .xbody-lg {
   font-family: var(--x-font-body);
-  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  font-size: clamp(1.19rem, 1.4vw, 1.34rem);
   font-weight: 300;
   line-height: 1.7;
   color: var(--x-neutral);
 }
 .xbody {
   font-family: var(--x-font-body);
-  font-size: 0.875rem;
+  font-size: 1.06rem;
   line-height: 1.75;
   color: var(--x-neutral);
 }
@@ -183,7 +183,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 }
 .xnav__links a {
   font-family: var(--x-font-body);
-  font-size: 0.82rem;
+  font-size: 1.01rem;
   font-weight: 400;
   letter-spacing: 0.02em;
   color: rgba(255,255,255,0.7);
@@ -213,13 +213,13 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 .lang-toggle { display: flex; align-items: center; gap: 0.25rem; }
 .lang-toggle__sep {
   font-family: var(--x-font-body);
-  font-size: 0.72rem;
+  font-size: 0.91rem;
   font-weight: 300;
   color: rgba(255,255,255,0.35);
 }
 .lang-toggle__btn {
   font-family: var(--x-font-body);
-  font-size: 0.72rem;
+  font-size: 0.91rem;
   font-weight: 500;
   letter-spacing: 0.06em;
   color: rgba(255,255,255,0.35);
@@ -486,7 +486,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 .wd-features__cta {
   flex-shrink: 0;
   font-family: var(--x-font-body);
-  font-size: 0.875rem;
+  font-size: 1.06rem;
   color: var(--x-dark);
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -570,7 +570,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
 .wd-pricing__before {
   color: var(--x-neutral);
-  font-size: 0.8rem;
+  font-size: 0.99rem;
   letter-spacing: 0.1em;
 }
 .wd-pricing__before s { text-decoration: line-through; }
@@ -592,7 +592,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
 .wd-pricing__currency {
   margin-bottom: 0.9rem;
-  font-size: 0.85rem;
+  font-size: 1.04rem;
 }
 
 .wd-pricing__note { color: var(--x-neutral); }
@@ -601,7 +601,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
 .wd-pricing__discount {
   color: var(--x-neutral);
-  font-size: 0.8rem;
+  font-size: 0.99rem;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -780,7 +780,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
 .wd-process__step-title { color: var(--x-dark); }
 
-.wd-process__step .xbody { font-size: 0.8rem; color: var(--x-neutral); }
+.wd-process__step .xbody { font-size: 0.99rem; color: var(--x-neutral); }
 
 
 /* ════════════════════════════════════════════════════════════
@@ -902,7 +902,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   align-items: flex-start;
   gap: 0.5rem;
   color: rgba(255,255,255,0.5);
-  font-size: 0.82rem;
+  font-size: 1.01rem;
 }
 .wd-plan__check {
   color: var(--x-green);
@@ -1058,7 +1058,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
 .wd-footer__logo-tagline {
   font-family: var(--x-font-body);
-  font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+  font-size: clamp(0.89rem, 1.2vw, 1.09rem);
   font-weight: 600;
   letter-spacing: 0.35em;
   text-transform: uppercase;
@@ -1081,7 +1081,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
 .wd-footer__contact-label {
   font-family: var(--x-font-body);
-  font-size: 0.72rem;
+  font-size: 0.91rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: rgba(255,255,255,0.9);
@@ -1089,7 +1089,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
 .wd-footer__email {
   font-family: var(--x-font-body);
-  font-size: 0.82rem;
+  font-size: 1.01rem;
   font-weight: 400;
   color: rgba(255,255,255,0.55);
   transition: color var(--x-dur) var(--x-ease);
@@ -1102,7 +1102,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
 .wd-footer__social-label {
   font-family: var(--x-font-body);
-  font-size: 0.72rem;
+  font-size: 0.91rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: rgba(255,255,255,0.9);
@@ -1143,7 +1143,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 .wd-footer__controls { display: flex; align-items: center; gap: 0.9rem; }
 
 /* Footer lang toggle inherits base .lang-toggle styles */
-.lang-toggle--footer .lang-toggle__btn { font-size: 0.72rem; }
+.lang-toggle--footer .lang-toggle__btn { font-size: 0.91rem; }
 
 /* Back-to-top */
 .wd-footer__totop {
@@ -1155,7 +1155,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   border-radius: 50%;
   border: 1.5px solid rgba(255,255,255,0.25);
   color: rgba(255,255,255,0.6);
-  font-size: 0.85rem;
+  font-size: 1.04rem;
   font-family: var(--x-font-body);
   cursor: pointer;
   transition: border-color var(--x-dur) var(--x-ease),
