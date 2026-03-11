@@ -1,0 +1,84 @@
+/* ============================================================
+   XILO — Design Tokens
+   Single source of truth for colors, typography, spacing.
+   Both --c-* (landing) and --x-* (web-dev/onboarding) aliases.
+   ============================================================ */
+
+:root {
+  /* ── COLORS ──────────────────────────────────────────────── */
+  --x-neutral:    #707070;
+  --x-teal:       #E2FFFD;
+  --x-green:      #88D98D;
+  --x-bg:         #FDFCF8;
+  --x-dark:       #2E2E2E;
+  --x-mid:        #E3E4E8;
+  --x-blue:       #88AEF5;
+  --x-red:        #FD3F28;
+  --x-accent:     #FD3F28;
+
+  --x-white:      #FFFFFF;
+  --x-grey-100:   #F5F5F5;
+  --x-grey-200:   #E5E5E5;
+  --x-grey-300:   #B0B0B0;
+  --x-grey-400:   #8A8A8A;
+  --x-grey-500:   #707070;
+  --x-grey-600:   #505050;
+  --x-grey-700:   #3A3A3A;
+  --x-grey-800:   #2C2C2C;
+  --x-grey-900:   #1A1A1A;
+
+  /* Dark surfaces (admin, nav, footer) */
+  --x-surface-dark: #1A1A1A;
+  --x-surface-card: #242424;
+
+  /* Heading alias used in inline styles */
+  --x-font-heading: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+
+  /* Landing-page aliases (same values) */
+  --c-neutral:    var(--x-neutral);
+  --c-teal-light: var(--x-teal);
+  --c-green:      var(--x-green);
+  --c-bg-light:   var(--x-bg);
+  --c-dark:       var(--x-dark);
+  --c-bg-neutral: var(--x-mid);
+  --c-blue:       var(--x-blue);
+  --c-red:        var(--x-red);
+
+  /* ── TYPOGRAPHY ──────────────────────────────────────────── */
+  --x-font-head:  'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --x-font-body:  'Barlow', Helvetica, Arial, sans-serif;
+
+  /* Landing aliases */
+  --font-display: var(--x-font-head);
+  --font-body:    var(--x-font-body);
+
+  /* ── SPACING ─────────────────────────────────────────────── */
+  --x-gutter:     2rem;
+  --x-max:        1200px;
+
+  --space-xs:     0.5rem;
+  --space-sm:     1rem;
+  --space-md:     2rem;
+  --space-lg:     4rem;
+  --space-xl:     6rem;
+  --space-2xl:    10rem;
+
+  /* Landing layout */
+  --container:    1280px;
+  --gutter:       2rem;
+
+  /* ── RADIUS ──────────────────────────────────────────────── */
+  --x-radius:     8px;
+  --x-pill:       999px;
+
+  --radius-sm:    4px;
+  --radius-md:    8px;
+  --radius-pill:  999px;
+
+  /* ── TRANSITIONS ─────────────────────────────────────────── */
+  --x-ease:       cubic-bezier(0.4, 0, 0.2, 1);
+  --x-dur:        0.25s;
+
+  --ease:         var(--x-ease);
+  --dur:          var(--x-dur);
+}

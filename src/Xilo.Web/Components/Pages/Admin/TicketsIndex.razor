@@ -1,0 +1,101 @@
+@page "/admin/tickets"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "Client,SuperAdmin")]
+@inject XiloDbContext Db
+@inject NavigationManager Navigation
+
+<PageTitle>Mis Tickets — XIPE</PageTitle>
+
+<div class="cl-page">
+    <div class="xcontainer">
+        <ClientNav />
+
+        <div class="cl-header">
+            <h1 class="cl-title">Mis Tickets de Soporte</h1>
+            <p class="cl-subtitle">Selecciona un proyecto para ver sus tickets.</p>
+        </div>
+
+        @if (websites.Count == 0)
+        {
+            <div class="cl-empty">
+                <p>No tienes proyectos activos.</p>
+                <a href="/admin" class="cl-btn cl-btn--primary">Volver a Proyectos</a>
+            </div>
+        }
+        else if (websites.Count == 1)
+        {
+            // Redirigir automáticamente si solo hay un proyecto
+            Navigation.NavigateTo($"/admin/tickets/{websites[0].Id}");
+        }
+        else
+        {
+            <div class="cl-projects">
+                @foreach (var site in websites)
+                {
+                    <div class="cl-project" @onclick="() => GoToProjectTickets(site.Id)" style="cursor:pointer;">
+                        <div class="cl-project__header">
+                            <div>
+                                <div class="cl-project__name">@site.Name</div>
+                                <div class="cl-project__url">@(site.Url ?? "URL pendiente")</div>
+                            </div>
+                            <span class="cl-status cl-status--@site.Status">@site.Status</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;">
+                            <div style="font-size:0.85rem;color:var(--x-neutral);">
+                                @if (ticketCounts.TryGetValue(site.Id, out var count))
+                                {
+                                    <span>🎫 @count ticket@(count != 1 ? "s" : "")</span>
+                                }
+                                else
+                                {
+                                    <span>🎫 Sin tickets</span>
+                                }
+                            </div>
+                            <span class="cl-btn cl-btn--sm cl-btn--outline">Ver Tickets →</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    private List<Website> websites = [];
+    private Dictionary<int, int> ticketCounts = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userId = HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "";
+        if (string.IsNullOrEmpty(userId)) return;
+
+        websites = await Db.Websites
+            .Where(w => w.UserId == userId)
+            .OrderByDescending(w => w.CreatedAt)
+            .ToListAsync();
+
+        // Contar tickets por proyecto
+        var websiteIds = websites.Select(w => w.Id).ToList();
+        var counts = await Db.SupportTickets
+            .Where(t => websiteIds.Contains(t.WebsiteId))
+            .GroupBy(t => t.WebsiteId)
+            .Select(g => new { WebsiteId = g.Key, Count = g.Count() })
+            .ToListAsync();
+
+        ticketCounts = counts.ToDictionary(c => c.WebsiteId, c => c.Count);
+
+        // Si solo hay un proyecto, redirigir automáticamente
+        if (websites.Count == 1)
+        {
+            Navigation.NavigateTo($"/admin/tickets/{websites[0].Id}");
+        }
+    }
+
+    private void GoToProjectTickets(int projectId)
+    {
+        Navigation.NavigateTo($"/admin/tickets/{projectId}");
+    }
+}

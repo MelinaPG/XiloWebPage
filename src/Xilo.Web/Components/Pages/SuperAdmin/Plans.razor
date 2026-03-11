@@ -1,0 +1,104 @@
+@page "/superadmin/plans"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "SuperAdmin")]
+@inject XiloDbContext Db
+@inject NavigationManager Nav
+
+<PageTitle>Planes de Soporte — SuperAdmin</PageTitle>
+
+<div class="sa-page">
+    <div class="xcontainer">
+        <AdminNav />
+
+        <h1 class="sa-title">Planes de Soporte</h1>
+
+        <table class="sa-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Precio / Mes</th>
+                    <th>Estado</th>
+                    <th>Destacado</th>
+                    <th>Websites</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in plans)
+                {
+                    <tr>
+                        <td>@p.Name</td>
+                        <td>$@p.MonthlyPrice.ToString("N0") USD</td>
+                        <td><span class="sa-badge @(p.IsActive ? "sa-badge--active" : "sa-badge--inactive")">@(p.IsActive ? "Activo" : "Inactivo")</span></td>
+                        <td>@(p.IsFeatured ? "⭐" : "—")</td>
+                        <td>@p.Websites.Count</td>
+                        <td><a href="/superadmin/plans/@p.Id" class="sa-btn sa-btn--outline sa-btn--sm">Editar</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h2 class="sa-title" style="font-size:1.2rem;margin-top:2rem;">Crear Nuevo Plan</h2>
+
+        <EditForm Model="Input" method="post" OnValidSubmit="HandleCreate" FormName="create-plan">
+            <div class="sa-form">
+                <div class="sa-form__group">
+                    <label class="sa-form__label">Nombre</label>
+                    <InputText @bind-Value="Input.Name" class="sa-form__input" />
+                </div>
+                <div class="sa-form__group">
+                    <label class="sa-form__label">Descripción</label>
+                    <InputTextArea @bind-Value="Input.Description" class="sa-form__textarea" />
+                </div>
+                <div class="sa-form__group">
+                    <label class="sa-form__label">Precio Mensual (USD)</label>
+                    <InputNumber @bind-Value="Input.MonthlyPrice" class="sa-form__input" />
+                </div>
+                <div class="sa-form__group">
+                    <label class="sa-form__check">
+                        <InputCheckbox @bind-Value="Input.IsFeatured" />
+                        Destacado (Most Popular)
+                    </label>
+                </div>
+                <div class="sa-form__actions">
+                    <button type="submit" class="sa-btn sa-btn--primary">Crear Plan</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private List<SupportPlan> plans = [];
+
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+    [SupplyParameterFromForm] private PlanInput Input { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        plans = (await Db.SupportPlans.Include(p => p.Websites).ToListAsync())
+            .OrderBy(p => p.MonthlyPrice).ToList();
+    }
+
+    private async Task HandleCreate()
+    {
+        Db.SupportPlans.Add(new SupportPlan
+        {
+            Name = Input.Name ?? "",
+            Description = Input.Description ?? "",
+            MonthlyPrice = Input.MonthlyPrice ?? 0,
+            IsFeatured = Input.IsFeatured
+        });
+        await Db.SaveChangesAsync();
+        Nav.NavigateTo("/superadmin/plans", forceLoad: true);
+    }
+
+    private sealed class PlanInput
+    {
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public decimal? MonthlyPrice { get; set; }
+        public bool IsFeatured { get; set; }
+    }
+}

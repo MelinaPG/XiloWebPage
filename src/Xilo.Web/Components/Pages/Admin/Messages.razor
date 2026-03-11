@@ -1,0 +1,150 @@
+@page "/admin/messages/{Id:int}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "Client,SuperAdmin")]
+@inject XiloDbContext Db
+@inject UserManager<AppUser> UserManager
+
+<PageTitle>Messages — XIPE</PageTitle>
+
+<div class="@(isSuperAdmin ? "sa-page" : "cl-page")">
+    <div class="xcontainer">
+        @if (isSuperAdmin)
+        {
+            <AdminNav />
+        }
+        else
+        {
+            <ClientNav />
+        }
+
+        @if (website is null)
+        {
+            <p class="cl-subtitle">Project not found.</p>
+        }
+        else
+        {
+            <div class="cl-header">
+                <h1 class="cl-title">Messages — @website.Name</h1>
+                @if (isSuperAdmin)
+                {
+                    <p class="cl-subtitle">Client: @website.User.FullName (@website.User.Email)</p>
+                }
+                else
+                {
+                    <p class="cl-subtitle">Real-time chat with the XIPE team.</p>
+                }
+            </div>
+
+            @if (isSuperAdmin)
+            {
+                <div class="sa-chat-layout">
+                    <div class="sa-chat-layout__main">
+                        <ChatPanel ProjectId="Id" UserId="@userId" UserName="@userName" IsSuperAdmin="@true" />
+                    </div>
+
+                    <aside class="sa-chat-layout__sidebar">
+                        <div class="sa-sidebar-card">
+                            <h3 class="sa-sidebar-card__title">Project Info</h3>
+                            <dl class="sa-sidebar-dl">
+                                <dt>Name</dt><dd>@website.Name</dd>
+                                <dt>Package</dt><dd>@website.Package.Name</dd>
+                                <dt>Status</dt><dd><span class="cl-status cl-status--@website.Status">@website.Status</span></dd>
+                                <dt>URL</dt><dd>@(website.Url ?? "Pending")</dd>
+                                <dt>Created</dt><dd>@website.CreatedAt.ToString("MMM dd, yyyy")</dd>
+                            </dl>
+                        </div>
+                        <div class="sa-sidebar-card">
+                            <h3 class="sa-sidebar-card__title">Assets (@assets.Count)</h3>
+                            @if (assets.Count == 0)
+                            {
+                                <p style="font-size:.8rem;color:rgba(255,255,255,0.4);">No assets uploaded yet.</p>
+                            }
+                            else
+                            {
+                                <div class="sa-sidebar-assets">
+                                    @foreach (var a in assets)
+                                    {
+                                        <a href="/@a.StoredPath" target="_blank" class="sa-sidebar-asset">
+                                            @if (a.ContentType.StartsWith("image/"))
+                                            {
+                                                <img src="/@a.StoredPath" alt="@a.FileName" class="sa-sidebar-asset__thumb" />
+                                            }
+                                            else
+                                            {
+                                                <div class="sa-sidebar-asset__icon">@GetFileIcon(a.ContentType)</div>
+                                            }
+                                            <span class="sa-sidebar-asset__name" title="@a.FileName">@a.FileName</span>
+                                        </a>
+                                    }
+                                </div>
+                            }
+                            <a href="/admin/assets/@Id" class="sa-btn sa-btn--outline" style="width:100%;margin-top:.75rem;font-size:.78rem;text-align:center;">View All Assets</a>
+                        </div>
+                    </aside>
+                </div>
+            }
+            else
+            {
+                <ChatPanel ProjectId="Id" UserId="@userId" UserName="@userName" IsSuperAdmin="@false" />
+            }
+
+            <div style="margin-top:1.5rem;">
+                @if (isSuperAdmin)
+                {
+                    <a href="/superadmin/projects" class="sa-btn sa-btn--outline">← Back to Projects</a>
+                }
+                else
+                {
+                    <a href="/admin" class="cl-btn cl-btn--outline">← Back to Projects</a>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    private Website? website;
+    private List<ProjectAsset> assets = [];
+    private bool isSuperAdmin;
+    private string userId = "";
+    private string userName = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        userId = HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "";
+        if (string.IsNullOrEmpty(userId)) return;
+
+        isSuperAdmin = HttpContext.User.IsInRole("SuperAdmin");
+
+        var user = await UserManager.FindByIdAsync(userId);
+        userName = isSuperAdmin ? "XIPE Team" : (user?.FullName ?? "Client");
+
+        website = await Db.Websites
+            .Include(w => w.User)
+            .Include(w => w.Package)
+            .Where(w => w.Id == Id && (w.UserId == userId || isSuperAdmin))
+            .FirstOrDefaultAsync();
+
+        if (website is null) return;
+
+        if (isSuperAdmin)
+        {
+            assets = await Db.ProjectAssets
+                .Where(a => a.WebsiteId == Id)
+                .OrderByDescending(a => a.Id)
+                .ToListAsync();
+        }
+    }
+
+    private static string GetFileIcon(string contentType)
+    {
+        if (contentType.Contains("pdf")) return "PDF";
+        if (contentType.Contains("zip")) return "ZIP";
+        return "FILE";
+    }
+}

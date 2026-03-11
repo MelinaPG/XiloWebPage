@@ -1,0 +1,113 @@
+@page "/superadmin/plans/{Id:int}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "SuperAdmin")]
+@inject XiloDbContext Db
+@inject NavigationManager Nav
+
+<PageTitle>Editar Plan — SuperAdmin</PageTitle>
+
+<div class="sa-page">
+    <div class="xcontainer">
+        <AdminNav />
+
+        @if (plan is null)
+        {
+            <p>Plan no encontrado.</p>
+        }
+        else
+        {
+            <h1 class="sa-title">Editar: @plan.Name</h1>
+
+            <EditForm Model="Input" method="post" OnValidSubmit="HandleSave" FormName="edit-plan">
+                <div class="sa-form">
+                    <div class="sa-form__group">
+                        <label class="sa-form__label">Nombre</label>
+                        <InputText @bind-Value="Input.Name" class="sa-form__input" />
+                    </div>
+                    <div class="sa-form__group">
+                        <label class="sa-form__label">Descripción</label>
+                        <InputTextArea @bind-Value="Input.Description" class="sa-form__textarea" />
+                    </div>
+                    <div class="sa-form__group">
+                        <label class="sa-form__label">Precio Mensual (USD)</label>
+                        <InputNumber @bind-Value="Input.MonthlyPrice" class="sa-form__input" />
+                    </div>
+                    <div class="sa-form__group">
+                        <label class="sa-form__check">
+                            <InputCheckbox @bind-Value="Input.IsFeatured" />
+                            Destacado (Most Popular)
+                        </label>
+                    </div>
+                    <div class="sa-form__group">
+                        <label class="sa-form__check">
+                            <InputCheckbox @bind-Value="Input.IsActive" />
+                            Activo
+                        </label>
+                    </div>
+                    <div class="sa-form__actions">
+                        <button type="submit" class="sa-btn sa-btn--primary">Guardar</button>
+                        <a href="/superadmin/plans" class="sa-btn sa-btn--outline">Cancelar</a>
+                    </div>
+                </div>
+            </EditForm>
+
+            <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);">
+                <EditForm Model="deleteModel" method="post" OnValidSubmit="HandleDelete" FormName="delete-plan">
+                    <button type="submit" class="sa-btn sa-btn--danger">Eliminar Plan</button>
+                </EditForm>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+    [SupplyParameterFromForm(FormName = "edit-plan")] private PlanInput Input { get; set; } = new();
+
+    private SupportPlan? plan;
+    private object deleteModel = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        plan = await Db.SupportPlans.FindAsync(Id);
+        if (plan is not null && !HttpMethods.IsPost(HttpContext.Request.Method))
+        {
+            Input.Name = plan.Name;
+            Input.Description = plan.Description;
+            Input.MonthlyPrice = plan.MonthlyPrice;
+            Input.IsFeatured = plan.IsFeatured;
+            Input.IsActive = plan.IsActive;
+        }
+    }
+
+    private async Task HandleSave()
+    {
+        if (plan is null) return;
+        plan.Name = Input.Name ?? "";
+        plan.Description = Input.Description ?? "";
+        plan.MonthlyPrice = Input.MonthlyPrice ?? 0;
+        plan.IsFeatured = Input.IsFeatured;
+        plan.IsActive = Input.IsActive;
+        await Db.SaveChangesAsync();
+        Nav.NavigateTo("/superadmin/plans", forceLoad: true);
+    }
+
+    private async Task HandleDelete()
+    {
+        if (plan is null) return;
+        Db.SupportPlans.Remove(plan);
+        await Db.SaveChangesAsync();
+        Nav.NavigateTo("/superadmin/plans", forceLoad: true);
+    }
+
+    private sealed class PlanInput
+    {
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public decimal? MonthlyPrice { get; set; }
+        public bool IsFeatured { get; set; }
+        public bool IsActive { get; set; } = true;
+    }
+}

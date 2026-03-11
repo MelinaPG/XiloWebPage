@@ -1,0 +1,154 @@
+@page "/admin/assets/{Id:int}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "Client,SuperAdmin")]
+@inject XiloDbContext Db
+
+<PageTitle>My Assets — XIPE</PageTitle>
+
+<div class="cl-page">
+    <div class="xcontainer">
+        @if (isSuperAdmin)
+        {
+            <AdminNav />
+        }
+        else
+        {
+            <ClientNav />
+        }
+
+        @if (website is null)
+        {
+            <p class="cl-subtitle">Project not found.</p>
+        }
+        else
+        {
+            <div class="cl-header">
+                <h1 class="cl-title">Assets — @website.Name</h1>
+                <p class="cl-subtitle">Upload logos, brand guides, photos, and inspiration files.</p>
+            </div>
+
+            @if (!string.IsNullOrEmpty(alertMessage))
+            {
+                <div class="cl-alert @(alertIsError ? "cl-alert--error" : "cl-alert--success")">@alertMessage</div>
+            }
+
+            <!-- Upload form -->
+            <div class="cl-upload-card">
+                <form method="post" action="/api/assets/upload" enctype="multipart/form-data">
+                    <input type="hidden" name="siteId" value="@Id" />
+                    <label class="cl-dropzone" style="cursor:pointer;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16 16 12 12 8 16" />
+                            <line x1="12" y1="12" x2="12" y2="21" />
+                            <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+                        </svg>
+                        <span>Click to choose files</span>
+                        <span class="cl-dropzone__formats">PDF, PNG, JPG, AI, ZIP — Up to 10 MB each</span>
+                        <input type="file" name="files" multiple
+                               accept=".pdf,.png,.jpg,.jpeg,.ai,.zip,.svg,.webp"
+                               style="margin-top:.75rem;" />
+                    </label>
+                    <button type="submit" class="cl-btn cl-btn--primary" style="width:100%;margin-top:1rem;">Upload Assets</button>
+                </form>
+            </div>
+
+            <!-- Asset list -->
+            @if (assets.Count == 0)
+            {
+                <div class="cl-empty">
+                    <p>No assets uploaded yet.</p>
+                </div>
+            }
+            else
+            {
+                <div class="cl-asset-list">
+                    @foreach (var asset in assets)
+                    {
+                        var iconText = GetFileIcon(asset.ContentType);
+                        var sizeText = FormatSize(asset.FileSize);
+                        var dateText = asset.UploadedAt.ToString("MMM dd, yyyy");
+
+                        <div class="cl-asset">
+                            <div class="cl-asset__icon">@iconText</div>
+                            <div class="cl-asset__info">
+                                <span class="cl-asset__name">@asset.FileName</span>
+                                <span class="cl-asset__size">@sizeText — @dateText</span>
+                            </div>
+                            <div class="cl-asset__actions">
+                                <a href="/admin/assets/@Id/delete/@asset.Id"
+                                   class="cl-btn cl-btn--danger cl-btn--sm"
+                                   onclick="return confirm('Delete this file?');">
+                                    Delete
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
+            <div style="margin-top:2rem;">
+                @if (isSuperAdmin)
+                {
+                    <a href="/superadmin/projects" class="sa-btn sa-btn--outline">← Back to Projects</a>
+                }
+                else
+                {
+                    <a href="/admin" class="cl-btn cl-btn--outline">← Back to Projects</a>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    private Website? website;
+    private List<ProjectAsset> assets = [];
+    private string? alertMessage;
+    private bool alertIsError;
+    private bool isSuperAdmin;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userId = HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (userId is null) return;
+
+        isSuperAdmin = HttpContext.User.IsInRole("SuperAdmin");
+
+        website = await Db.Websites
+            .Where(w => w.Id == Id && (w.UserId == userId || isSuperAdmin))
+            .FirstOrDefaultAsync();
+
+        if (website is null) return;
+
+        // Check for upload result query param
+        var query = HttpContext.Request.Query;
+        if (query.ContainsKey("uploaded"))
+        {
+            alertMessage = "File uploaded successfully.";
+        }
+
+        assets = await Db.ProjectAssets
+            .Where(a => a.WebsiteId == Id)
+            .OrderByDescending(a => a.Id)
+            .ToListAsync();
+    }
+
+    private static string FormatSize(long bytes)
+    {
+        if (bytes < 1024) return $"{bytes} B";
+        if (bytes < 1024 * 1024) return $"{bytes / 1024.0:F1} KB";
+        return $"{bytes / (1024.0 * 1024.0):F1} MB";
+    }
+
+    private static string GetFileIcon(string contentType)
+    {
+        if (contentType.StartsWith("image/")) return "IMG";
+        if (contentType.Contains("pdf")) return "PDF";
+        if (contentType.Contains("zip")) return "ZIP";
+        return "FILE";
+    }
+}

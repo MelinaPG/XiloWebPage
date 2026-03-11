@@ -1,0 +1,61 @@
+@page "/superadmin"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "SuperAdmin")]
+@inject XiloDbContext Db
+
+<PageTitle>SuperAdmin — XIPE</PageTitle>
+
+<div class="sa-page">
+    <div class="xcontainer">
+        <AdminNav />
+
+        <h1 class="sa-title">Dashboard</h1>
+
+        <div class="sa-stats">
+            <div class="sa-stat">
+                <div class="sa-stat__value">@packageCount</div>
+                <div class="sa-stat__label">Paquetes Web</div>
+            </div>
+            <div class="sa-stat">
+                <div class="sa-stat__value">@planCount</div>
+                <div class="sa-stat__label">Planes de Soporte</div>
+            </div>
+            <div class="sa-stat">
+                <div class="sa-stat__value">@userCount</div>
+                <div class="sa-stat__label">Clientes</div>
+            </div>
+            <div class="sa-stat">
+                <div class="sa-stat__value">@websiteCount</div>
+                <div class="sa-stat__label">Websites</div>
+            </div>
+            <div class="sa-stat">
+                <div class="sa-stat__value">@messageCount</div>
+                <div class="sa-stat__label">Mensajes</div>
+            </div>
+        </div>
+
+        <div class="sa-form__actions">
+            <a href="/superadmin/packages" class="sa-btn sa-btn--outline">Gestionar Paquetes →</a>
+            <a href="/superadmin/plans" class="sa-btn sa-btn--outline">Gestionar Planes →</a>
+            <a href="/superadmin/users" class="sa-btn sa-btn--outline">Ver Usuarios →</a>
+            <a href="/superadmin/projects" class="sa-btn sa-btn--outline">Ver Proyectos →</a>
+        </div>
+    </div>
+</div>
+
+@code {
+    private int packageCount, planCount, userCount, websiteCount, messageCount;
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        packageCount = await Db.WebPackages.CountAsync();
+        planCount = await Db.SupportPlans.CountAsync();
+        userCount = await Db.Users.CountAsync();
+        websiteCount = await Db.Websites.CountAsync();
+        messageCount = await Db.ProjectMessages.CountAsync();
+    }
+}

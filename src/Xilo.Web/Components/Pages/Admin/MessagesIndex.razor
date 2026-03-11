@@ -1,0 +1,18 @@
+@page "/admin/messages"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "Client")]
+@inject XiloDbContext Db
+
+@code {
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userId = HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (userId is null) { HttpContext.Response.Redirect("/admin"); return; }
+
+        var site = await Db.Websites.Where(w => w.UserId == userId).FirstOrDefaultAsync();
+        HttpContext.Response.Redirect(site is not null ? $"/admin/messages/{site.Id}" : "/admin");
+    }
+}

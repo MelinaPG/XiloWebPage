@@ -1,0 +1,27 @@
+@* Reusable stepper — pass CurrentStep (1-6) *@
+
+<div class="ob-stepper">
+    <div class="ob-stepper__inner xcontainer">
+        @for (int i = 1; i <= 6; i++)
+        {
+            var step = i;
+            var css = step < CurrentStep ? "ob-step ob-step--done"
+                    : step == CurrentStep ? "ob-step ob-step--active"
+                    : "ob-step";
+
+            <div class="@css" aria-current="@(step == CurrentStep ? "step" : null)">
+                <div class="ob-step__circle" aria-label="@(step < CurrentStep ? $"Step {step} completed" : null)">
+                    @(step < CurrentStep ? "✓" : step.ToString())
+                </div>
+                <span class="ob-step__label">@Labels[step - 1]</span>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public int CurrentStep { get; set; } = 1;
+
+    private static readonly string[] Labels =
+        { "About You", "Payment", "You're In!", "Your Assets", "Book a Call", "Your URL" };
+}

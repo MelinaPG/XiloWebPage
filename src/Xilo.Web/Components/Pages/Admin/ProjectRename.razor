@@ -1,0 +1,74 @@
+@page "/admin/project/{Id:int}/rename"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "Client")]
+@inject XiloDbContext Db
+
+<PageTitle>Rename Project — XIPE</PageTitle>
+
+<div class="cl-page">
+    <div class="xcontainer">
+        <ClientNav />
+
+        @if (website is null)
+        {
+            <p class="cl-subtitle">Project not found.</p>
+        }
+        else
+        {
+            <div class="cl-header">
+                <h1 class="cl-title">Rename Project</h1>
+            </div>
+
+            <div style="max-width:500px;">
+                <EditForm Model="Input" method="post" OnValidSubmit="HandleSave" FormName="rename-project">
+                    <div class="ob-field" style="margin-bottom:1.5rem;">
+                        <label class="ob-field__label">Project Name</label>
+                        <InputText @bind-Value="Input.Name" class="ob-field__input" placeholder="My Website" />
+                    </div>
+                    <div style="display:flex;gap:.75rem;">
+                        <button type="submit" class="cl-btn cl-btn--primary">Save</button>
+                        <a href="/admin" class="cl-btn cl-btn--outline">Cancel</a>
+                    </div>
+                </EditForm>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+    [SupplyParameterFromForm] private RenameInput Input { get; set; } = new();
+
+    private Website? website;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userId = HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (userId is null) return;
+
+        website = await Db.Websites
+            .FirstOrDefaultAsync(w => w.Id == Id && w.UserId == userId);
+
+        if (website is not null && !HttpMethods.IsPost(HttpContext.Request.Method))
+        {
+            Input.Name = website.Name;
+        }
+    }
+
+    private async Task HandleSave()
+    {
+        if (website is null || string.IsNullOrWhiteSpace(Input.Name)) return;
+
+        website.Name = Input.Name.Trim();
+        await Db.SaveChangesAsync();
+
+        HttpContext.Response.Redirect("/admin");
+    }
+
+    private sealed class RenameInput
+    {
+        public string? Name { get; set; }
+    }
+}

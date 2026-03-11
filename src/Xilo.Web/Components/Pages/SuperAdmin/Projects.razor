@@ -1,0 +1,90 @@
+@page "/superadmin/projects"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "SuperAdmin")]
+@inject XiloDbContext Db
+
+<PageTitle>Projects — XIPE</PageTitle>
+
+<div class="sa-page">
+    <div class="xcontainer">
+        <AdminNav />
+
+        <h1 class="sa-title">All Projects</h1>
+        <p style="margin-bottom:2rem;color:var(--x-neutral);">Manage client projects and communicate with them.</p>
+
+        @if (projects.Count == 0)
+        {
+            <p>No projects yet.</p>
+        }
+        else
+        {
+            <div class="sa-project-list">
+                @foreach (var p in projects)
+                {
+                    var unread = p.Messages.Count(m => !m.IsFromTeam && !m.ReadByAdmin);
+
+                    <div class="sa-project-card @(unread > 0 ? "sa-project-card--unread" : "")">
+                        <div class="sa-project-card__top">
+                            <div>
+                                <h2 class="sa-project-card__name">@p.Name</h2>
+                                <p class="sa-project-card__client">@p.User.FullName — @p.User.Email</p>
+                                <p class="sa-project-card__meta">@p.Package.Name · <span class="cl-status cl-status--@p.Status">@FormatStatus(p.Status)</span></p>
+                            </div>
+                            <div class="sa-project-card__stats">
+                                <div class="sa-project-card__stat">
+                                    <span class="sa-project-card__stat-val">@p.Assets.Count</span>
+                                    <span class="sa-project-card__stat-lbl">Assets</span>
+                                </div>
+                                <div class="sa-project-card__stat">
+                                    <span class="sa-project-card__stat-val">@p.Messages.Count</span>
+                                    <span class="sa-project-card__stat-lbl">Messages</span>
+                                </div>
+                                @if (unread > 0)
+                                {
+                                    <div class="sa-project-card__stat sa-project-card__stat--alert">
+                                        <span class="sa-project-card__stat-val">@unread</span>
+                                        <span class="sa-project-card__stat-lbl">New</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="sa-project-card__actions">
+                            <a href="/admin/messages/@p.Id" class="sa-btn sa-btn--primary" style="font-size:.82rem;">
+                                Chat
+                                @if (unread > 0)
+                                {
+                                    <span class="sa-badge" style="margin-left:.4rem;">@unread</span>
+                                }
+                            </a>
+                            <a href="/admin/assets/@p.Id" class="sa-btn sa-btn--outline" style="font-size:.82rem;">Assets (@p.Assets.Count)</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<Website> projects = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        projects = await Db.Websites
+            .Include(w => w.User)
+            .Include(w => w.Package)
+            .Include(w => w.Assets)
+            .Include(w => w.Messages)
+            .OrderByDescending(w => w.Id)
+            .ToListAsync();
+    }
+
+    private static string FormatStatus(string status) => status switch
+    {
+        "pending" => "Pending",
+        "in-progress" => "In Progress",
+        "live" => "Live",
+        _ => status
+    };
+}

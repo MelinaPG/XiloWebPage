@@ -1,0 +1,193 @@
+@page "/admin/tickets/{ProjectId:int}"
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "Client,SuperAdmin")]
+@inject XiloDbContext Db
+@inject UserManager<AppUser> UserManager
+@inject NavigationManager Navigation
+
+<PageTitle>Tickets — @website?.Name — XIPE</PageTitle>
+
+<div class="cl-page">
+    <div class="xcontainer">
+        <ClientNav />
+
+        @if (website is null)
+        {
+            <div class="cl-loading">Cargando...</div>
+        }
+        else
+        {
+            <div class="cl-header">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;">
+                    <div>
+                        <h1 class="cl-title">🎫 Tickets — @website.Name</h1>
+                        <p class="cl-subtitle">Gestiona tus solicitudes de soporte para este proyecto.</p>
+                    </div>
+                    <div style="display:flex;gap:0.75rem;">
+                        <a href="/admin/tickets" class="cl-btn cl-btn--outline">← Todos los Proyectos</a>
+                        <a href="/admin/tickets/@ProjectId/new" class="cl-btn cl-btn--primary">+ Nuevo Ticket</a>
+                    </div>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(message))
+            {
+                <div class="cl-alert cl-alert--@(isError ? "error" : "success")" style="margin-bottom:1rem;">
+                    @message
+                </div>
+            }
+
+            <!-- Filtros -->
+            <div class="tk-toolbar">
+                <div class="tk-filter">
+                    <select class="tk-select" @bind="selectedFilter">
+                        <option value="all">Todos los estados</option>
+                        <option value="open">Abiertos</option>
+                        <option value="in-progress">En Progreso</option>
+                        <option value="waiting-client">Esperando Respuesta</option>
+                        <option value="closed">Cerrados</option>
+                    </select>
+                </div>
+                <div style="font-size:0.85rem;color:var(--x-neutral);">
+                    @filteredTickets.Count ticket@(filteredTickets.Count != 1 ? "s" : "") encontrado@(filteredTickets.Count != 1 ? "s" : "")
+                </div>
+            </div>
+
+            @if (filteredTickets.Count == 0)
+            {
+                <div class="tk-empty">
+                    <div class="tk-empty__icon">🎫</div>
+                    <h3>No hay tickets @GetFilterLabel()</h3>
+                    <p>Crea tu primer ticket para este proyecto.</p>
+                    <a href="/admin/tickets/@ProjectId/new" class="cl-btn cl-btn--primary">
+                        Crear Ticket
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="tk-list">
+                    @foreach (var ticket in filteredTickets)
+                    {
+                        <a href="/admin/tickets/detail/@ticket.Id" class="tk-card @GetStatusClass(ticket.Status)" style="text-decoration:none;display:block;">
+                            <div class="tk-card__header">
+                                <div class="tk-card__meta">
+                                    <span class="tk-badge tk-badge--@ticket.Priority">
+                                        @ticket.CategoryLabel
+                                    </span>
+                                    <span class="tk-status tk-status--@ticket.Status">
+                                        @ticket.StatusLabel
+                                    </span>
+                                </div>
+                                <span class="tk-card__date">
+                                    @ticket.CreatedAt.ToString("MMM dd, yyyy")
+                                </span>
+                            </div>
+                            <h3 class="tk-card__title">@ticket.Title</h3>
+                            <p class="tk-card__preview">
+                                @(ticket.Description.Length > 100 
+                                    ? ticket.Description[..100] + "..." 
+                                    : ticket.Description)
+                            </p>
+                            <div class="tk-card__footer">
+                                <span class="tk-card__id">#@ticket.Id</span>
+                                @if (ticket.Comments.Count > 0)
+                                {
+                                    <span class="tk-card__comments">
+                                        💬 @ticket.Comments.Count respuesta@(ticket.Comments.Count != 1 ? "s" : "")
+                                    </span>
+                                }
+                                @if (ticket.Priority == "urgent" || ticket.Priority == "high")
+                                {
+                                    <span style="color:@ticket.PriorityColor;font-size:0.75rem;font-weight:600;">
+                                        ⚠️ @ticket.Priority
+                                    </span>
+                                }
+                            </div>
+                        </a>
+                    }
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public int ProjectId { get; set; }
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+    [SupplyParameterFromQuery] public string? Message { get; set; }
+
+    private Website? website;
+    private List<SupportTicket> tickets = [];
+    private string userId = "";
+    private string selectedFilter = "all";
+    private string? message;
+    private bool isError;
+
+    private List<SupportTicket> filteredTickets => selectedFilter switch
+    {
+        "open" => tickets.Where(t => t.Status == "open").ToList(),
+        "in-progress" => tickets.Where(t => t.Status == "in-progress").ToList(),
+        "waiting-client" => tickets.Where(t => t.Status == "waiting-client").ToList(),
+        "closed" => tickets.Where(t => t.Status == "closed").ToList(),
+        _ => tickets
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        userId = HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "";
+        if (string.IsNullOrEmpty(userId)) return;
+
+        // Verificar que el proyecto pertenezca al usuario
+        website = await Db.Websites
+            .FirstOrDefaultAsync(w => w.Id == ProjectId && w.UserId == userId);
+
+        if (website is null)
+        {
+            Navigation.NavigateTo("/admin/tickets");
+            return;
+        }
+
+        // Mensaje desde query string
+        if (!string.IsNullOrEmpty(Message))
+        {
+            message = Message;
+            isError = Message.Contains("Error");
+        }
+
+        await LoadTickets();
+    }
+
+    private async Task LoadTickets()
+    {
+        tickets = await Db.SupportTickets
+            .Include(t => t.Comments)
+            .Where(t => t.WebsiteId == ProjectId)
+            .OrderByDescending(t => t.UpdatedAt ?? t.CreatedAt)
+            .ToListAsync();
+    }
+
+    private void CreateTicket()
+    {
+        Navigation.NavigateTo($"/admin/tickets/{ProjectId}/new");
+    }
+
+    private void ViewTicket(int ticketId)
+    {
+        Navigation.NavigateTo($"/admin/tickets/detail/{ticketId}");
+    }
+
+    private string GetFilterLabel() => selectedFilter switch
+    {
+        "open" => "abiertos",
+        "in-progress" => "en progreso",
+        "waiting-client" => "esperando tu respuesta",
+        "closed" => "cerrados",
+        _ => ""
+    };
+
+    private string GetStatusClass(string status) => $"tk-card--{status}";
+}

@@ -1,0 +1,101 @@
+@page "/admin"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "Client")]
+@inject XiloDbContext Db
+
+<PageTitle>My Projects — XIPE</PageTitle>
+
+<div class="cl-page">
+    <div class="xcontainer">
+        <ClientNav />
+
+        <div class="cl-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+            <div>
+                <h1 class="cl-title">My Projects</h1>
+                <p class="cl-subtitle">Manage your websites, assets, and communicate with the XIPE team.</p>
+            </div>
+            <a href="/onboarding/step-2" class="cl-btn cl-btn--primary">+ New Project</a>
+        </div>
+
+        @if (websites.Count == 0)
+        {
+            <div class="cl-empty">
+                <p>You don't have any projects yet.</p>
+                <a href="/admin/new-project" class="ob-cta" style="display:inline-block;width:auto;">Start a Project →</a>
+            </div>
+        }
+        else
+        {
+            <div class="cl-projects">
+                @foreach (var site in websites)
+                {
+                    <div class="cl-project">
+                        <div class="cl-project__header">
+                            <div>
+                                <h2 class="cl-project__name">@site.Name</h2>
+                                <p class="cl-project__url">@(site.Url ?? "URL pending")</p>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:.75rem;">
+                                <a href="/admin/project/@site.Id/rename" class="cl-btn cl-btn--outline cl-btn--sm">Rename</a>
+                                <span class="cl-status cl-status--@site.Status">@FormatStatus(site.Status)</span>
+                            </div>
+                        </div>
+
+                        <div class="cl-project__meta">
+                            <div class="cl-project__meta-item">
+                                <span class="cl-project__meta-label">Package</span>
+                                <span class="cl-project__meta-value">@site.Package.Name</span>
+                            </div>
+                            <div class="cl-project__meta-item">
+                                <span class="cl-project__meta-label">Support Plan</span>
+                                <span class="cl-project__meta-value">@(site.SupportPlan?.Name ?? "None")</span>
+                            </div>
+                            <div class="cl-project__meta-item">
+                                <span class="cl-project__meta-label">Assets</span>
+                                <span class="cl-project__meta-value">@site.Assets.Count files</span>
+                            </div>
+                            <div class="cl-project__meta-item">
+                                <span class="cl-project__meta-label">Messages</span>
+                                <span class="cl-project__meta-value">@site.Messages.Count</span>
+                            </div>
+                        </div>
+
+                        <div class="cl-project__actions">
+                            <a href="/admin/assets/@site.Id" class="cl-btn cl-btn--primary">My Assets</a>
+                            <a href="/admin/messages/@site.Id" class="cl-btn cl-btn--outline">Messages</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<Website> websites = [];
+
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userId = HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (userId is null) return;
+
+        websites = await Db.Websites
+            .Where(w => w.UserId == userId)
+            .Include(w => w.Package)
+            .Include(w => w.SupportPlan)
+            .Include(w => w.Assets)
+            .Include(w => w.Messages)
+            .ToListAsync();
+    }
+
+    private static string FormatStatus(string status) => status switch
+    {
+        "pending" => "Pending",
+        "in-progress" => "In Progress",
+        "live" => "Live",
+        _ => status
+    };
+}

@@ -1,0 +1,33 @@
+@page "/admin/assets/{SiteId:int}/delete/{AssetId:int}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "Client")]
+@inject XiloDbContext Db
+@inject IWebHostEnvironment Env
+
+@code {
+    [Parameter] public int SiteId { get; set; }
+    [Parameter] public int AssetId { get; set; }
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userId = HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (userId is null) return;
+
+        var site = await Db.Websites.AnyAsync(w => w.Id == SiteId && w.UserId == userId);
+        if (!site) return;
+
+        var asset = await Db.ProjectAssets
+            .FirstOrDefaultAsync(a => a.Id == AssetId && a.WebsiteId == SiteId);
+        if (asset is null) return;
+
+        var fullPath = Path.Combine(Env.WebRootPath, asset.StoredPath.Replace('/', Path.DirectorySeparatorChar));
+        if (File.Exists(fullPath)) File.Delete(fullPath);
+
+        Db.ProjectAssets.Remove(asset);
+        await Db.SaveChangesAsync();
+
+        HttpContext.Response.Redirect($"/admin/assets/{SiteId}");
+    }
+}

@@ -1,0 +1,106 @@
+@page "/superadmin/packages"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "SuperAdmin")]
+@inject XiloDbContext Db
+@inject NavigationManager Nav
+
+<PageTitle>Paquetes Web — SuperAdmin</PageTitle>
+
+<div class="sa-page">
+    <div class="xcontainer">
+        <AdminNav />
+
+        <h1 class="sa-title">Paquetes Web</h1>
+
+        <!-- List -->
+        <table class="sa-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Precio Original</th>
+                    <th>Estado</th>
+                    <th>Websites</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in packages)
+                {
+                    <tr>
+                        <td>@p.Name</td>
+                        <td>$@p.Price.ToString("N0") USD</td>
+                        <td>@(p.OriginalPrice.HasValue ? $"${p.OriginalPrice:N0}" : "—")</td>
+                        <td><span class="sa-badge @(p.IsActive ? "sa-badge--active" : "sa-badge--inactive")">@(p.IsActive ? "Activo" : "Inactivo")</span></td>
+                        <td>@p.Websites.Count</td>
+                        <td><a href="/superadmin/packages/@p.Id" class="sa-btn sa-btn--outline sa-btn--sm">Editar</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- Create form -->
+        <h2 class="sa-title" style="font-size:1.2rem;margin-top:2rem;">Crear Nuevo Paquete</h2>
+
+        <EditForm Model="Input" method="post" OnValidSubmit="HandleCreate" FormName="create-package">
+            <div class="sa-form">
+                <div class="sa-form__group">
+                    <label class="sa-form__label">Nombre</label>
+                    <InputText @bind-Value="Input.Name" class="sa-form__input" />
+                </div>
+                <div class="sa-form__group">
+                    <label class="sa-form__label">Descripción</label>
+                    <InputTextArea @bind-Value="Input.Description" class="sa-form__textarea" />
+                </div>
+                <div style="display:flex;gap:1rem;">
+                    <div class="sa-form__group" style="flex:1;">
+                        <label class="sa-form__label">Precio (USD)</label>
+                        <InputNumber @bind-Value="Input.Price" class="sa-form__input" />
+                    </div>
+                    <div class="sa-form__group" style="flex:1;">
+                        <label class="sa-form__label">Precio Original (USD)</label>
+                        <InputNumber @bind-Value="Input.OriginalPrice" class="sa-form__input" />
+                    </div>
+                </div>
+                <div class="sa-form__actions">
+                    <button type="submit" class="sa-btn sa-btn--primary">Crear Paquete</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private List<WebPackage> packages = [];
+
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromForm] private PackageInput Input { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        packages = await Db.WebPackages.Include(p => p.Websites).OrderBy(p => p.Id).ToListAsync();
+    }
+
+    private async Task HandleCreate()
+    {
+        Db.WebPackages.Add(new WebPackage
+        {
+            Name = Input.Name ?? "",
+            Description = Input.Description ?? "",
+            Price = Input.Price ?? 0,
+            OriginalPrice = Input.OriginalPrice
+        });
+        await Db.SaveChangesAsync();
+        Nav.NavigateTo("/superadmin/packages", forceLoad: true);
+    }
+
+    private sealed class PackageInput
+    {
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public decimal? Price { get; set; }
+        public decimal? OriginalPrice { get; set; }
+    }
+}

@@ -1,0 +1,173 @@
+@page "/admin/tickets/{ProjectId:int}/new"
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using System.ComponentModel.DataAnnotations
+@attribute [Authorize(Roles = "Client,SuperAdmin")]
+@inject XiloDbContext Db
+@inject UserManager<AppUser> UserManager
+@inject NavigationManager Navigation
+
+<PageTitle>Nuevo Ticket — @website?.Name — XIPE</PageTitle>
+
+<div class="cl-page">
+    <div class="xcontainer">
+        <ClientNav />
+
+        @if (website is null)
+        {
+            <div class="cl-loading">Cargando...</div>
+        }
+        else
+        {
+            <div class="cl-header">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+                    <div>
+                        <h1 class="cl-title">Nuevo Ticket</h1>
+                        <p class="cl-subtitle">Proyecto: <strong>@website.Name</strong></p>
+                    </div>
+                    <a href="/admin/tickets/@ProjectId" class="cl-btn cl-btn--outline">← Cancelar</a>
+                </div>
+            </div>
+
+            <EditForm Model="@model" OnValidSubmit="SubmitTicket" class="tk-form">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="tk-validation-summary" />
+
+                @if (!string.IsNullOrEmpty(error))
+                {
+                    <div class="tk-error">@error</div>
+                }
+
+                <div class="tk-form__group">
+                    <label class="tk-label">Categoría</label>
+                    <InputSelect @bind-Value="model.Category" class="tk-input">
+                        <option value="support">Soporte Técnico</option>
+                        <option value="bug">Reportar Error/Bug</option>
+                        <option value="feature">Solicitud de Funcionalidad</option>
+                        <option value="question">Pregunta General</option>
+                        <option value="other">Otro</option>
+                    </InputSelect>
+                </div>
+
+                <div class="tk-form__group">
+                    <label class="tk-label">Prioridad</label>
+                    <InputSelect @bind-Value="model.Priority" class="tk-input">
+                        <option value="low">Baja - Cuando tengan tiempo</option>
+                        <option value="medium">Media - Necesito ayuda pronto</option>
+                        <option value="high">Alta - Está afectando mi negocio</option>
+                        <option value="urgent">Urgente - Problema crítico</option>
+                    </InputSelect>
+                </div>
+
+                <div class="tk-form__group">
+                    <label class="tk-label">Título</label>
+                    <InputText @bind-Value="model.Title" class="tk-input" placeholder="Resume brevemente tu solicitud" />
+                    <ValidationMessage For="() => model.Title" class="tk-validation-message" />
+                </div>
+
+                <div class="tk-form__group">
+                    <label class="tk-label">Descripción</label>
+                    <InputTextArea @bind-Value="model.Description" class="tk-textarea" rows="6" 
+                        placeholder="Describe detalladamente tu solicitud, problema o pregunta..." />
+                    <ValidationMessage For="() => model.Description" class="tk-validation-message" />
+                    <span class="tk-hint">Sé lo más específico posible. Incluye pasos para reproducir errores, URLs relevantes, etc.</span>
+                </div>
+
+                <div class="tk-form__actions">
+                    <button type="button" class="cl-btn cl-btn--outline" @onclick="Cancel">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="cl-btn cl-btn--primary" disabled="@isSubmitting">
+                        @(isSubmitting ? "Creando..." : "Crear Ticket")
+                    </button>
+                </div>
+            </EditForm>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public int ProjectId { get; set; }
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    private Website? website;
+    private TicketModel model = new();
+    private string userId = "";
+    private string? error;
+    private bool isSubmitting;
+
+    protected override async Task OnInitializedAsync()
+    {
+        userId = HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "";
+        
+        if (string.IsNullOrEmpty(userId))
+        {
+            Navigation.NavigateTo("/account/login");
+            return;
+        }
+
+        // Verificar que el proyecto pertenezca al usuario
+        website = await Db.Websites
+            .FirstOrDefaultAsync(w => w.Id == ProjectId && w.UserId == userId);
+
+        if (website is null)
+        {
+            Navigation.NavigateTo("/admin/tickets");
+            return;
+        }
+    }
+
+    private async Task SubmitTicket()
+    {
+        isSubmitting = true;
+        error = null;
+
+        try
+        {
+            var ticket = new SupportTicket
+            {
+                WebsiteId = ProjectId,
+                CreatedById = userId,
+                Title = model.Title.Trim(),
+                Description = model.Description.Trim(),
+                Category = model.Category,
+                Priority = model.Priority,
+                Status = "open"
+            };
+
+            Db.SupportTickets.Add(ticket);
+            await Db.SaveChangesAsync();
+
+            Navigation.NavigateTo($"/admin/tickets/{ProjectId}?Message=Ticket+creado+exitosamente");
+        }
+        catch (Exception ex)
+        {
+            error = $"Error al crear el ticket: {ex.Message}";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo($"/admin/tickets/{ProjectId}");
+    }
+
+    public class TicketModel
+    {
+        [Required(ErrorMessage = "El título es obligatorio")]
+        [StringLength(200, ErrorMessage = "El título no puede exceder 200 caracteres")]
+        public string Title { get; set; } = "";
+
+        [Required(ErrorMessage = "La descripción es obligatoria")]
+        [StringLength(5000, ErrorMessage = "La descripción no puede exceder 5000 caracteres")]
+        public string Description { get; set; } = "";
+
+        public string Category { get; set; } = "support";
+        public string Priority { get; set; } = "medium";
+    }
+}

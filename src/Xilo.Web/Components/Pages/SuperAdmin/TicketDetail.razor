@@ -1,0 +1,401 @@
+@page "/superadmin/tickets/{Id:int}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "SuperAdmin")]
+@inject XiloDbContext Db
+@inject UserManager<AppUser> UserManager
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+@implements IDisposable
+
+<PageTitle>Ticket #@Id — XIPE SuperAdmin</PageTitle>
+
+<div class="sa-page">
+    <div class="xcontainer">
+        <AdminNav />
+
+        @if (ticket is null)
+        {
+            <div class="sa-loading">Cargando ticket...</div>
+        }
+        else
+        {
+            <div class="tk-detail-header">
+                <div class="tk-detail__meta">
+                    <a href="/superadmin/tickets" class="tk-back">← Volver a tickets</a>
+                    <span class="tk-id">Ticket #@ticket.Id</span>
+                </div>
+                <h1 class="sa-title">@ticket.Title</h1>
+                <div class="tk-detail__info">
+                    <span>Por: <strong>@ticket.CreatedBy.FullName</strong></span>
+                    <span>•</span>
+                    <span>Proyecto: <strong>@ticket.Website.Name</strong></span>
+                    <span>•</span>
+                    <span>Creado: @ticket.CreatedAt.ToString("MMM dd, yyyy HH:mm")</span>
+                </div>
+            </div>
+
+            <div class="tk-admin-layout">
+                <div class="tk-admin__main">
+                    <!-- Descripción original -->
+                    <div class="tk-message tk-message--original">
+                        <div class="tk-message__header">
+                            <span class="tk-message__author">@ticket.CreatedBy.FullName</span>
+                            <span class="tk-badge tk-badge--@ticket.Category">@ticket.CategoryLabel</span>
+                        </div>
+                        <div class="tk-message__body">
+                            @((MarkupString)FormatDescription(ticket.Description))
+                        </div>
+                    </div>
+
+                    <!-- Comentarios -->
+                    @if (comments.Count > 0)
+                    {
+                        <div class="tk-comments-divider">
+                            <span>@comments.Count respuesta(s)</span>
+                        </div>
+
+                        <div class="tk-comments">
+                            @foreach (var comment in comments.OrderBy(c => c.CreatedAt))
+                            {
+                                <div class="tk-message @(comment.IsFromTeam ? "tk-message--team" : "tk-message--client")" 
+                                     id="comment-@comment.Id">
+                                    <div class="tk-message__header">
+                                        <span class="tk-message__author">
+                                            @(comment.IsFromTeam ? "🔧 XIPE Team" : comment.AuthorName)
+                                        </span>
+                                        <span class="tk-message__date">
+                                            @comment.CreatedAt.ToString("MMM dd, yyyy HH:mm")
+                                        </span>
+                                    </div>
+                                    <div class="tk-message__body">
+                                        @((MarkupString)FormatDescription(comment.Content))
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    <!-- Formulario de respuesta -->
+                    @if (!ticket.IsClosed)
+                    {
+                        <div class="tk-reply-section tk-reply-section--admin">
+                            <h4>Responder como XIPE Team</h4>
+                            @if (!string.IsNullOrEmpty(error))
+                            {
+                                <div class="tk-error">@error</div>
+                            }
+                            <textarea class="tk-textarea" rows="5" @bind="replyText" 
+                                placeholder="Escribe tu respuesta al cliente..."></textarea>
+                            
+                            <div class="tk-reply__options">
+                                <label class="tk-checkbox">
+                                    <input type="checkbox" @bind="changeStatus" />
+                                    <span>Cambiar estado a:</span>
+                                </label>
+                                <select class="tk-select" @bind="newStatus" disabled="@(!changeStatus)">
+                                    <option value="in-progress">En Progreso</option>
+                                    <option value="waiting-client">Esperando Cliente</option>
+                                    <option value="closed">Cerrado</option>
+                                </select>
+                            </div>
+
+                            <div class="tk-reply__actions">
+                                <button class="sa-btn sa-btn--primary" @onclick="SubmitReply" disabled="@isSubmitting">
+                                    @(isSubmitting ? "Enviando..." : "Enviar Respuesta")
+                                </button>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="tk-closed-notice tk-closed-notice--admin">
+                            <p>🔒 Este ticket fue cerrado el @ticket.ClosedAt?.ToString("MMM dd, yyyy")</p>
+                            <button class="sa-btn sa-btn--outline" @onclick="ReopenTicket">
+                                Reabrir Ticket
+                            </button>
+                        </div>
+                    }
+                </div>
+
+                <!-- Sidebar Admin -->
+                <aside class="tk-admin__sidebar">
+                    <div class="tk-sidebar-card">
+                        <h4>Gestión del Ticket</h4>
+                        
+                        <div class="tk-field">
+                            <label>Estado actual</label>
+                            <select class="tk-select" value="@ticket.Status" @onchange="ChangeStatus">
+                                <option value="open">Abierto</option>
+                                <option value="in-progress">En Progreso</option>
+                                <option value="waiting-client">Esperando Cliente</option>
+                                <option value="closed">Cerrado</option>
+                            </select>
+                        </div>
+
+                        <div class="tk-field">
+                            <label>Prioridad</label>
+                            <select class="tk-select" value="@ticket.Priority" @onchange="ChangePriority">
+                                <option value="low">Baja</option>
+                                <option value="medium">Media</option>
+                                <option value="high">Alta</option>
+                                <option value="urgent">Urgente</option>
+                            </select>
+                        </div>
+
+                        <div class="tk-field">
+                            <label>Asignado a</label>
+                            <select class="tk-select" @bind="assignedToId">
+                                <option value="">Sin asignar</option>
+                                @foreach (var admin in superAdmins)
+                                {
+                                    <option value="@admin.Id">@admin.FullName</option>
+                                }
+                            </select>
+                        </div>
+
+                        <button class="sa-btn sa-btn--secondary sa-btn--block" @onclick="SaveChanges">
+                            Guardar Cambios
+                        </button>
+                    </div>
+
+                    <div class="tk-sidebar-card">
+                        <h4>Información del Cliente</h4>
+                        <dl class="tk-dl">
+                            <dt>Nombre</dt>
+                            <dd>@ticket.CreatedBy.FullName</dd>
+                            <dt>Email</dt>
+                            <dd>@ticket.CreatedBy.Email</dd>
+                            <dt>Proyecto</dt>
+                            <dd>@ticket.Website.Name</dd>
+                            <dt>Estado Proyecto</dt>
+                            <dd>@ticket.Website.Status</dd>
+                        </dl>
+                        <a href="/admin/messages/@ticket.WebsiteId" class="sa-btn sa-btn--outline sa-btn--block" target="_blank">
+                            Ver Chat del Proyecto
+                        </a>
+                    </div>
+
+                    <div class="tk-sidebar-card tk-sidebar-card--danger">
+                        <h4>Zona Peligrosa</h4>
+                        <button class="sa-btn sa-btn--danger sa-btn--block" @onclick="DeleteTicket">
+                            Eliminar Ticket
+                        </button>
+                    </div>
+                </aside>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    private SupportTicket? ticket;
+    private List<TicketComment> comments = [];
+    private List<AppUser> superAdmins = [];
+    private string userId = "";
+    private string userName = "";
+    private string replyText = "";
+    private string? error;
+    private bool isSubmitting;
+    private bool changeStatus = true;
+    private string newStatus = "waiting-client";
+    private string? assignedToId;
+    private System.Timers.Timer? refreshTimer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        userId = HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "";
+
+        var user = await UserManager.FindByIdAsync(userId);
+        userName = user?.FullName ?? "XIPE Team";
+
+        // Cargar lista de SuperAdmins
+        var allUsers = await UserManager.Users.ToListAsync();
+        superAdmins = [];
+        foreach (var u in allUsers)
+        {
+            if (await UserManager.IsInRoleAsync(u, "SuperAdmin"))
+            {
+                superAdmins.Add(u);
+            }
+        }
+
+        await LoadTicket();
+
+        // Auto-refresh cada 15 segundos
+        refreshTimer = new System.Timers.Timer(15000);
+        refreshTimer.Elapsed += async (_, _) => await InvokeAsync(LoadComments);
+        refreshTimer.AutoReset = true;
+        refreshTimer.Start();
+    }
+
+    private async Task LoadTicket()
+    {
+        ticket = await Db.SupportTickets
+            .Include(t => t.Website)
+            .Include(t => t.CreatedBy)
+            .Include(t => t.Comments)
+            .ThenInclude(c => c.Author)
+            .FirstOrDefaultAsync(t => t.Id == Id);
+
+        if (ticket is null)
+        {
+            Navigation.NavigateTo("/superadmin/tickets");
+            return;
+        }
+
+        assignedToId = ticket.AssignedToId;
+        comments = ticket.Comments.ToList();
+    }
+
+    private async Task LoadComments()
+    {
+        if (ticket is null) return;
+
+        comments = await Db.TicketComments
+            .Include(c => c.Author)
+            .Where(c => c.TicketId == Id)
+            .OrderBy(c => c.CreatedAt)
+            .ToListAsync();
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task SubmitReply()
+    {
+        if (string.IsNullOrWhiteSpace(replyText) || ticket is null || ticket.IsClosed) return;
+
+        isSubmitting = true;
+        error = null;
+
+        try
+        {
+            var comment = new TicketComment
+            {
+                TicketId = Id,
+                AuthorId = userId,
+                AuthorName = userName,
+                Content = replyText.Trim(),
+                IsFromTeam = true
+            };
+
+            Db.TicketComments.Add(comment);
+
+            ticket.UpdatedAt = DateTime.UtcNow;
+
+            if (changeStatus && !string.IsNullOrEmpty(newStatus))
+            {
+                ticket.Status = newStatus;
+                if (newStatus == "closed")
+                {
+                    ticket.ClosedAt = DateTime.UtcNow;
+                }
+            }
+            else
+            {
+                ticket.Status = "waiting-client";
+            }
+
+            await Db.SaveChangesAsync();
+
+            replyText = "";
+            await LoadComments();
+        }
+        catch (Exception ex)
+        {
+            error = $"Error al enviar: {ex.Message}";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private async Task ChangeStatus(ChangeEventArgs e)
+    {
+        if (ticket is null) return;
+
+        var newStatusValue = e.Value?.ToString() ?? ticket.Status;
+        ticket.Status = newStatusValue;
+        ticket.UpdatedAt = DateTime.UtcNow;
+
+        if (newStatusValue == "closed" && !ticket.ClosedAt.HasValue)
+        {
+            ticket.ClosedAt = DateTime.UtcNow;
+        }
+        else if (newStatusValue != "closed")
+        {
+            ticket.ClosedAt = null;
+        }
+
+        await Db.SaveChangesAsync();
+    }
+
+    private async Task ChangePriority(ChangeEventArgs e)
+    {
+        if (ticket is null) return;
+
+        ticket.Priority = e.Value?.ToString() ?? ticket.Priority;
+        ticket.UpdatedAt = DateTime.UtcNow;
+        await Db.SaveChangesAsync();
+    }
+
+    private async Task SaveChanges()
+    {
+        if (ticket is null) return;
+
+        ticket.AssignedToId = string.IsNullOrEmpty(assignedToId) ? null : assignedToId;
+        ticket.UpdatedAt = DateTime.UtcNow;
+        await Db.SaveChangesAsync();
+    }
+
+    private async Task ReopenTicket()
+    {
+        if (ticket is null) return;
+
+        ticket.Status = "open";
+        ticket.ClosedAt = null;
+        ticket.UpdatedAt = DateTime.UtcNow;
+        await Db.SaveChangesAsync();
+    }
+
+    private async Task DeleteTicket()
+    {
+        if (ticket is null) return;
+
+        var confirmed = await JS.InvokeAsync<bool>("confirm", 
+            "¿Estás seguro de eliminar este ticket? Esta acción no se puede deshacer.");
+
+        if (!confirmed) return;
+
+        // Eliminar comentarios primero
+        var commentsToDelete = await Db.TicketComments.Where(c => c.TicketId == ticket.Id).ToListAsync();
+        Db.TicketComments.RemoveRange(commentsToDelete);
+        Db.SupportTickets.Remove(ticket);
+        await Db.SaveChangesAsync();
+
+        Navigation.NavigateTo("/superadmin/tickets");
+    }
+
+    private static string FormatDescription(string text)
+    {
+        if (string.IsNullOrEmpty(text)) return "";
+
+        var html = text.Replace("\n", "<br>");
+        var urlRegex = new System.Text.RegularExpressions.Regex(@"(https?://[^\s<]+)");
+        html = urlRegex.Replace(html, "<a href=\"$1\" target=\"_blank\" class=\"tk-link\">$1</a>");
+
+        return html;
+    }
+
+    public void Dispose()
+    {
+        refreshTimer?.Stop();
+        refreshTimer?.Dispose();
+    }
+}

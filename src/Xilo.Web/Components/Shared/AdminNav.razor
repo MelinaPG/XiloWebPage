@@ -1,0 +1,37 @@
+@using Microsoft.EntityFrameworkCore
+@inject XiloDbContext Db
+
+<nav class="sa-nav">
+    <a href="/superadmin" class="sa-nav__link">Dashboard</a>
+    <a href="/superadmin/packages" class="sa-nav__link">Paquetes Web</a>
+    <a href="/superadmin/plans" class="sa-nav__link">Planes de Soporte</a>
+    <a href="/superadmin/users" class="sa-nav__link">Usuarios</a>
+    <a href="/superadmin/projects" class="sa-nav__link">
+        Proyectos
+        @if (unreadMessages > 0)
+        {
+            <span class="sa-badge">@unreadMessages</span>
+        }
+    </a>
+    <a href="/superadmin/tickets" class="sa-nav__link">
+        Tickets
+        @if (openTickets > 0)
+        {
+            <span class="sa-badge sa-badge--urgent">@openTickets</span>
+        }
+    </a>
+</nav>
+
+@code {
+    private int unreadMessages;
+    private int openTickets;
+
+    protected override async Task OnInitializedAsync()
+    {
+        unreadMessages = await Db.ProjectMessages
+            .CountAsync(m => !m.IsFromTeam && !m.ReadByAdmin);
+        
+        openTickets = await Db.SupportTickets
+            .CountAsync(t => t.Status == "open" || t.Status == "in-progress");
+    }
+}

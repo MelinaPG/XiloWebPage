@@ -1,0 +1,113 @@
+@page "/superadmin/packages/{Id:int}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "SuperAdmin")]
+@inject XiloDbContext Db
+@inject NavigationManager Nav
+
+<PageTitle>Editar Paquete — SuperAdmin</PageTitle>
+
+<div class="sa-page">
+    <div class="xcontainer">
+        <AdminNav />
+
+        @if (package is null)
+        {
+            <p>Paquete no encontrado.</p>
+        }
+        else
+        {
+            <h1 class="sa-title">Editar: @package.Name</h1>
+
+            <EditForm Model="Input" method="post" OnValidSubmit="HandleSave" FormName="edit-package">
+                <div class="sa-form">
+                    <div class="sa-form__group">
+                        <label class="sa-form__label">Nombre</label>
+                        <InputText @bind-Value="Input.Name" class="sa-form__input" />
+                    </div>
+                    <div class="sa-form__group">
+                        <label class="sa-form__label">Descripción</label>
+                        <InputTextArea @bind-Value="Input.Description" class="sa-form__textarea" />
+                    </div>
+                    <div style="display:flex;gap:1rem;">
+                        <div class="sa-form__group" style="flex:1;">
+                            <label class="sa-form__label">Precio (USD)</label>
+                            <InputNumber @bind-Value="Input.Price" class="sa-form__input" />
+                        </div>
+                        <div class="sa-form__group" style="flex:1;">
+                            <label class="sa-form__label">Precio Original (USD)</label>
+                            <InputNumber @bind-Value="Input.OriginalPrice" class="sa-form__input" />
+                        </div>
+                    </div>
+                    <div class="sa-form__group">
+                        <label class="sa-form__check">
+                            <InputCheckbox @bind-Value="Input.IsActive" />
+                            Activo
+                        </label>
+                    </div>
+                    <div class="sa-form__actions">
+                        <button type="submit" class="sa-btn sa-btn--primary">Guardar</button>
+                        <a href="/superadmin/packages" class="sa-btn sa-btn--outline">Cancelar</a>
+                    </div>
+                </div>
+            </EditForm>
+
+            <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);">
+                <EditForm Model="deleteModel" method="post" OnValidSubmit="HandleDelete" FormName="delete-package">
+                    <button type="submit" class="sa-btn sa-btn--danger">Eliminar Paquete</button>
+                </EditForm>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+    [SupplyParameterFromForm(FormName = "edit-package")] private PackageInput Input { get; set; } = new();
+
+    private WebPackage? package;
+    private object deleteModel = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        package = await Db.WebPackages.FindAsync(Id);
+        if (package is not null && !HttpMethods.IsPost(HttpContext.Request.Method))
+        {
+            Input.Name = package.Name;
+            Input.Description = package.Description;
+            Input.Price = package.Price;
+            Input.OriginalPrice = package.OriginalPrice;
+            Input.IsActive = package.IsActive;
+        }
+    }
+
+    private async Task HandleSave()
+    {
+        if (package is null) return;
+        package.Name = Input.Name ?? "";
+        package.Description = Input.Description ?? "";
+        package.Price = Input.Price ?? 0;
+        package.OriginalPrice = Input.OriginalPrice;
+        package.IsActive = Input.IsActive;
+        await Db.SaveChangesAsync();
+        Nav.NavigateTo("/superadmin/packages", forceLoad: true);
+    }
+
+    private async Task HandleDelete()
+    {
+        if (package is null) return;
+        Db.WebPackages.Remove(package);
+        await Db.SaveChangesAsync();
+        Nav.NavigateTo("/superadmin/packages", forceLoad: true);
+    }
+
+    private sealed class PackageInput
+    {
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public decimal? Price { get; set; }
+        public decimal? OriginalPrice { get; set; }
+        public bool IsActive { get; set; } = true;
+    }
+}

@@ -1,0 +1,98 @@
+@page "/admin/new-project"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "Client")]
+@inject XiloDbContext Db
+
+<PageTitle>New Project — XIPE</PageTitle>
+
+<div class="cl-page">
+    <div class="xcontainer">
+        <ClientNav />
+
+        <div class="cl-header">
+            <h1 class="cl-title">New Project</h1>
+            <p class="cl-subtitle">Choose a package to start your new website project.</p>
+        </div>
+
+        <div class="cl-projects">
+            @foreach (var pkg in packages)
+            {
+                <div class="cl-project">
+                    <div class="cl-project__header">
+                        <div>
+                            <h2 class="cl-project__name">@pkg.Name</h2>
+                            <p class="cl-project__url">@pkg.Description</p>
+                        </div>
+                        <div style="text-align:right;">
+                            <span style="font-family:var(--x-font-head);font-size:1.8rem;font-weight:800;color:var(--x-dark);">$@pkg.Price.ToString("N0")</span>
+                            @if (pkg.OriginalPrice.HasValue && pkg.OriginalPrice > pkg.Price)
+                            {
+                                <br />
+                                <span style="font-size:.78rem;color:var(--x-neutral);"><s>$@pkg.OriginalPrice.Value.ToString("N0")</s> USD</span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="cl-project__actions">
+                        <EditForm Model="formModel" method="post" OnValidSubmit="() => HandleSelect(pkg.Id)" FormName="@($"select-pkg-{pkg.Id}")">
+                            <input type="hidden" name="packageId" value="@pkg.Id" />
+                            <button type="submit" class="cl-btn cl-btn--primary">Select &amp; Pay →</button>
+                        </EditForm>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div style="margin-top:2rem;">
+            <a href="/admin" class="cl-btn cl-btn--outline">← Back to Projects</a>
+        </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    private List<WebPackage> packages = [];
+    private object formModel = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Handle POST — create the project
+        if (HttpMethods.IsPost(HttpContext.Request.Method))
+        {
+            if (int.TryParse(HttpContext.Request.Form["packageId"], out var pkgId))
+            {
+                await HandleSelect(pkgId);
+                return;
+            }
+        }
+
+        packages = (await Db.WebPackages.Where(p => p.IsActive).ToListAsync())
+            .OrderBy(p => p.Price).ToList();
+    }
+
+    private async Task HandleSelect(int packageId)
+    {
+        var userId = HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (userId is null) return;
+
+        // Count existing projects to generate default name
+        var count = await Db.Websites.CountAsync(w => w.UserId == userId);
+        var projectName = $"Project {count + 1}";
+
+        var website = new Website
+        {
+            UserId = userId,
+            WebPackageId = packageId,
+            Name = projectName,
+            Status = "pending"
+        };
+
+        Db.Websites.Add(website);
+        await Db.SaveChangesAsync();
+
+        // Redirect to payment (step 2) with project context
+        HttpContext.Response.Redirect("/onboarding/step-2");
+    }
+}

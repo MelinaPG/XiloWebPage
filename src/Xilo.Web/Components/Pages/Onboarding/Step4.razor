@@ -1,0 +1,142 @@
+@page "/onboarding/step-4"
+@using Microsoft.EntityFrameworkCore
+@inject XiloDbContext Db
+
+<PageTitle>Your Assets — XIPE</PageTitle>
+
+<div class="ob-page">
+    <OnboardingStepper CurrentStep="4" />
+
+    <section class="ob-content">
+        <div class="ob-content__inner xcontainer">
+
+            <div class="ob-left">
+                <span class="ob-step-badge">Step 4 of 6</span>
+                <h1 class="ob-headline">UPLOAD YOUR<br />BRAND<br />MATERIALS.</h1>
+                <p class="ob-sub">Logos, fonts, photos, inspiration — anything that helps us understand your brand and vision.</p>
+            </div>
+
+            <div class="ob-card">
+                <div class="ob-card__header">
+                    <p class="ob-card__title">Share Your Brand Assets</p>
+                </div>
+
+                <div class="ob-card__body">
+                    @if (siteId > 0)
+                    {
+                        <form method="post" action="/api/assets/upload?returnUrl=/onboarding/step-4" enctype="multipart/form-data">
+                            <input type="hidden" name="siteId" value="@siteId" />
+                            <label class="ob-dropzone" style="cursor:pointer;">
+                                <div class="ob-dropzone__icon">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+                                         stroke="currentColor" stroke-width="1.5"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="16 16 12 12 8 16" />
+                                        <line x1="12" y1="12" x2="12" y2="21" />
+                                        <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+                                    </svg>
+                                </div>
+                                <p class="ob-dropzone__primary">Click to choose files</p>
+                                <p class="ob-dropzone__formats">PDF, PNG, JPG, AI, ZIP, SVG — Up to 10 MB each</p>
+                                <input type="file" name="files" multiple
+                                       accept=".pdf,.png,.jpg,.jpeg,.ai,.zip,.svg,.webp"
+                                       style="margin-top:.75rem;" />
+                            </label>
+
+                            <div class="ob-tags">
+                                <span class="ob-tag">Logo</span>
+                                <span class="ob-tag">Brand Guide</span>
+                                <span class="ob-tag">Photos</span>
+                                <span class="ob-tag">Inspiration</span>
+                            </div>
+
+                            @if (showUploaded)
+                            {
+                                <div style="background:rgba(136,217,141,0.12);color:#2d7d32;border:1px solid rgba(136,217,141,0.3);padding:.65rem .85rem;border-radius:6px;font-size:.82rem;margin-bottom:1rem;">
+                                    Files uploaded successfully!
+                                </div>
+                            }
+
+                            @if (assets.Count > 0)
+                            {
+                                <div style="margin-bottom:1rem;">
+                                    <p style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--x-neutral);margin-bottom:.5rem;">Uploaded (@assets.Count)</p>
+                                    @foreach (var a in assets)
+                                    {
+                                        <div style="display:flex;align-items:center;gap:.6rem;padding:.4rem 0;font-size:.82rem;color:var(--x-dark);border-bottom:1px solid var(--x-mid,#E3E4E8);">
+                                            <span style="font-weight:600;font-size:.65rem;color:var(--x-neutral);">@GetFileIcon(a.ContentType)</span>
+                                            <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">@a.FileName</span>
+                                            <span style="font-size:.7rem;color:var(--x-neutral);">@FormatSize(a.FileSize)</span>
+                                        </div>
+                                    }
+                                </div>
+                            }
+
+                            <button type="submit" class="ob-cta" style="display:block;width:100%;text-align:center;margin-bottom:.75rem;">
+                                Upload Files
+                            </button>
+                        </form>
+                    }
+
+                    <a href="/onboarding/step-5" class="ob-cta ob-cta--secondary" style="display:block;text-align:center;">
+                        Continue to Next Step →
+                    </a>
+
+                    <a class="ob-skip" href="/onboarding/step-5">
+                        I'll send my assets later
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+@code {
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    private int siteId;
+    private List<ProjectAsset> assets = [];
+    private bool showUploaded;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userId = HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (userId is null) return;
+
+        // Get the user's latest project
+        var site = await Db.Websites
+            .Where(w => w.UserId == userId)
+            .OrderByDescending(w => w.Id)
+            .FirstOrDefaultAsync();
+
+        if (site is null) return;
+
+        siteId = site.Id;
+
+        // Load already uploaded assets
+        assets = await Db.ProjectAssets
+            .Where(a => a.WebsiteId == siteId)
+            .OrderByDescending(a => a.Id)
+            .ToListAsync();
+
+        // Check if we just uploaded
+        if (HttpContext.Request.Query.ContainsKey("uploaded"))
+            showUploaded = true;
+    }
+
+    private static string FormatSize(long bytes)
+    {
+        if (bytes < 1024) return $"{bytes} B";
+        if (bytes < 1024 * 1024) return $"{bytes / 1024.0:F1} KB";
+        return $"{bytes / (1024.0 * 1024.0):F1} MB";
+    }
+
+    private static string GetFileIcon(string contentType)
+    {
+        if (contentType.StartsWith("image/")) return "IMG";
+        if (contentType.Contains("pdf")) return "PDF";
+        if (contentType.Contains("zip")) return "ZIP";
+        return "FILE";
+    }
+}

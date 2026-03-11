@@ -1,0 +1,261 @@
+@page "/onboarding/step-2"
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@inject XiloDbContext Db
+@inject NavigationManager Navigation
+
+<PageTitle>Payment — XIPE</PageTitle>
+
+<div class="ob-page">
+    <OnboardingStepper CurrentStep="2" />
+
+    <section class="ob-content">
+        <div class="ob-content__inner xcontainer">
+
+            <!-- LEFT: package carousel + price -->
+            <div class="ob-left">
+                <span class="ob-step-badge">Step 2 of 6</span>
+
+                <h1 class="ob-headline">SECURE<br />YOUR<br />SPOT.</h1>
+
+                @if (packages.Count > 0)
+                {
+                    var pkg = packages[selectedIndex];
+
+                    <p class="ob-sub">
+                        @pkg.Description
+                    </p>
+
+                    <div class="ob-price-block">
+                        <div class="ob-price">$@pkg.Price.ToString("N0")</div>
+                        <p class="ob-price__period">USD · One-time payment</p>
+                        @if (pkg.OriginalPrice.HasValue && pkg.OriginalPrice > pkg.Price)
+                        {
+                            <p class="ob-price__original">
+                                <s>$@pkg.OriginalPrice.Value.ToString("N0")</s>
+                            </p>
+                        }
+                        <p class="ob-price__secure">Secured payment.</p>
+                    </div>
+
+                    <!-- Package selector pills -->
+                    @if (packages.Count > 1)
+                    {
+                        <div class="ob-pkg-selector" id="pkgSelector">
+                            @for (var i = 0; i < packages.Count; i++)
+                            {
+                                var idx = i;
+                                var p = packages[idx];
+                                <button type="button"
+                                        class="ob-pkg-pill @(idx == selectedIndex ? "active" : "")"
+                                        data-index="@idx"
+                                        data-name="@p.Name"
+                                        data-desc="@p.Description"
+                                        data-price="@p.Price.ToString("N0")"
+                                        data-original="@(p.OriginalPrice.HasValue ? p.OriginalPrice.Value.ToString("N0") : "")"
+                                        data-package-id="@p.Id">
+                                    @p.Name
+                                    <span class="ob-pkg-pill__price">$@p.Price.ToString("N0")</span>
+                                </button>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="ob-sub">No packages available at the moment.</p>
+                }
+            </div>
+
+            <!-- RIGHT: Stripe payment card -->
+            <div class="ob-card" id="ob-card">
+                <h2 class="ob-card__title">Payment Details</h2>
+
+                <div class="ob-form">
+                    <!-- Stripe Payment Element mounts here -->
+                    <div id="stripe-payment-element" class="ob-stripe-mount">
+                        <div class="ob-stripe-placeholder">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="1.6"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                                <line x1="1" y1="10" x2="23" y2="10"/>
+                            </svg>
+                            <span>Loading secure payment form…</span>
+                        </div>
+                    </div>
+
+                    <!-- Stripe status messages -->
+                    <div id="stripe-message" class="ob-stripe-message" style="display:none;"></div>
+
+                    <!-- Promo code accordion -->
+                    <div class="ob-promo">
+                        <button type="button" class="ob-promo__toggle" id="promoToggle">
+                            <span class="ob-promo__arrow">▶</span>
+                            Have a promo code?
+                        </button>
+                        <div class="ob-promo__field" id="promoField">
+                            <input class="ob-promo__input" type="text" id="promoCode"
+                                   placeholder="ENTER DISCOUNT CODE" autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <!-- Hidden form to create project on pay (dev mode) -->
+                    <form method="post" action="/api/onboarding/create-project" id="payForm">
+                        <input type="hidden" name="packageId" id="selectedPackageId"
+                               value="@(packages.Count > 0 ? packages[selectedIndex].Id : 0)" />
+                        <button type="submit" class="ob-cta" id="stripe-submit-btn" disabled>
+                            Pay &amp; Continue →
+                        </button>
+                    </form>
+                </div>
+
+                <a href="mailto:Contac@xipetechnology.com" class="ob-link-secondary">
+                    Have questions? Contact us
+                </a>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<script suppress-error="BL9992" src="https://js.stripe.com/v3/"></script>
+<script suppress-error="BL9992">
+    document.addEventListener('DOMContentLoaded', function () {
+
+        /* ── Package selector pills ─────────────────────────── */
+        var selector = document.getElementById('pkgSelector');
+        if (selector) {
+            selector.addEventListener('click', function (e) {
+                var pill = e.target.closest('.ob-pkg-pill');
+                if (!pill) return;
+
+                selector.querySelectorAll('.ob-pkg-pill').forEach(function (p) {
+                    p.classList.remove('active');
+                });
+                pill.classList.add('active');
+
+                var desc = pill.getAttribute('data-desc');
+                var price = pill.getAttribute('data-price');
+                var original = pill.getAttribute('data-original');
+                var pkgId = pill.getAttribute('data-package-id');
+
+                var subEl = document.querySelector('.ob-sub');
+                var priceEl = document.querySelector('.ob-price');
+                var origEl = document.querySelector('.ob-price__original');
+                var hiddenPkg = document.getElementById('selectedPackageId');
+
+                if (subEl) subEl.textContent = desc;
+                if (priceEl) priceEl.textContent = '$' + price;
+                if (hiddenPkg) hiddenPkg.value = pkgId;
+                if (origEl) {
+                    if (original) {
+                        origEl.innerHTML = '<s>$' + original + '</s>';
+                        origEl.style.display = '';
+                    } else {
+                        origEl.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        /* ── Promo code toggle ──────────────────────────────── */
+        var promoToggle = document.getElementById('promoToggle');
+        var promoField = document.getElementById('promoField');
+        if (promoToggle && promoField) {
+            promoToggle.addEventListener('click', function () {
+                promoToggle.classList.toggle('open');
+                promoField.classList.toggle('visible');
+            });
+        }
+
+        /* ── Stripe Embedded Payment Element ────────────────── */
+        var STRIPE_PK = '';
+
+        if (STRIPE_PK) {
+            // Stripe integration — prevent form submit, use Stripe.confirmPayment instead
+            var form = document.getElementById('payForm');
+            form.addEventListener('submit', function(e) { e.preventDefault(); });
+
+            var stripe = Stripe(STRIPE_PK);
+            var submitBtn = document.getElementById('stripe-submit-btn');
+            var messageEl = document.getElementById('stripe-message');
+
+            fetch('/api/stripe/create-payment-intent', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ packageId: getSelectedPackageId() })
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                var elements = stripe.elements({
+                    clientSecret: data.clientSecret,
+                    appearance: {
+                        theme: 'flat',
+                        variables: {
+                            fontFamily: "'Barlow', Helvetica, Arial, sans-serif",
+                            colorPrimary: '#2E2E2E',
+                            colorBackground: '#FDFCF8',
+                            colorText: '#2E2E2E',
+                            colorDanger: '#FD3F28',
+                            borderRadius: '6px',
+                            spacingUnit: '4px'
+                        }
+                    }
+                });
+
+                var paymentElement = elements.create('payment');
+                paymentElement.mount('#stripe-payment-element');
+
+                paymentElement.on('ready', function () {
+                    submitBtn.disabled = false;
+                });
+
+                submitBtn.addEventListener('click', function () {
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Processing…';
+
+                    stripe.confirmPayment({
+                        elements: elements,
+                        confirmParams: {
+                            return_url: window.location.origin + '/onboarding/step-3'
+                        }
+                    }).then(function (result) {
+                        if (result.error) {
+                            messageEl.textContent = result.error.message;
+                            messageEl.style.display = 'block';
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = 'Pay &amp; Continue →';
+                        }
+                    });
+                });
+            })
+            .catch(function () {
+                document.querySelector('.ob-stripe-placeholder span').textContent =
+                    'Unable to load payment form. Please refresh.';
+            });
+        } else {
+            // Dev mode: enable button, form submits to API which creates project
+            var btn = document.getElementById('stripe-submit-btn');
+            if (btn) btn.disabled = false;
+            var ph = document.querySelector('.ob-stripe-placeholder span');
+            if (ph) ph.textContent = 'Stripe — configure key to activate. Dev mode: click to continue.';
+        }
+
+        function getSelectedPackageId() {
+            var active = document.querySelector('.ob-pkg-pill.active');
+            return active ? parseInt(active.getAttribute('data-package-id')) : 1;
+        }
+    });
+</script>
+
+@code {
+    private List<WebPackage> packages = [];
+    private int selectedIndex = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        packages = (await Db.WebPackages.Where(p => p.IsActive).ToListAsync())
+            .OrderBy(p => p.Price).ToList();
+    }
+}

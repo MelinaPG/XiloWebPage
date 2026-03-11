@@ -1,0 +1,29 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# NuGet
+*.nupkg
+**/[Pp]ackages/*
+
+# Local database
+*.db
+*.db-shm
+*.db-wal
+
+# Uploads (user content)
+**/wwwroot/uploads/
+
+# Cookies / secrets
+cookies.txt
+
+# OS files
+Thumbs.db
+.DS_Store

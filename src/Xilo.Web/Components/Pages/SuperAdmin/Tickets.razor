@@ -1,0 +1,219 @@
+@page "/superadmin/tickets"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "SuperAdmin")]
+@inject XiloDbContext Db
+@inject UserManager<AppUser> UserManager
+@inject NavigationManager Navigation
+
+<PageTitle>Gestión de Tickets — XIPE</PageTitle>
+
+<div class="sa-page">
+    <div class="xcontainer">
+        <AdminNav />
+
+        <div class="sa-header">
+            <h1 class="sa-title">Gestión de Tickets de Soporte</h1>
+        </div>
+
+        <!-- Stats -->
+        <div class="tk-stats">
+            <div class="tk-stat tk-stat--open">
+                <span class="tk-stat__number">@openCount</span>
+                <span class="tk-stat__label">Abiertos</span>
+            </div>
+            <div class="tk-stat tk-stat--progress">
+                <span class="tk-stat__number">@inProgressCount</span>
+                <span class="tk-stat__label">En Progreso</span>
+            </div>
+            <div class="tk-stat tk-stat--waiting">
+                <span class="tk-stat__number">@waitingCount</span>
+                <span class="tk-stat__label">Esperando Cliente</span>
+            </div>
+            <div class="tk-stat tk-stat--urgent">
+                <span class="tk-stat__number">@urgentCount</span>
+                <span class="tk-stat__label">Urgentes</span>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="tk-filters">
+            <div class="tk-filter-group" style="flex-wrap:wrap;">
+                <select class="tk-select" @bind="projectFilter" style="min-width:180px;">
+                    <option value="0">Todos los proyectos</option>
+                    @foreach (var site in websites)
+                    {
+                        <option value="@site.Id">@site.Name</option>
+                    }
+                </select>
+                <select class="tk-select" @bind="statusFilter">
+                    <option value="all">Todos los estados</option>
+                    <option value="open">Abiertos</option>
+                    <option value="in-progress">En Progreso</option>
+                    <option value="waiting-client">Esperando Cliente</option>
+                    <option value="closed">Cerrados</option>
+                </select>
+                <select class="tk-select" @bind="priorityFilter">
+                    <option value="all">Todas las prioridades</option>
+                    <option value="urgent">Urgente</option>
+                    <option value="high">Alta</option>
+                    <option value="medium">Media</option>
+                    <option value="low">Baja</option>
+                </select>
+                <select class="tk-select" @bind="categoryFilter">
+                    <option value="all">Todas las categorías</option>
+                    <option value="bug">Error/Bug</option>
+                    <option value="feature">Funcionalidad</option>
+                    <option value="support">Soporte</option>
+                    <option value="question">Pregunta</option>
+                    <option value="other">Otro</option>
+                </select>
+            </div>
+            <div class="tk-search">
+                <input type="text" class="tk-input" placeholder="Buscar tickets..." 
+                    @bind="searchText" @bind:event="oninput" />
+            </div>
+        </div>
+
+        @if (filteredTickets.Count == 0)
+        {
+            <div class="tk-empty" style="background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);">
+                <p>No se encontraron tickets con los filtros seleccionados.</p>
+            </div>
+        }
+        else
+        {
+            <div class="tk-table-wrapper">
+                <table class="tk-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Título</th>
+                            <th>Cliente</th>
+                            <th>Proyecto</th>
+                            <th>Categoría</th>
+                            <th>Prioridad</th>
+                            <th>Estado</th>
+                            <th>Creado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ticket in filteredTickets)
+                        {
+                            <tr class="@GetRowClass(ticket)">
+                                <td>#@ticket.Id</td>
+                                <td>
+                                    <a href="/superadmin/tickets/@ticket.Id" class="tk-table-link">
+                                        @ticket.Title
+                                    </a>
+                                    @if (HasUnreadComments(ticket))
+                                    {
+                                        <span class="tk-unread-dot" title="Nuevos comentarios del cliente"></span>
+                                    }
+                                </td>
+                                <td>@ticket.CreatedBy.FullName</td>
+                                <td>@ticket.Website.Name</td>
+                                <td>
+                                    <span class="tk-badge tk-badge--small tk-badge--@ticket.Category">
+                                        @ticket.CategoryLabel
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="tk-priority-dot" style="background:@ticket.PriorityColor"></span>
+                                    @ticket.Priority
+                                </td>
+                                <td>
+                                    <span class="tk-status tk-status--small tk-status--@ticket.Status">
+                                        @ticket.StatusLabel
+                                    </span>
+                                </td>
+                                <td>@ticket.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    <a href="/superadmin/tickets/@ticket.Id" class="sa-btn sa-btn--small">
+                                        Ver
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<SupportTicket> tickets = [];
+    private List<Website> websites = [];
+    private List<TicketComment> allComments = [];
+    private int projectFilter = 0;
+    private string statusFilter = "all";
+    private string priorityFilter = "all";
+    private string categoryFilter = "all";
+    private string searchText = "";
+    private string userId = "";
+
+    private int openCount => tickets.Count(t => t.Status == "open");
+    private int inProgressCount => tickets.Count(t => t.Status == "in-progress");
+    private int waitingCount => tickets.Count(t => t.Status == "waiting-client");
+    private int urgentCount => tickets.Count(t => t.Priority == "urgent" && !t.IsClosed);
+
+    private List<SupportTicket> filteredTickets => tickets
+        .Where(t => projectFilter == 0 || t.WebsiteId == projectFilter)
+        .Where(t => statusFilter == "all" || t.Status == statusFilter)
+        .Where(t => priorityFilter == "all" || t.Priority == priorityFilter)
+        .Where(t => categoryFilter == "all" || t.Category == categoryFilter)
+        .Where(t => string.IsNullOrEmpty(searchText) || 
+            t.Title.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+            t.Description.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+            t.CreatedBy.FullName.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+        .OrderByDescending(t => t.Priority == "urgent")
+        .ThenByDescending(t => t.Priority == "high")
+        .ThenByDescending(t => t.CreatedAt)
+        .ToList();
+
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        userId = HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "";
+
+        // Cargar proyectos para el filtro
+        websites = await Db.Websites
+            .OrderBy(w => w.Name)
+            .ToListAsync();
+
+        await LoadTickets();
+    }
+
+    private async Task LoadTickets()
+    {
+        tickets = await Db.SupportTickets
+            .Include(t => t.Website)
+            .Include(t => t.CreatedBy)
+            .Include(t => t.Comments)
+            .OrderByDescending(t => t.CreatedAt)
+            .ToListAsync();
+
+        allComments = await Db.TicketComments
+            .Where(c => !c.IsFromTeam)
+            .ToListAsync();
+    }
+
+    private bool HasUnreadComments(SupportTicket ticket)
+    {
+        // Considerar no leídos los comentarios del cliente que no tienen respuesta del equipo
+        var lastComment = ticket.Comments.OrderByDescending(c => c.CreatedAt).FirstOrDefault();
+        return lastComment != null && !lastComment.IsFromTeam && 
+               lastComment.CreatedAt > DateTime.UtcNow.AddHours(-24);
+    }
+
+    private string GetRowClass(SupportTicket ticket)
+    {
+        if (ticket.Priority == "urgent" && !ticket.IsClosed) return "tk-row--urgent";
+        if (ticket.Status == "open") return "tk-row--new";
+        return "";
+    }
+}

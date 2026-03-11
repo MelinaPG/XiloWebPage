@@ -1,0 +1,212 @@
+@page "/onboarding"
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Identity
+@inject NavigationManager Navigation
+@inject UserManager<AppUser> UserManager
+@inject SignInManager<AppUser> SignInManager
+
+<PageTitle>Get Started — XIPE</PageTitle>
+
+<div class="ob-page">
+    <OnboardingStepper CurrentStep="1" />
+
+    <section class="ob-content">
+        <div class="ob-content__inner xcontainer">
+
+            <div class="ob-left">
+                <span class="ob-step-badge">Step 1 of 6</span>
+                <h1 class="ob-headline">LET'S BUILD<br />SOMETHING<br />GREAT<br />TOGETHER</h1>
+                <p class="ob-sub">
+                    We've designed this process around you — to make sure every step
+                    feels guided, valuable, and worth your time.
+                </p>
+            </div>
+
+            <div class="ob-card">
+                <h2 class="ob-card__title">Tell us about yourself</h2>
+
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div style="background:rgba(253,63,40,0.06);border:1px solid rgba(253,63,40,0.2);color:var(--x-red);padding:.65rem .85rem;border-radius:6px;font-size:.78rem;">
+                        @errorMessage
+                    </div>
+                }
+
+                <EditForm Model="Input" method="post" OnSubmit="HandleSubmit" FormName="onboarding-step1">
+
+                    <div class="ob-form">
+                        <!-- Row 1: Full Name + Phone -->
+                        <div class="ob-form__row">
+                            <div class="ob-field">
+                                <label class="ob-field__label">Full Name</label>
+                                <InputText @bind-Value="Input.FullName" class="ob-field__input"
+                                           placeholder="Jane Smith" />
+                            </div>
+                            <div class="ob-field">
+                                <label class="ob-field__label">Phone Number</label>
+                                <InputText @bind-Value="Input.Phone" class="ob-field__input"
+                                           type="tel" placeholder="+1 555 000 0000" />
+                            </div>
+                        </div>
+
+                        <!-- Row 2: Work Email + Company -->
+                        <div class="ob-form__row">
+                            <div class="ob-field">
+                                <label class="ob-field__label">Work Email</label>
+                                <InputText @bind-Value="Input.Email" class="ob-field__input"
+                                           type="email" placeholder="jane@company.com" />
+                            </div>
+                            <div class="ob-field">
+                                <label class="ob-field__label">Company / Studio</label>
+                                <InputText @bind-Value="Input.Company" class="ob-field__input"
+                                           placeholder="Acme Studio" />
+                            </div>
+                        </div>
+
+                        <!-- Row 3: Password -->
+                        <div class="ob-form__row">
+                            <div class="ob-field">
+                                <label class="ob-field__label">Password</label>
+                                <InputText @bind-Value="Input.Password" class="ob-field__input"
+                                           type="password" placeholder="Min. 6 characters" />
+                            </div>
+                            <div class="ob-field">
+                                <label class="ob-field__label">Confirm Password</label>
+                                <InputText @bind-Value="Input.ConfirmPassword" class="ob-field__input"
+                                           type="password" placeholder="Repeat your password" />
+                            </div>
+                        </div>
+
+                        <!-- Row 4: Existing website question -->
+                        <div class="ob-form__row ob-form__row--full">
+                            <div class="ob-field">
+                                <label class="ob-field__label">Do you have an existing website?</label>
+                                <div class="ob-toggle-group">
+                                    <button type="button"
+                                            class="ob-toggle-btn @(Input.HasWebsite ? "active" : "")"
+                                            onclick="this.classList.add('active');this.nextElementSibling.classList.remove('active');document.getElementById('hasWebsiteField').value='True';document.getElementById('urlRow').classList.add('visible');">
+                                        Yes
+                                    </button>
+                                    <button type="button"
+                                            class="ob-toggle-btn @(!Input.HasWebsite ? "active" : "")"
+                                            onclick="this.classList.add('active');this.previousElementSibling.classList.remove('active');document.getElementById('hasWebsiteField').value='False';document.getElementById('urlRow').classList.remove('visible');">
+                                        No
+                                    </button>
+                                </div>
+                                <input type="hidden" name="Input.HasWebsite" id="hasWebsiteField" value="@Input.HasWebsite" />
+                            </div>
+                        </div>
+
+                        <!-- Row 5: URL field (shown when Yes is active) -->
+                        <div class="ob-form__row ob-form__row--full ob-url-field @(Input.HasWebsite ? "visible" : "")" id="urlRow">
+                            <div class="ob-field">
+                                <label class="ob-field__label">Your current website URL</label>
+                                <InputText @bind-Value="Input.CurrentUrl" class="ob-field__input"
+                                           type="url" placeholder="https://www.yourwebsite.com" />
+                            </div>
+                        </div>
+
+                        <!-- Terms & Conditions -->
+                        <div class="ob-form__row ob-form__row--full">
+                            <label class="ob-check">
+                                <InputCheckbox @bind-Value="Input.AcceptTerms" />
+                                <span class="ob-check__text">
+                                    I accept the <a href="/terms" target="_blank" class="ob-check__link">Terms &amp; Conditions</a>
+                                </span>
+                            </label>
+                        </div>
+
+                        <!-- CTA -->
+                        <button type="submit" class="ob-cta">Get Started →</button>
+                    </div>
+                </EditForm>
+
+                <a href="mailto:Contac@xipetechnology.com" class="ob-link-secondary">
+                    Have questions? Contact us
+                </a>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+@code {
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromForm]
+    private Step1Model Input { get; set; } = new();
+
+    private string? errorMessage;
+
+    private async Task HandleSubmit(EditContext editContext)
+    {
+        // Validations
+        if (string.IsNullOrWhiteSpace(Input.FullName) || string.IsNullOrWhiteSpace(Input.Email))
+        {
+            errorMessage = "Full name and email are required.";
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(Input.Password) || Input.Password.Length < 6)
+        {
+            errorMessage = "Password must be at least 6 characters.";
+            return;
+        }
+        if (Input.Password != Input.ConfirmPassword)
+        {
+            errorMessage = "Passwords do not match.";
+            return;
+        }
+        if (!Input.AcceptTerms)
+        {
+            errorMessage = "You must accept the Terms & Conditions.";
+            return;
+        }
+
+        // Check if user already exists
+        var existing = await UserManager.FindByEmailAsync(Input.Email);
+        if (existing is not null)
+        {
+            errorMessage = "An account with this email already exists. Please log in.";
+            return;
+        }
+
+        // Create user
+        var user = new AppUser
+        {
+            UserName = Input.Email,
+            Email = Input.Email,
+            FullName = Input.FullName,
+            PhoneNumber = Input.Phone,
+            EmailConfirmed = true
+        };
+
+        var result = await UserManager.CreateAsync(user, Input.Password);
+        if (!result.Succeeded)
+        {
+            errorMessage = string.Join(" ", result.Errors.Select(e => e.Description));
+            return;
+        }
+
+        await UserManager.AddToRoleAsync(user, SeedData.ClientRole);
+
+        // Sign in
+        await SignInManager.SignInAsync(user, isPersistent: true);
+
+        // Project is created in step-2 after payment
+        HttpContext.Response.Redirect("/onboarding/step-2");
+    }
+
+    private sealed class Step1Model
+    {
+        public string? FullName { get; set; }
+        public string? Phone { get; set; }
+        public string? Email { get; set; }
+        public string? Company { get; set; }
+        public string? Password { get; set; }
+        public string? ConfirmPassword { get; set; }
+        public bool HasWebsite { get; set; }
+        public string? CurrentUrl { get; set; }
+        public bool AcceptTerms { get; set; }
+    }
+}

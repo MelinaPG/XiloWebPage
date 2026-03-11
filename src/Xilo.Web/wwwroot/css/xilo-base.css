@@ -1,0 +1,252 @@
+/* ============================================================
+   XILO — Base: Reset, Typography, Layout, Buttons
+   ============================================================ */
+
+/* ── RESET ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: var(--x-font-body);
+  font-weight: 400;
+  color: var(--x-dark);
+  background-color: var(--x-bg);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img, video { display: block; max-width: 100%; }
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+button { cursor: pointer; border: none; background: none; font: inherit; }
+
+/* ── TYPOGRAPHY — x-prefixed (web-dev / onboarding) ──────── */
+.xlabel {
+  font-family: var(--x-font-body);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--x-neutral);
+}
+.xbody-lg {
+  font-family: var(--x-font-body);
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--x-neutral);
+}
+.xbody {
+  font-family: var(--x-font-body);
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: var(--x-neutral);
+}
+.xsection-label { display: block; margin-bottom: 1rem; }
+
+/* ── TYPOGRAPHY — landing-page tokens ────────────────────── */
+.display {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 10vw, 9rem);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+.display em { font-style: normal; color: var(--c-red); }
+
+.heading-xl {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5.5vw, 5rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+.heading-md {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+.heading-sm {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.label {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-neutral);
+}
+.body-lg {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--c-neutral);
+}
+.body {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--c-neutral);
+}
+
+/* ── LAYOUT ────────────────────────────────────────────────── */
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+.xcontainer {
+  max-width: var(--x-max);
+  margin: 0 auto;
+  padding: 0 var(--x-gutter);
+}
+
+/* ── SECTION HEADER ────────────────────────────────────────── */
+.section-label { display: block; margin-bottom: 1.2rem; }
+.section-header { margin-bottom: var(--space-lg); }
+.section-header--split {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+.section-header--split .btn { flex-shrink: 0; margin-bottom: 0.4rem; }
+
+/* ── BUTTONS — landing (pill) ──────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.8rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: all var(--dur) var(--ease);
+  white-space: nowrap;
+}
+.btn--primary {
+  background: var(--c-dark);
+  color: #fff;
+  border: 1.5px solid var(--c-dark);
+}
+.btn--primary:hover {
+  background: var(--c-red);
+  border-color: var(--c-red);
+  transform: translateY(-1px);
+}
+.btn--outline {
+  background: transparent;
+  color: var(--c-dark);
+  border: 1.5px solid var(--c-dark);
+}
+.btn--outline:hover {
+  background: var(--c-dark);
+  color: #fff;
+  transform: translateY(-1px);
+}
+.btn--dark {
+  background: var(--c-dark);
+  color: #fff;
+  border: 1.5px solid var(--c-dark);
+}
+.btn--dark:hover {
+  background: transparent;
+  color: var(--c-dark);
+  transform: translateY(-1px);
+}
+.btn--cta {
+  background: var(--c-red);
+  color: #fff;
+  border: 1.5px solid var(--c-red);
+  padding: 1rem 2.4rem;
+  font-size: 0.75rem;
+}
+.btn--cta:hover {
+  background: transparent;
+  color: var(--c-red);
+  transform: translateY(-2px);
+}
+.btn--sm { padding: 0.55rem 1.2rem; font-size: 0.65rem; }
+.btn--outline-white {
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.5);
+}
+.btn--outline-white:hover {
+  background: #fff;
+  color: var(--c-dark);
+  border-color: #fff;
+}
+
+/* ── BUTTONS — x-prefixed (web-dev / onboarding) ─────────── */
+.xbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  border-radius: var(--x-pill);
+  font-family: var(--x-font-body);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background var(--x-dur) var(--x-ease),
+              color var(--x-dur) var(--x-ease),
+              border-color var(--x-dur) var(--x-ease),
+              transform var(--x-dur) var(--x-ease);
+}
+.xbtn--primary {
+  background: var(--x-dark);
+  color: #fff;
+  border: 1.5px solid var(--x-dark);
+}
+.xbtn--primary:hover {
+  background: var(--x-red);
+  border-color: var(--x-red);
+  transform: translateY(-1px);
+}
+.xbtn--outline {
+  background: transparent;
+  color: var(--x-dark);
+  border: 1.5px solid var(--x-dark);
+}
+.xbtn--outline:hover {
+  background: var(--x-dark);
+  color: #fff;
+  transform: translateY(-1px);
+}
+.xbtn--outline-white {
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.45);
+}
+.xbtn--outline-white:hover {
+  background: #fff;
+  color: var(--x-dark);
+  border-color: #fff;
+}
+
+/* ── SCROLL REVEAL ─────────────────────────────────────────── */
+.x-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s var(--x-ease), transform 0.6s var(--x-ease);
+}
+.x-reveal.visible { opacity: 1; transform: none; }

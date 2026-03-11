@@ -1,0 +1,178 @@
+@rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
+@using Xilo.Web.Services
+@implements IDisposable
+@inject IDbContextFactory<XiloDbContext> DbFactory
+@inject ChatNotifier Notifier
+@inject IJSRuntime JS
+
+<div class="cl-chat" id="chatScroll">
+    @if (messages.Count == 0)
+    {
+        <div class="cl-chat__empty">No messages yet. Start the conversation!</div>
+    }
+    else
+    {
+        @foreach (var msg in messages)
+        {
+            <div class="cl-msg @(msg.IsTeam ? "cl-msg--team" : "cl-msg--client")">
+                <div class="cl-msg__avatar">
+                    @(msg.IsTeam ? "X" : msg.Sender[..1].ToUpper())
+                </div>
+                <div class="cl-msg__bubble">
+                    <div class="cl-msg__header">
+                        <span class="cl-msg__name">@msg.Sender</span>
+                        <span class="cl-msg__time">@msg.Time</span>
+                    </div>
+                    <p class="cl-msg__body">@msg.Body</p>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@if (!string.IsNullOrEmpty(error))
+{
+    <div style="color:var(--x-red,red);font-size:.78rem;padding:.4rem 0;">@error</div>
+}
+
+<div class="cl-chat-input">
+    <textarea class="cl-chat-input__field" rows="2"
+              placeholder="Type your message..."
+              @bind="newMessage"
+              @bind:event="oninput"
+              @onkeydown="HandleKey"
+              @onkeydown:preventDefault="@shouldPreventDefault"></textarea>
+    <button type="button"
+            class="cl-btn cl-btn--primary cl-chat-input__btn"
+            disabled="@sending"
+            @onclick="SendMessage">
+        @(sending ? "..." : "Send")
+    </button>
+</div>
+
+@code {
+    [Parameter] public int ProjectId { get; set; }
+    [Parameter] public string UserId { get; set; } = "";
+    [Parameter] public string UserName { get; set; } = "";
+    [Parameter] public bool IsSuperAdmin { get; set; }
+
+    private List<ChatMsg> messages = [];
+    private string newMessage = "";
+    private bool sending;
+    private string? error;
+    private bool shouldPreventDefault;
+    private IDisposable? subscription;
+
+    private record ChatMsg(string Sender, string Body, string Time, bool IsTeam);
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Load existing messages
+            await using var db = await DbFactory.CreateDbContextAsync();
+            var dbMessages = await db.ProjectMessages
+                .Where(m => m.WebsiteId == ProjectId)
+                .OrderBy(m => m.Id)
+                .Select(m => new { m.SenderName, m.Body, m.SentAt, m.IsFromTeam })
+                .ToListAsync();
+
+            messages = dbMessages.Select(m =>
+                new ChatMsg(m.SenderName, m.Body, m.SentAt.ToString("MMM dd, h:mm tt"), m.IsFromTeam)
+            ).ToList();
+
+            // Mark as read if SuperAdmin
+            if (IsSuperAdmin)
+            {
+                var unread = await db.ProjectMessages
+                    .Where(m => m.WebsiteId == ProjectId && !m.IsFromTeam && !m.ReadByAdmin)
+                    .ToListAsync();
+                if (unread.Count > 0)
+                {
+                    foreach (var m in unread) m.ReadByAdmin = true;
+                    await db.SaveChangesAsync();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
+
+        // Subscribe to real-time updates
+        subscription = Notifier.Subscribe(ProjectId, evt =>
+        {
+            messages.Add(new ChatMsg(evt.Sender, evt.Body, evt.Time, evt.IsTeam));
+            return InvokeAsync(StateHasChanged);
+        });
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("eval",
+                "var el=document.getElementById('chatScroll');if(el)el.scrollTop=el.scrollHeight;");
+        }
+        catch { }
+    }
+
+    private async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(newMessage) || sending) return;
+
+        sending = true;
+        error = null;
+
+        try
+        {
+            var body = newMessage.Trim();
+            var senderName = IsSuperAdmin ? "XIPE Team" : UserName;
+            var isTeam = IsSuperAdmin;
+            var now = DateTime.UtcNow;
+            var timeStr = now.ToString("MMM dd, h:mm tt");
+
+            // Save to DB
+            await using var db = await DbFactory.CreateDbContextAsync();
+            db.ProjectMessages.Add(new ProjectMessage
+            {
+                WebsiteId = ProjectId,
+                SenderId = UserId,
+                SenderName = senderName,
+                IsFromTeam = isTeam,
+                Body = body,
+                SentAt = now,
+                ReadByAdmin = IsSuperAdmin
+            });
+            await db.SaveChangesAsync();
+
+            // Notify all subscribers (including self)
+            await Notifier.Notify(ProjectId,
+                new ChatNotifier.ChatEvent(senderName, body, timeStr, isTeam));
+
+            newMessage = "";
+        }
+        catch (Exception ex)
+        {
+            error = $"Send failed: {ex.Message}";
+        }
+        finally
+        {
+            sending = false;
+        }
+    }
+
+    private async Task HandleKey(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !e.ShiftKey)
+        {
+            await SendMessage();
+        }
+    }
+
+    public void Dispose()
+    {
+        subscription?.Dispose();
+    }
+}

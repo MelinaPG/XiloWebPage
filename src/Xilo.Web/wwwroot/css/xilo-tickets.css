@@ -1,0 +1,916 @@
+/* ════════════════════════════════════════════════════════════
+   XILO — TICKET SYSTEM STYLES
+   ════════════════════════════════════════════════════════════ */
+
+/* ────────────────────────────────────────────────────────────
+   TICKET SYSTEM — SHARED COMPONENTS
+   ──────────────────────────────────────────────────────────── */
+
+/* Toolbar & Filters */
+.tk-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.tk-filter {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.tk-select {
+  font-family: var(--x-font-body);
+  font-size: 0.8rem;
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  border: 1px solid var(--x-mid, #E3E4E8);
+  border-radius: 6px;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23707070' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 0.6rem center;
+  appearance: none;
+  cursor: pointer;
+  color: var(--x-dark, #2E2E2E);
+}
+
+.tk-select:focus {
+  outline: none;
+  border-color: var(--x-accent, #FD3F28);
+}
+
+/* Empty State */
+.tk-empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #fff;
+  border: 1px solid var(--x-mid, #E3E4E8);
+  border-radius: 10px;
+}
+
+.tk-empty__icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.tk-empty h3 {
+  font-family: var(--x-font-head);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--x-dark);
+  margin-bottom: 0.5rem;
+}
+
+.tk-empty p {
+  font-family: var(--x-font-body);
+  font-size: 0.9rem;
+  color: var(--x-neutral);
+  margin-bottom: 1.5rem;
+}
+
+/* Badges & Status */
+.tk-badge {
+  display: inline-block;
+  font-family: var(--x-font-body);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+}
+
+.tk-badge--small { font-size: 0.6rem; padding: 0.15rem 0.5rem; }
+
+.tk-badge--support { background: rgba(136, 174, 245, 0.15); color: #4a7de0; }
+.tk-badge--bug { background: rgba(253, 63, 40, 0.1); color: var(--x-red, #FD3F28); }
+.tk-badge--feature { background: rgba(136, 217, 141, 0.15); color: #2d7d32; }
+.tk-badge--question { background: rgba(240, 173, 78, 0.15); color: #d68a1c; }
+.tk-badge--other { background: rgba(112, 112, 112, 0.1); color: var(--x-neutral); }
+
+.tk-badge--urgent { background: #ef4444; color: #fff; }
+.tk-badge--high { background: #f97316; color: #fff; }
+.tk-badge--medium { background: #eab308; color: #fff; }
+.tk-badge--low { background: #22c55e; color: #fff; }
+
+.tk-status {
+  display: inline-block;
+  font-family: var(--x-font-body);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+}
+
+.tk-status--small { font-size: 0.6rem; padding: 0.15rem 0.5rem; }
+
+.tk-status--open { background: rgba(136, 217, 141, 0.15); color: #2d7d32; }
+.tk-status--in-progress { background: rgba(136, 174, 245, 0.15); color: #4a7de0; }
+.tk-status--waiting-client { background: rgba(240, 173, 78, 0.15); color: #d68a1c; }
+.tk-status--closed { background: rgba(112, 112, 112, 0.1); color: var(--x-neutral); }
+
+/* Priority dot */
+.tk-priority-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 0.4rem;
+}
+
+/* ────────────────────────────────────────────────────────────
+   TICKET LIST (CLIENT)
+   ──────────────────────────────────────────────────────────── */
+
+.tk-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tk-card {
+  background: #fff;
+  border: 1px solid var(--x-mid, #E3E4E8);
+  border-radius: 10px;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.tk-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border-color: #c0c0c0;
+}
+
+.tk-card--open { border-left: 3px solid #22c55e; }
+.tk-card--in-progress { border-left: 3px solid #4a7de0; }
+.tk-card--waiting-client { border-left: 3px solid #d68a1c; }
+.tk-card--closed { border-left: 3px solid var(--x-neutral); opacity: 0.8; }
+
+.tk-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.tk-card__meta {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.tk-card__date {
+  font-family: var(--x-font-body);
+  font-size: 0.75rem;
+  color: var(--x-neutral);
+}
+
+.tk-card__title {
+  font-family: var(--x-font-head);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--x-dark);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.tk-card__preview {
+  font-family: var(--x-font-body);
+  font-size: 0.85rem;
+  color: var(--x-neutral);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.tk-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-family: var(--x-font-body);
+  font-size: 0.75rem;
+  color: var(--x-neutral);
+}
+
+.tk-card__project {
+  font-weight: 500;
+}
+
+.tk-card__comments {
+  color: var(--x-dark);
+}
+
+/* ────────────────────────────────────────────────────────────
+   TICKET FORM
+   ──────────────────────────────────────────────────────────── */
+
+.tk-form {
+  background: #fff;
+  border: 1px solid var(--x-mid, #E3E4E8);
+  border-radius: 10px;
+  padding: 2rem;
+  max-width: 700px;
+}
+
+.tk-form__group {
+  margin-bottom: 1.5rem;
+}
+
+.tk-label {
+  display: block;
+  font-family: var(--x-font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--x-dark);
+  margin-bottom: 0.5rem;
+}
+
+.tk-input,
+.tk-textarea {
+  width: 100%;
+  font-family: var(--x-font-body);
+  font-size: 0.9rem;
+  color: var(--x-dark);
+  background: #fff;
+  border: 1px solid var(--x-mid, #E3E4E8);
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  transition: border-color 0.2s;
+}
+
+.tk-input:focus,
+.tk-textarea:focus {
+  outline: none;
+  border-color: var(--x-accent, #FD3F28);
+}
+
+.tk-textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+}
+
+.tk-hint {
+  display: block;
+  font-family: var(--x-font-body);
+  font-size: 0.75rem;
+  color: var(--x-neutral);
+  margin-top: 0.4rem;
+}
+
+.tk-form__actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.tk-error {
+  background: rgba(253, 63, 40, 0.08);
+  border: 1px solid rgba(253, 63, 40, 0.2);
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  font-family: var(--x-font-body);
+  font-size: 0.85rem;
+  color: var(--x-red);
+  margin-bottom: 1rem;
+}
+
+.tk-validation-message {
+  font-family: var(--x-font-body);
+  font-size: 0.75rem;
+  color: var(--x-red);
+  margin-top: 0.35rem;
+}
+
+/* ────────────────────────────────────────────────────────────
+   TICKET DETAIL
+   ──────────────────────────────────────────────────────────── */
+
+.tk-detail-header {
+  margin-bottom: 2rem;
+}
+
+.tk-detail__meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.tk-back {
+  font-family: var(--x-font-body);
+  font-size: 0.8rem;
+  color: var(--x-neutral);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.tk-back:hover {
+  color: var(--x-dark);
+}
+
+.tk-id {
+  font-family: var(--x-font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--x-neutral);
+  background: #fff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  border: 1px solid var(--x-mid);
+}
+
+.tk-detail__title {
+  font-family: var(--x-font-head);
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--x-dark);
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+
+.tk-detail__badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tk-detail__info {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  font-family: var(--x-font-body);
+  font-size: 0.85rem;
+  color: var(--x-neutral);
+}
+
+.tk-detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+  align-items: start;
+}
+
+.tk-detail__main {
+  background: #fff;
+  border: 1px solid var(--x-mid, #E3E4E8);
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.tk-detail__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tk-sidebar-card {
+  background: #fff;
+  border: 1px solid var(--x-mid, #E3E4E8);
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.tk-sidebar-card h4 {
+  font-family: var(--x-font-head);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--x-dark);
+  margin-bottom: 1rem;
+}
+
+.tk-dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 1rem;
+  font-family: var(--x-font-body);
+  font-size: 0.85rem;
+}
+
+.tk-dl dt {
+  color: var(--x-neutral);
+  font-weight: 600;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.tk-dl dd {
+  color: var(--x-dark);
+  margin: 0;
+}
+
+.tk-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 0.35rem;
+}
+
+/* Messages */
+.tk-message {
+  padding: 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.tk-message--original {
+  background: #f9f9f7;
+  border-left: 3px solid var(--x-accent, #FD3F28);
+}
+
+.tk-message--client {
+  background: rgba(136, 174, 245, 0.08);
+  border-left: 3px solid #88AEF5;
+}
+
+.tk-message--team {
+  background: #f9f9f7;
+  border-left: 3px solid var(--x-dark);
+}
+
+.tk-message__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.tk-message__author {
+  font-family: var(--x-font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--x-dark);
+}
+
+.tk-message__date {
+  font-family: var(--x-font-body);
+  font-size: 0.7rem;
+  color: var(--x-neutral);
+}
+
+.tk-message__body {
+  font-family: var(--x-font-body);
+  font-size: 0.9rem;
+  color: var(--x-dark);
+  line-height: 1.7;
+}
+
+.tk-message__body .tk-link {
+  color: var(--x-accent, #FD3F28);
+  text-decoration: underline;
+}
+
+.tk-comments-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1.5rem 0;
+  font-family: var(--x-font-body);
+  font-size: 0.75rem;
+  color: var(--x-neutral);
+}
+
+.tk-comments-divider::before,
+.tk-comments-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--x-mid);
+}
+
+.tk-comments-divider span {
+  padding: 0 1rem;
+}
+
+/* Reply Section */
+.tk-reply-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--x-mid);
+}
+
+.tk-reply-section h4 {
+  font-family: var(--x-font-head);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--x-dark);
+  margin-bottom: 1rem;
+}
+
+.tk-reply__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.tk-closed-notice {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: #f9f9f7;
+  border: 1px dashed var(--x-mid);
+  border-radius: 8px;
+  text-align: center;
+  font-family: var(--x-font-body);
+  font-size: 0.9rem;
+  color: var(--x-neutral);
+}
+
+/* ────────────────────────────────────────────────────────────
+   SUPER ADMIN TICKET STYLES
+   ──────────────────────────────────────────────────────────── */
+
+/* Stats */
+.tk-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.tk-stat {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.tk-stat__number {
+  display: block;
+  font-family: var(--x-font-heading);
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.tk-stat__label {
+  font-family: var(--x-font-body);
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.tk-stat--open .tk-stat__number { color: #22c55e; }
+.tk-stat--progress .tk-stat__number { color: #88AEF5; }
+.tk-stat--waiting .tk-stat__number { color: #f0ad4e; }
+.tk-stat--urgent .tk-stat__number { color: #ef4444; }
+
+/* Filters */
+.tk-filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.tk-filter-group {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.tk-search {
+  flex: 1;
+  max-width: 300px;
+}
+
+.tk-search .tk-input {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.tk-search .tk-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* Table */
+.tk-table-wrapper {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tk-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--x-font-body);
+  font-size: 0.85rem;
+}
+
+.tk-table th {
+  font-family: var(--x-font-heading);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  text-align: left;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tk-table td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.tk-table tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.tk-table tr:last-child td {
+  border-bottom: none;
+}
+
+.tk-row--urgent {
+  background: rgba(239, 68, 68, 0.08) !important;
+}
+
+.tk-row--new {
+  background: rgba(136, 217, 141, 0.08) !important;
+}
+
+.tk-table-link {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.tk-table-link:hover {
+  color: var(--x-accent, #FD3F28);
+}
+
+.tk-unread-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--x-accent, #FD3F28);
+  border-radius: 50%;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+/* SA Badge override */
+.sa-badge--urgent {
+  background: #ef4444 !important;
+  color: #fff !important;
+}
+
+/* SA Layout */
+.tk-admin-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.tk-admin__main {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.tk-admin__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tk-admin__sidebar .tk-sidebar-card {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.tk-admin__sidebar .tk-sidebar-card h4 {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.tk-admin__sidebar .tk-dl dt {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.tk-admin__sidebar .tk-dl dd {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.tk-sidebar-card--danger {
+  border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+.tk-sidebar-card--danger h4 {
+  color: #ef4444 !important;
+}
+
+.tk-field {
+  margin-bottom: 1rem;
+}
+
+.tk-field label {
+  display: block;
+  font-family: var(--x-font-heading);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0.4rem;
+}
+
+.tk-field .tk-select {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  width: 100%;
+}
+
+.tk-btn {
+  display: inline-block;
+  font-family: var(--x-font-heading);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.55rem 1rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.tk-btn--outline {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.tk-btn--outline:hover {
+  border-color: #fff;
+  color: #fff;
+}
+
+.tk-btn--block {
+  display: block;
+  width: 100%;
+}
+
+.tk-btn--danger {
+  background: transparent;
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+}
+
+.tk-btn--danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* Reply section in admin */
+.tk-reply-section--admin {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.tk-reply-section--admin h4 {
+  color: #fff;
+}
+
+.tk-reply-section--admin .tk-textarea {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.tk-reply__options {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.tk-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--x-font-body);
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+}
+
+.tk-closed-notice--admin {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Message styling in admin */
+.tk-admin__main .tk-message--original {
+  background: rgba(255, 255, 255, 0.06);
+  border-left-color: var(--x-accent, #FD3F28);
+}
+
+.tk-admin__main .tk-message--client {
+  background: rgba(136, 174, 245, 0.12);
+  border-left-color: #88AEF5;
+}
+
+.tk-admin__main .tk-message--team {
+  background: rgba(255, 255, 255, 0.08);
+  border-left-color: #fff;
+}
+
+.tk-admin__main .tk-message__author,
+.tk-admin__main .tk-message__body {
+  color: #fff;
+}
+
+.tk-admin__main .tk-message__date {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.tk-admin__main .tk-comments-divider {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.tk-admin__main .tk-comments-divider::before,
+.tk-admin__main .tk-comments-divider::after {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .tk-detail-layout,
+  .tk-admin-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .tk-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .tk-search {
+    max-width: none;
+  }
+  
+  .tk-filter-group {
+    justify-content: stretch;
+  }
+  
+  .tk-filter-group .tk-select {
+    flex: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .tk-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .tk-form {
+    padding: 1.25rem;
+  }
+  
+  .tk-form__actions {
+    flex-direction: column;
+  }
+  
+  .tk-table {
+    font-size: 0.8rem;
+  }
+  
+  .tk-table th,
+  .tk-table td {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .tk-reply__options {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

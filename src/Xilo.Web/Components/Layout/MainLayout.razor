@@ -1,0 +1,134 @@
+@inherits LayoutComponentBase
+
+<!-- NAV -->
+<header class="xnav" id="xnav">
+    <div class="xnav__inner xcontainer">
+
+        <a href="/web-development" class="xnav__logo" aria-label="XILO — Home">
+            <img src="assets/xilo-logo.png" alt="XILO" class="xilo-logo xilo-logo--nav" />
+        </a>
+
+        <nav class="xnav__links" id="xnavLinks" aria-label="Main navigation">
+            <a href="/web-development#features" data-i18n="nav.webdev">Web Development</a>
+            <a href="/web-development#portfolio" data-i18n="nav.portfolio">Portfolio</a>
+        </nav>
+
+        <div class="xnav__right">
+            <AuthorizeView>
+                <Authorized>
+                    <AuthorizeView Roles="SuperAdmin" Context="sa">
+                        <Authorized>
+                            <a href="/superadmin" class="xnav__auth-link">Panel</a>
+                        </Authorized>
+                    </AuthorizeView>
+                    <AuthorizeView Roles="Client" Context="cl">
+                        <Authorized>
+                            <a href="/admin" class="xnav__auth-link">Mi Cuenta</a>
+                        </Authorized>
+                    </AuthorizeView>
+                    <AuthorizeView Roles="SuperAdmin" Context="saLogout">
+                        <Authorized>
+                            <a href="/account/logout" class="xnav__auth-link xnav__auth-link--logout">Logout</a>
+                        </Authorized>
+                    </AuthorizeView>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="/account/login" class="xnav__auth-link">Login</a>
+                </NotAuthorized>
+            </AuthorizeView>
+            <div class="lang-toggle" role="group" aria-label="Language">
+                <button class="lang-toggle__btn active" data-lang="en" aria-pressed="true">EN</button>
+                <span class="lang-toggle__sep" aria-hidden="true">/</span>
+                <button class="lang-toggle__btn" data-lang="es" aria-pressed="false">SP</button>
+            </div>
+            <button class="xnav__hamburger" id="xHamburger" aria-label="Open menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+
+    </div>
+</header>
+
+<!-- PAGE CONTENT -->
+@Body
+
+<!-- FOOTER -->
+<footer class="wd-footer" id="contact">
+    <div class="xcontainer wd-footer__inner">
+
+        <!-- Brand block -->
+        <div class="wd-footer__brand">
+            <a href="/web-development" class="wd-footer__logo-link" aria-label="XILO — Home">
+                <img src="assets/xilo-logo.png" alt="XILO" class="xilo-logo xilo-logo--footer" />
+                <span class="wd-footer__logo-tagline" data-i18n="footer.tagline">VENTURE STUDIO</span>
+            </a>
+        </div>
+
+        <!-- Info block -->
+        <div class="wd-footer__info">
+
+            <div class="wd-footer__contact">
+                <p class="wd-footer__contact-label" data-i18n="footer.contactLabel">Contact:</p>
+                <a href="mailto:Contac@xipetechnology.com" class="wd-footer__email">
+                    Contac@xipetechnology.com
+                </a>
+            </div>
+
+            <div class="wd-footer__social-block">
+                <p class="wd-footer__social-label" data-i18n="footer.followLabel">Follow us at</p>
+
+                <div class="wd-footer__social-row">
+
+                    <div class="wd-footer__social-icons">
+                        <!-- Instagram -->
+                        <a href="https://www.instagram.com/xilostudio/"
+                           target="_blank" rel="noopener noreferrer"
+                           class="wd-footer__social-icon" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                <circle cx="12" cy="12" r="4"/>
+                                <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+                            </svg>
+                        </a>
+                        <!-- LinkedIn -->
+                        <a href="https://www.linkedin.com/company/xilo-studio/"
+                           target="_blank" rel="noopener noreferrer"
+                           class="wd-footer__social-icon" aria-label="LinkedIn">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
+                                <rect x="2" y="9" width="4" height="12"/>
+                                <circle cx="4" cy="4" r="2"/>
+                            </svg>
+                        </a>
+                        <!-- Facebook -->
+                        <a href="https://www.facebook.com/xilostudio/"
+                           target="_blank" rel="noopener noreferrer"
+                           class="wd-footer__social-icon" aria-label="Facebook">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <div class="wd-footer__controls">
+                        <div class="lang-toggle lang-toggle--footer" role="group" aria-label="Language">
+                            <button class="lang-toggle__btn active" data-lang="en" aria-pressed="true">EN</button>
+                            <span class="lang-toggle__sep" aria-hidden="true">/</span>
+                            <button class="lang-toggle__btn" data-lang="es" aria-pressed="false">SP</button>
+                        </div>
+                        <button class="wd-footer__totop" id="backToTop" aria-label="Back to top">↑</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</footer>
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>

@@ -1,0 +1,92 @@
+@page "/superadmin/users"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "SuperAdmin")]
+@inject XiloDbContext Db
+@inject UserManager<AppUser> UserManager
+
+<PageTitle>Usuarios — SuperAdmin</PageTitle>
+
+<div class="sa-page">
+    <div class="xcontainer">
+        <AdminNav />
+
+        <h1 class="sa-title">Usuarios</h1>
+
+        <table class="sa-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Websites</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var u in users)
+                {
+                    <tr>
+                        <td>@u.FullName</td>
+                        <td>@u.Email</td>
+                        <td>
+                            @foreach (var r in u.Roles)
+                            {
+                                <span class="sa-badge @(r == "SuperAdmin" ? "sa-badge--featured" : "sa-badge--active")">@r</span>
+                            }
+                        </td>
+                        <td>
+                            @if (u.Websites.Any())
+                            {
+                                @foreach (var w in u.Websites)
+                                {
+                                    <div style="margin-bottom:.25rem;">
+                                        <strong>@w.Name</strong>
+                                        <span class="sa-badge sa-badge--@w.Status">@w.Status</span>
+                                        @if (w.SupportPlanName is not null)
+                                        {
+                                            <span style="font-size:.75rem;color:rgba(255,255,255,0.45);"> · @w.SupportPlanName</span>
+                                        }
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <span style="color:rgba(255,255,255,0.3);">—</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    private List<UserRow> users = [];
+
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var allUsers = await Db.Users.ToListAsync();
+        var websites = await Db.Websites
+            .Include(w => w.Package)
+            .Include(w => w.SupportPlan)
+            .ToListAsync();
+
+        foreach (var u in allUsers)
+        {
+            var roles = await UserManager.GetRolesAsync(u);
+            var userWebsites = websites
+                .Where(w => w.UserId == u.Id)
+                .Select(w => new WebsiteRow(w.Name, w.Status, w.SupportPlan?.Name))
+                .ToList();
+
+            users.Add(new UserRow(u.FullName, u.Email ?? "", roles.ToList(), userWebsites));
+        }
+    }
+
+    private record UserRow(string FullName, string Email, List<string> Roles, List<WebsiteRow> Websites);
+    private record WebsiteRow(string Name, string Status, string? SupportPlanName);
+}

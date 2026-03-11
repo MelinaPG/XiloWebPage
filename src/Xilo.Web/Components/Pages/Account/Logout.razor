@@ -1,0 +1,27 @@
+@page "/account/logout"
+@using Microsoft.AspNetCore.Identity
+@using Xilo.Web.Data
+@inject SignInManager<AppUser> SignInManager
+@inject NavigationManager Navigation
+
+<PageTitle>Logout — XIPE</PageTitle>
+
+<section style="min-height:80vh;display:flex;align-items:center;justify-content:center;background:var(--x-surface-dark,#1A1A1A);">
+    <div style="text-align:center;">
+        <h2 style="font-family:var(--x-font-heading);color:var(--x-white);margin-bottom:1rem;">LOG OUT</h2>
+        <p class="xbody" style="color:var(--x-grey-400);margin-bottom:2rem;">Are you sure?</p>
+        <EditForm Model="formModel" method="post" OnValidSubmit="HandleLogout" FormName="logout">
+            <button type="submit" class="xbtn xbtn--primary">Confirm Logout</button>
+        </EditForm>
+    </div>
+</section>
+
+@code {
+    private object formModel = new();
+
+    private async Task HandleLogout()
+    {
+        await SignInManager.SignOutAsync();
+        Navigation.NavigateTo("/", forceLoad: true);
+    }
+}
