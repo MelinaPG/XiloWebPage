@@ -4,13 +4,26 @@
 <header class="xnav" id="xnav">
     <div class="xnav__inner xcontainer">
 
-        <a href="/web-development" class="xnav__logo" aria-label="XILO — Home">
-            <img src="assets/xilo-logo.png" alt="XILO" class="xilo-logo xilo-logo--nav" />
-        </a>
+        <AuthorizeView>
+            <Authorized>
+                <a href="/admin" class="xnav__logo" aria-label="XILO — Home">
+                    <img src="assets/xilo-logo.png" alt="XILO" class="xilo-logo xilo-logo--nav" />
+                </a>
+            </Authorized>
+            <NotAuthorized>
+                <a href="/web-development" class="xnav__logo" aria-label="XILO — Home">
+                    <img src="assets/xilo-logo.png" alt="XILO" class="xilo-logo xilo-logo--nav" />
+                </a>
+            </NotAuthorized>
+        </AuthorizeView>
 
         <nav class="xnav__links" id="xnavLinks" aria-label="Main navigation">
-            <a href="/web-development#features" data-i18n="nav.webdev">Web Development</a>
-            <a href="/web-development#portfolio" data-i18n="nav.portfolio">Portfolio</a>
+            <AuthorizeView>
+                <NotAuthorized>
+                    <a href="/web-development#features" data-i18n="nav.webdev">Web Development</a>
+                    <a href="/web-development#portfolio" data-i18n="nav.portfolio">Portfolio</a>
+                </NotAuthorized>
+            </AuthorizeView>
         </nav>
 
         <div class="xnav__right">

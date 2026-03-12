@@ -38,9 +38,10 @@
                                 </div>
                                 <p class="ob-dropzone__primary">Click to choose files</p>
                                 <p class="ob-dropzone__formats">PDF, PNG, JPG, AI, ZIP, SVG — Up to 10 MB each</p>
-                                <input type="file" name="files" multiple
+                                <input id="assetFiles" type="file" name="files" multiple
                                        accept=".pdf,.png,.jpg,.jpeg,.ai,.zip,.svg,.webp"
-                                       style="margin-top:.75rem;" />
+                                       style="display:none;"
+                                       onchange="document.getElementById('uploadBtn').disabled = this.files.length === 0;" />
                             </label>
 
                             <div class="ob-tags">
@@ -72,7 +73,8 @@
                                 </div>
                             }
 
-                            <button type="submit" class="ob-cta" style="display:block;width:100%;text-align:center;margin-bottom:.75rem;">
+                            <button id="uploadBtn" type="submit" class="ob-cta" disabled
+                                    style="display:block;width:100%;text-align:center;margin-bottom:.75rem;">
                                 Upload Files
                             </button>
                         </form>

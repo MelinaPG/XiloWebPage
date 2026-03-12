@@ -1,6 +1,13 @@
 @page "/"
+@inject NavigationManager Nav
 
 <PageTitle>XIPE Technology — Web Development</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        @{ Nav.NavigateTo("/admin", replace: true); }
+    </Authorized>
+</AuthorizeView>
 
 <WdHero />
 <WdPossible />

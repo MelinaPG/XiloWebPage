@@ -1,18 +1,148 @@
 @page "/admin/assets"
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
-@attribute [Authorize(Roles = "Client")]
+@attribute [Authorize(Roles = "Client,SuperAdmin")]
 @inject XiloDbContext Db
+
+<PageTitle>My Assets — XIPE</PageTitle>
+
+<div class="cl-page">
+    <div class="xcontainer">
+        <ClientNav />
+
+        <div class="cl-header">
+            <h1 class="cl-title">My Assets</h1>
+            <p class="cl-subtitle">All files uploaded across your projects.</p>
+        </div>
+
+        @if (!string.IsNullOrEmpty(alertMessage))
+        {
+            <div class="cl-alert cl-alert--success">@alertMessage</div>
+        }
+
+        @if (websites.Count > 0)
+        {
+            <div class="cl-upload-card">
+                <form method="post" action="/api/assets/upload?returnUrl=/admin/assets" enctype="multipart/form-data">
+                    <label class="cl-dropzone" style="cursor:pointer;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16 16 12 12 8 16" />
+                            <line x1="12" y1="12" x2="12" y2="21" />
+                            <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+                        </svg>
+                        <span>Click to choose files</span>
+                        <span class="cl-dropzone__formats">PDF, PNG, JPG, AI, ZIP — Up to 10 MB each</span>
+                        <input id="assetsFiles" type="file" name="files" multiple
+                               accept=".pdf,.png,.jpg,.jpeg,.ai,.zip,.svg,.webp"
+                               style="display:none;"
+                               onchange="document.getElementById('assetsUploadBtn').disabled = this.files.length === 0;" />
+                    </label>
+
+                    @if (websites.Count > 1)
+                    {
+                        <div style="margin-top:.75rem;">
+                            <label style="font-size:.78rem;font-weight:600;color:var(--x-neutral);display:block;margin-bottom:.3rem;">Upload to project</label>
+                            <select name="siteId" class="cl-select" style="width:100%;">
+                                @foreach (var site in websites)
+                                {
+                                    <option value="@site.Id">@site.Name</option>
+                                }
+                            </select>
+                        </div>
+                    }
+                    else
+                    {
+                        <input type="hidden" name="siteId" value="@websites[0].Id" />
+                    }
+
+                    <button id="assetsUploadBtn" type="submit" class="cl-btn cl-btn--primary" disabled
+                            style="width:100%;margin-top:1rem;">
+                        Upload Assets
+                    </button>
+                </form>
+            </div>
+        }
+
+        @if (assets.Count == 0)
+        {
+            <div class="cl-empty">
+                <p>No assets uploaded yet.</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var group in assets.GroupBy(a => a.WebsiteId))
+            {
+                var projectName = websites.FirstOrDefault(w => w.Id == group.Key)?.Name ?? $"Project #{group.Key}";
+                <div style="margin-bottom:2rem;">
+                    <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--x-neutral);margin-bottom:.5rem;">
+                        @projectName
+                    </p>
+                    <div class="cl-asset-list">
+                        @foreach (var asset in group)
+                        {
+                            <div class="cl-asset">
+                                <div class="cl-asset__icon">@GetFileIcon(asset.ContentType)</div>
+                                <div class="cl-asset__info">
+                                    <span class="cl-asset__name">@asset.FileName</span>
+                                    <span class="cl-asset__size">@FormatSize(asset.FileSize) — @asset.UploadedAt.ToString("MMM dd, yyyy")</span>
+                                </div>
+                                <div class="cl-asset__actions">
+                                    <a href="/admin/assets/@group.Key/delete/@asset.Id"
+                                       class="cl-btn cl-btn--danger cl-btn--sm"
+                                       onclick="return confirm('Delete this file?');">
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
 
 @code {
     [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
 
+    private List<Website> websites = [];
+    private List<ProjectAsset> assets = [];
+    private string? alertMessage;
+
     protected override async Task OnInitializedAsync()
     {
         var userId = HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        if (userId is null) { HttpContext.Response.Redirect("/admin"); return; }
+        if (userId is null) return;
 
-        var site = await Db.Websites.Where(w => w.UserId == userId).FirstOrDefaultAsync();
-        HttpContext.Response.Redirect(site is not null ? $"/admin/assets/{site.Id}" : "/admin");
+        websites = await Db.Websites
+            .Where(w => w.UserId == userId)
+            .OrderByDescending(w => w.Id)
+            .ToListAsync();
+
+        var siteIds = websites.Select(w => w.Id).ToList();
+
+        assets = await Db.ProjectAssets
+            .Where(a => siteIds.Contains(a.WebsiteId))
+            .OrderByDescending(a => a.Id)
+            .ToListAsync();
+
+        if (HttpContext.Request.Query.ContainsKey("uploaded"))
+            alertMessage = "File uploaded successfully.";
+    }
+
+    private static string FormatSize(long bytes)
+    {
+        if (bytes < 1024) return $"{bytes} B";
+        if (bytes < 1024 * 1024) return $"{bytes / 1024.0:F1} KB";
+        return $"{bytes / (1024.0 * 1024.0):F1} MB";
+    }
+
+    private static string GetFileIcon(string contentType)
+    {
+        if (contentType.StartsWith("image/")) return "IMG";
+        if (contentType.Contains("pdf")) return "PDF";
+        if (contentType.Contains("zip")) return "ZIP";
+        return "FILE";
     }
 }
